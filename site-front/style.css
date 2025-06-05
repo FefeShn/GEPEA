@@ -9242,6 +9242,21 @@ pre code {
   margin-left: 0;
 }
 
+.publicacoes { 
+  margin-top: 20px;
+  margin-right: 10px;
+  margin-bottom: 30px;
+  margin-left: 5px;
+  border-width: 2px; 
+  border-style: solid;  
+  border-color: grey;
+  border-radius: 5px;
+  transition: opacity 0.15s linear;
+
+
+}
+
+
 .no-gutters > .col,
 .no-gutters > [class*="col-"] {
   padding-right: 0;
