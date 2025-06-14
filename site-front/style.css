@@ -116,6 +116,135 @@
 /* === Import template variables === */
 /*-------------------------------------------------------------------*/
 /* === SCSS Compass Functions === */
+
+/* CSS DA FEFE*/
+
+.menu-lateral {
+  width: 220px;
+  background-color: #f4f4f4;
+  padding: 20px;
+  height: 100vh;
+  position: fixed;
+}
+
+.menu-lateral {
+  margin-top: 60px; 
+}
+
+
+.menu-lateral ul {
+  list-style: none;
+  padding: 0;
+}
+
+.menu-lateral li {
+  margin-bottom: 15px;
+}
+
+.menu-lateral a {
+  text-decoration: none;
+  color: #333;
+}
+
+.menu-lateral a:hover {
+  color: #00ff08;
+}
+.menu-lateral {
+  width: 220px;
+  background-color: #f8f9fa;
+  position: fixed;
+  height: 100vh;
+  padding: 20px;
+  top: 0;
+  left: 0;
+  overflow-y: auto;
+  z-index: 1000;
+}
+
+.main-panel {
+  margin-left: 220px; 
+  padding: 20px;
+}
+
+.sombra-transparente {
+  background: rgba(255, 255, 255, 0.8); /* fundo branco semitransparente */
+  border: 1px solid rgba(0, 0, 0, 0.1); /* borda cinza bem clara */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* sombra leve pra dar profundidade */
+  border-radius: 8px; /* cantos arredondados */
+  padding: 15px; /* espaçamento interno */
+  margin: 5px;
+}
+
+nav.menu-lateral {
+  width: 250px;
+  transition: transform 0.3s ease;
+  transform: translateX(0);
+}
+
+nav.menu-lateral.ativo {
+  transform: translateX(-250px);
+}
+nav.menu-lateral {
+  box-shadow: 3px 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Menu lateral */
+nav.menu-lateral {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 250px;
+  background-color: #fff;
+  box-shadow: 3px 0 10px rgba(0,0,0,0.1); /* sombra só do lado direito */
+  transition: transform 0.3s ease;
+  transform: translateX(0);
+  z-index: 1000;
+}
+
+/* Quando o menu estiver recolhido */
+nav.menu-lateral.ativo {
+  transform: translateX(-250px);
+}
+
+/* Botão fora do menu */
+button#botao-menu {
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  z-index: 1100;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  font-size: 20px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: left 0.3s ease;
+}
+
+/* Quando o menu estiver aberto, o botão fica um pouco afastado para direita */
+nav.menu-lateral:not(.ativo) ~ button#botao-menu {
+  left: 265px; /* 250 do menu + 15px de distância */
+}
+
+/* Área principal do conteúdo */
+.main-panel {
+  margin-left: 250px; /* espaço para o menu */
+  transition: margin-left 0.3s ease;
+}
+
+/* Quando o menu estiver recolhido, conteúdo ocupa tudo */
+nav.menu-lateral.ativo ~ .main-panel {
+  margin-left: 0;
+}
+
+
+/* CSS DA FEFE*/
+
+
+
+
 @-moz-keyframes flash {
   0% {
     opacity: 1;
@@ -9229,6 +9358,9 @@ pre code {
     max-width: 1140px;
   }
 }
+
+
+
 
 .row {
   display: flex;
