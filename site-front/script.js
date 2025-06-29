@@ -1,27 +1,32 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', function() {
+  // Elementos do DOM
   const botaoMenu = document.getElementById('botao-menu');
-  const menuLateral = document.querySelector('nav.menu-lateral');
-
-  botaoMenu.addEventListener('click', () => {
+  const menuLateral = document.querySelector('.menu-lateral');
+  
+  // Controle do Menu
+  botaoMenu.addEventListener('click', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    // Alternar estado do menu
     menuLateral.classList.toggle('ativo');
+    
+    // Atualizar ícone
+    this.innerHTML = menuLateral.classList.contains('ativo') ? '✕' : '☰';
   });
 
-  // Busca simples para filtrar cards
-  const inputBusca = document.getElementById('navbar-search-input');
-  const cards = document.querySelectorAll('.card');
+  // Ajustar menu inicialmente baseado no tamanho da tela
+  function ajustarMenuInicial() {
+    if (window.innerWidth > 992) {
+      menuLateral.classList.add('ativo');
+      botaoMenu.innerHTML = '✕';
+    } else {
+      menuLateral.classList.remove('ativo');
+      botaoMenu.innerHTML = '☰';
+    }
+  }
 
-  inputBusca.addEventListener('input', () => {
-    const textoBusca = inputBusca.value.toLowerCase();
-
-    cards.forEach(card => {
-      const titulo = card.querySelector('.card-title').textContent.toLowerCase();
-      const texto = card.querySelector('.card-text').textContent.toLowerCase();
-
-      if (titulo.includes(textoBusca) || texto.includes(textoBusca)) {
-        card.parentElement.style.display = '';
-      } else {
-        card.parentElement.style.display = 'none';
-      }
-    });
-  });
+  // Executar no carregamento e redimensionamento
+  ajustarMenuInicial();
+  window.addEventListener('resize', ajustarMenuInicial);
 });
