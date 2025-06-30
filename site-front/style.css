@@ -141,7 +141,6 @@ body {
   height: 100vh;
   position: fixed;
   top: 0;
-  left: -280px;
   background: linear-gradient(135deg, var(--verde), var(--preto));
   color: var(--branco);
   transition: var(--transicao-normal);
@@ -186,6 +185,39 @@ body {
   color: var(--amarelo);
   font-size: 1.1rem;
 }
+
+/* Adicione estas regras ao seu CSS existente */
+
+/* Estado inicial do menu - escondido */
+.menu-lateral {
+  left: -280px; /* Adicione esta linha */
+}
+
+/* Menu aberto */
+.menu-lateral.ativo {
+  left: 0; /* Isso você já tem, mantenha */
+}
+
+/* Conteúdo principal ajustado */
+.main-panel {
+  transition: var(--transicao-normal); /* Adicione se não tiver */
+}
+
+.main-panel.menu-aberto {
+  margin-left: 280px;
+}
+
+/* Estado inicial do menu - escondido */
+.menu-lateral {
+  left: -280px;
+  transition: all 0.3s ease; /* Animação suave */
+}
+
+/* Remove quaisquer regras que escondam o botão */
+#botao-menu {
+  display: block !important; /* Garante que o botão sempre fique visível */
+}
+
 
 /* ============================================= */
 /* ============= CONTEÚDO PRINCIPAL ============ */
@@ -318,8 +350,6 @@ body {
 /* ================== FOOTER =================== */
 /* ============================================= */
 .footer {
-  background: var(--preto);
-  color: var(--branco);
   padding: 1.5rem;
   margin-top: 2rem;
   text-align: center;

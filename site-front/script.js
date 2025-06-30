@@ -1,32 +1,14 @@
-document.addEventListener('DOMContentLoaded', function() {
-  // Elementos do DOM
+document.addEventListener('DOMContentLoaded', () => {
   const botaoMenu = document.getElementById('botao-menu');
-  const menuLateral = document.querySelector('.menu-lateral');
-  
-  // Controle do Menu
-  botaoMenu.addEventListener('click', function(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    
-    // Alternar estado do menu
-    menuLateral.classList.toggle('ativo');
-    
-    // Atualizar ícone
-    this.innerHTML = menuLateral.classList.contains('ativo') ? '✕' : '☰';
-  });
+  const menuLateral = document.getElementById('menuLateral');
 
-  // Ajustar menu inicialmente baseado no tamanho da tela
-  function ajustarMenuInicial() {
-    if (window.innerWidth > 992) {
-      menuLateral.classList.add('ativo');
-      botaoMenu.innerHTML = '✕';
+  botaoMenu.addEventListener('click', () => {
+    menuLateral.classList.toggle('ativo'); // adiciona ou remove a classe 'ativo'
+
+    if (menuLateral.classList.contains('ativo')) {
+      botaoMenu.textContent = '✕'; // ícone de fechar
     } else {
-      menuLateral.classList.remove('ativo');
-      botaoMenu.innerHTML = '☰';
+      botaoMenu.textContent = '☰'; // ícone de abrir
     }
-  }
-
-  // Executar no carregamento e redimensionamento
-  ajustarMenuInicial();
-  window.addEventListener('resize', ajustarMenuInicial);
+  });
 });
