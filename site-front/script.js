@@ -3,12 +3,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const menuLateral = document.getElementById('menuLateral');
 
   botaoMenu.addEventListener('click', () => {
-    menuLateral.classList.toggle('ativo'); // adiciona ou remove a classe 'ativo'
+    menuLateral.classList.toggle('ativo'); 
 
     if (menuLateral.classList.contains('ativo')) {
-      botaoMenu.textContent = '✕'; // ícone de fechar
+      botaoMenu.textContent = '✕'; 
     } else {
-      botaoMenu.textContent = '☰'; // ícone de abrir
+      botaoMenu.textContent = '☰'; 
     }
   });
 });

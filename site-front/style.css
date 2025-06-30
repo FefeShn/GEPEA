@@ -1,34 +1,26 @@
-/* ============================================= */
 /* ============== VARIÁVEIS GLOBAIS ============ */
-/* ============================================= */
 :root {
-  /* Cores Pan-Africanas */
-  --vermelho: #E31B23;  /* Vermelho vibrante */
-  --verde: #008751;     /* Verde africano */
-  --amarelo: #FCD116;   /* Amarelo ouro */
+  --vermelho: #E31B23;  
+  --verde: #008751;     
+  --amarelo: #FCD116;   
   --preto: #000000;
   --branco: #FFFFFF;
   --cinza-claro: #F5F5F5;
   --cinza-medio: #E0E0E0;
   
-  /* Espaçamentos */
   --espacamento: 1rem;
   --borda-radius: 8px;
   
-  /* Sombras */
   --sombra-leve: 0 2px 10px rgba(0,0,0,0.1);
   --sombra-media: 0 4px 15px rgba(0,0,0,0.15);
   --sombra-forte: 0 8px 25px rgba(0,0,0,0.2);
   
-  /* Transições */
   --transicao-rapida: all 0.2s ease;
   --transicao-normal: all 0.3s ease;
   --transicao-lenta: all 0.5s ease;
 }
 
-/* ============================================= */
 /* ============== ESTILOS GERAIS =============== */
-/* ============================================= */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -49,11 +41,9 @@ body {
   flex-direction: column;
 }
 
-/* ============================================= */
 /* ================ NAVBAR ===================== */
-/* ============================================= */
 .navbar {
-  background: var(--branco);
+  background: linear-gradient(135deg, var(--verde), var(--preto));
   box-shadow: var(--sombra-leve);
   height: 70px;
   padding: 0 var(--espacamento);
@@ -73,41 +63,108 @@ body {
 }
 
 .titulo-logo {
-  color: var(--verde);
+  color: var(--branco);
   font-weight: 700;
   font-size: 1.8rem;
   text-transform: uppercase;
   letter-spacing: 1px;
   margin: 0;
-  margin-left: 80px;
+  margin-left: 30px;
 }
 
-/* Foto do usuário na navbar */
+.logo-nav{
+  margin-left: 80px;
+  width: 65px;
+  height: 65px;
+}
+
 .profile-img {
-  width: 50px;          /* Tamanho reduzido */
-  height: 50px;         /* Manter proporção quadrada */
-  transition: var(--transicao-rapida); /* Transição suave para efeitos hover */
-  margin-left: 10px;    /* Espaçamento do restante dos itens */
+  width: 50px;         
+  height: 50px;         
+  transition: var(--transicao-rapida); 
+  margin-left: 10px;
+  margin-top: 5px;    
   margin-bottom: 5px;
-  margin-right: 20px;
+  margin-right: 30px;
 }
 
 .profile-img:hover {
   transform: scale(1.05);
 }
 
-.busca{
-  margin-right: 100px;
+.busca {
+  border: none;
+  background-color: #f0f0f0;
+  color: #333;
+  border-radius: 0 6px 6px 0;
+  padding: 0.5rem 1rem;
+  transition: all 0.3s ease;
+  box-shadow: none;
+  width: 200px;
 }
+
+.busca:focus {
+  background-color: #ffffff;
+  outline: none;
+  box-shadow: 0 0 0 2px var(--verde);
+}
+
+.input-group-text {
+  background-color: #e0e0e0;
+  border: none;
+  border-radius: 6px 0 0 6px;
+  padding: 0.5rem 0.75rem;
+  color: var(--verde);
+}
+
+#navbar-search-icon:hover {
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+.busca-box {
+  max-width: 280px;
+}
+
+.busca {
+  border: 1px solid #ccc;
+  background-color: #f8f8f8;
+  color: #333;
+  border-radius: 0 20px 20px 0;
+  padding: 0.5rem 1rem;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+}
+
+.busca:focus {
+  background-color: #fff;
+  border-color: #2e8b57;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(46,139,87,0.2);
+}
+
+.input-group-text {
+  background-color: #e6e6e6;
+  border: 1px solid #ccc;
+  border-right: none;
+  border-radius: 20px 0 0 20px;
+  padding: 0.5rem 0.75rem;
+  color: #2e8b57;
+  font-size: 1rem;
+}
+
+#navbar-search-icon:hover {
+  opacity: 0.85;
+  cursor: pointer;
+}
+
 
 .navbar-menu-wrapper {
   display: flex;
   align-items: center;
 }
 
-/* ============================================= */
 /* ============== BOTÃO MENU =================== */
-/* ============================================= */
 #botao-menu {
   display: flex;
   align-items: center;
@@ -133,9 +190,7 @@ body {
   transform: scale(1.1);
 }
 
-/* ============================================= */
 /* ============== MENU LATERAL ================= */
-/* ============================================= */
 .menu-lateral {
   width: 280px;
   height: 100vh;
@@ -186,47 +241,38 @@ body {
   font-size: 1.1rem;
 }
 
-/* Adicione estas regras ao seu CSS existente */
-
-/* Estado inicial do menu - escondido */
 .menu-lateral {
-  left: -280px; /* Adicione esta linha */
+  left: -280px;
 }
 
-/* Menu aberto */
 .menu-lateral.ativo {
-  left: 0; /* Isso você já tem, mantenha */
+  left: 0; 
 }
 
-/* Conteúdo principal ajustado */
 .main-panel {
-  transition: var(--transicao-normal); /* Adicione se não tiver */
+  transition: var(--transicao-normal); 
 }
 
 .main-panel.menu-aberto {
   margin-left: 280px;
 }
 
-/* Estado inicial do menu - escondido */
 .menu-lateral {
   left: -280px;
-  transition: all 0.3s ease; /* Animação suave */
+  transition: all 0.3s ease; 
 }
 
-/* Remove quaisquer regras que escondam o botão */
 #botao-menu {
-  display: block !important; /* Garante que o botão sempre fique visível */
+  display: block !important; 
 }
 
 
-/* ============================================= */
 /* ============= CONTEÚDO PRINCIPAL ============ */
-/* ============================================= */
 .main-panel {
   margin-left: 0;
   padding: 1.5rem;
   transition: var(--transicao-normal);
-  margin-top: 70px; /* Altura da navbar */
+  margin-top: 70px; 
   flex: 1;
 }
 
@@ -240,9 +286,7 @@ body {
   width: 100%;
 }
 
-/* ============================================= */
 /* ============= TÍTULO PUBLICAÇÕES ============ */
-/* ============================================= */
 .titulo-publicacoes {
   margin: 2rem 0;
   padding-bottom: 1rem;
@@ -257,14 +301,12 @@ body {
 }
 
 .titulo-publicacoes h6 {
-  color: var(--vermelho);
+  color: var(--preto);
   font-weight: 400;
   font-size: 1rem;
 }
 
-/* ============================================= */
 /* ================ CARDS ====================== */
-/* ============================================= */
 .row {
   display: flex;
   flex-wrap: wrap;
@@ -346,9 +388,7 @@ body {
   color: var(--branco);
 }
 
-/* ============================================= */
 /* ================== FOOTER =================== */
-/* ============================================= */
 .footer {
   padding: 1.5rem;
   margin-top: 2rem;
@@ -364,9 +404,7 @@ body {
   margin: 0 0.25rem;
 }
 
-/* ============================================= */
 /* ============== RESPONSIVIDADE =============== */
-/* ============================================= */
 @media (max-width: 992px) {
   .menu-lateral.ativo + .main-panel {
     margin-left: 0;
@@ -395,9 +433,7 @@ body {
   }
 }
 
-/* ============================================= */
 /* ============== ANIMAÇÕES ==================== */
-/* ============================================= */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
@@ -412,10 +448,7 @@ body {
 .card:nth-child(2) { animation-delay: 0.2s; }
 .card:nth-child(3) { animation-delay: 0.3s; }
 
-/* ============================================= */
 /* ============== COMPONENTES ================== */
-/* ============================================= */
-/* Barra de busca */
 .input-group {
   position: relative;
   display: flex;
@@ -459,7 +492,6 @@ body {
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
-/* Dropdown */
 .dropdown-menu {
   position: absolute;
   top: 100%;
@@ -500,9 +532,7 @@ body {
   background-color: #f8f9fa;
 }
 
-/* ============================================= */
 /* ============== UTILITÁRIOS ================= */
-/* ============================================= */
 .d-flex {
   display: flex !important;
 }
@@ -633,9 +663,7 @@ body {
   cursor: pointer;
 }
 
-/* ============================================= */
 /* ============== MEDIA QUERIES ================ */
-/* ============================================= */
 @media (min-width: 576px) {
   .d-sm-flex {
     display: flex !important;
