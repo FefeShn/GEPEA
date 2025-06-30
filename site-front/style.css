@@ -306,6 +306,49 @@ body {
   font-size: 1rem;
 }
 
+/* ================ BOTÃO ADMIN ====================== */
+/* Botões de Ação */
+.acoes-publicacoes {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.btn-adicionar {
+  background-color: var(--verde);
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-excluir {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-adicionar:hover {
+  background-color: var(--amarelo);
+  transform: translateY(-2px);
+}
+
+.btn-excluir:hover {
+  background-color: #c82333;
+  transform: translateY(-2px);
+}
+
+/* Ícones */
+.ti-plus, .ti-trash {
+  margin-right: 5px;
+}
+
 /* ================ CARDS ====================== */
 .row {
   display: flex;
