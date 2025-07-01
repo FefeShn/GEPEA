@@ -528,6 +528,380 @@ body {
   color: var(--branco);
 }
 
+/* ================== LOGIN =================== */
+
+:root {
+    --primary-color: #008751;       /* Verde principal */
+    --secondary-color: #E31B23;    /* Vermelho para detalhes */
+    --accent-color: #FCD116;       /* Amarelo para realces */
+    --dark-color: #000000;         /* Preto */
+    --light-color: #FFFFFF;        /* Branco */
+    --gray-light: #F5F5F5;         /* Cinza claro */
+    --gray-medium: #E0E0E0;        /* Cinza médio */
+    
+    --border-radius: 8px;
+    --box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    --transition: all 0.3s ease;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Poppins', 'Segoe UI', sans-serif;
+    background-color: var(--gray-light);
+    color: var(--dark-color);
+    line-height: 1.6;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.login-container {
+    width: 100%;
+    max-width: 400px;
+}
+
+.login-card {
+    background: var(--light-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: 40px;
+    width: 100%;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 30px;
+}
+
+.logo-icon {
+    width: 120px;
+    height: 120px;
+    margin-right: 10px;
+}
+
+.logo-text {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.welcome-title {
+    color: var(--dark-color);
+    font-size: 1.5rem;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.welcome-subtitle {
+    color: #666;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--dark-color);
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid var(--gray-medium);
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    transition: var(--transition);
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(0, 135, 81, 0.2);
+}
+
+.password-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.forgot-password {
+    font-size: 0.875rem;
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.forgot-password:hover {
+    text-decoration: underline;
+}
+
+.password-input {
+    position: relative;
+}
+
+.password-input input {
+    padding-right: 45px;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #666;
+    padding: 5px;
+}
+
+.toggle-password:hover {
+    color: var(--primary-color);
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.remember-me input {
+    margin-right: 10px;
+    accent-color: var(--primary-color);
+}
+
+.remember-me label {
+    font-size: 0.9375rem;
+    color: #555;
+}
+
+.login-button {
+    display: block;
+    text-align: center;
+    text-decoration: none;
+}
+
+.form-actions {
+    margin-top: 20px;
+}
+
+.login-button {
+    width: 100%;
+    padding: 14px;
+    background-color: var(--primary-color);
+    color: var(--light-color);
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.login-button:hover {
+    background-color: #007544;
+}
+
+@media (max-width: 480px) {
+    .login-card {
+        padding: 30px 20px;
+    }
+    
+    .welcome-title {
+        font-size: 1.3rem;
+    }
+}
+
+/* ============ ESTILOS DA PÁGINA DE MEMBROS ============ */
+
+.members-container {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    margin-left: 100px; /* Ajuste para o menu lateral */
+    transition: var(--transicao-normal);
+}
+
+.members-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 colunas por padrão */
+    gap: 1.5rem;
+    width: 100%;
+}
+
+.member-card {
+    background: var(--light-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--sombra-leve);
+    padding: 1.5rem;
+    text-align: center;
+    transition: var(--transicao-normal);
+    text-decoration: none;
+    color: var(--dark-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Responsividade */
+@media (max-width: 1200px) {
+    .members-grid {
+        grid-template-columns: repeat(3, 1fr); /* 3 colunas */
+    }
+}
+
+@media (max-width: 992px) {
+    .members-container {
+        margin-left: 0;
+    }
+    
+    .members-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 colunas */
+    }
+}
+
+@media (max-width: 768px) {
+    .members-grid {
+        grid-template-columns: 1fr; /* 1 coluna */
+        max-width: 400px;
+        margin: 0 auto;
+    }
+}
+
+.menu-lateral.ativo + .main-panel .members-container {
+    margin-left: 0;
+}
+
+.page-title {
+  margin-top: 40px;
+    color: var(--primary-color);
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 2rem;
+}
+
+.member-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--sombra-media);
+}
+
+.member-photo {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin: 0 auto 1rem;
+    border: 3px solid var(--primary-color);
+}
+
+.member-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.member-name {
+    margin: 0.5rem 0;
+    color: var(--dark-color);
+    font-size: 1.1rem;
+}
+
+.member-role {
+    font-weight: 500;
+    margin: 0;
+    padding: 0.25rem 0.5rem;
+    border-radius: 20px;
+    display: inline-block;
+    font-size: 0.875rem;
+}
+
+/* Cores diferentes para cada cargo */
+.member-role.coordenador {
+    background-color: var(--secondary-color);
+    color: white;
+}
+
+.member-role.vice-coordenador {
+    
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.member-role.bolsista {
+  background-color: var(--amarelo);
+  color: var(--dark-color);
+    
+}
+
+.member-role.membro {
+    background-color: #6c757d;
+    color: white;
+}
+
+/* Responsividade */
+@media (max-width: 1200px) {
+    .members-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 992px) {
+    .members-container {
+        margin-left: 0;
+    }
+    
+    .members-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .members-grid {
+        grid-template-columns: 1fr;
+        max-width: 400px;
+        margin: 0 auto;
+    }
+    
+    .member-card {
+        padding: 1rem;
+    }
+    
+    .member-photo {
+        width: 100px;
+        height: 100px;
+    }
+}
+
+@media (max-width: 576px) {
+    .members-container {
+        padding: 1rem;
+    }
+    
+    .page-title {
+        font-size: 1.5rem;
+    }
+}
+
 /* ================== FOOTER =================== */
 .footer {
   padding: 1.5rem;
