@@ -349,6 +349,103 @@ body {
   margin-right: 5px;
 }
 
+/* ================ PÁGINA DE SOBRE ====================== */
+.sobre-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.sobre-content {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  margin-top: 20px;
+}
+
+.sobre-imagem {
+  flex: 1;
+  min-width: 300px;
+}
+
+.sobre-imagem img {
+  width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.sobre-texto {
+  flex: 2;
+  min-width: 300px;
+}
+
+.sobre-texto h4 {
+  color: #008751;
+  margin-top: 25px;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+.sobre-texto p {
+  margin-bottom: 15px;
+  line-height: 1.6;
+}
+
+.sobre-texto ul {
+  margin-left: 20px;
+  margin-bottom: 20px;
+}
+
+.sobre-texto li {
+  margin-bottom: 8px;
+}
+
+.sobre-texto {
+  font-size: 1.1rem;
+}
+
+.sobre-texto h4 {
+  font-size: 1.4rem;
+}
+
+.sobre-texto p, 
+.sobre-texto li {
+  line-height: 1.7;
+}
+
+.titulo-publicacoes h3 {
+  font-size: 2rem; 
+}
+
+.btn-primary {
+  background-color: var(--verde);
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-primary:hover {
+  background-color: var(--amarelo);
+  transform: translateY(-2px);
+}
+
+.btn-primary .ti-pencil {
+  vertical-align: middle;
+}
+@media (max-width: 768px) {
+  .sobre-content {
+    flex-direction: column;
+  }
+  
+  .sobre-imagem, .sobre-texto {
+    flex: none;
+    width: 100%;
+  }
+}
+
 /* ================ CARDS ====================== */
 .row {
   display: flex;
