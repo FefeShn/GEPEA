@@ -43,7 +43,7 @@
             <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
               <div class="profile-img">
                 <a href="login.html">
-                  <img src="imagens/admin-icon.jpg" alt="profile" class="profile-img">
+                  <img src="imagens/user-foto.png" alt="profile" class="profile-img">
                 </a>
               </div>
             </a>
@@ -71,69 +71,55 @@
       <button id="botao-menu" aria-label="Abrir menu">☰</button>
       <nav class="menu-lateral" id="menuLateral">
         <ul>
-          <li><a href="index-admin.html"><i class="ti-home mr-2"></i>Publicações</a></li>
-          <li><a href="sobre-admin.html" class="active"><i class="ti-book mr-2"></i>Sobre o GEPEA</a></li>
-          <li><a href="membros-admin.html"><i class="ti-agenda mr-2"></i>Membros</a></li>
-          <li><a href="biblioteca-admin.html"><i class="ti-agenda mr-2"></i>Biblioteca</a></li>
-          <li><a href="agenda-admin.html"><i class="ti-agenda mr-2"></i>Agenda</a></li>
-          <li><a href="forum-admin.html"><i class="ti-agenda mr-2"></i>Fórum</a></li>
-          <li><a href="suporte-admin.html"><i class="ti-user mr-2"></i>Suporte</a></li>
+          <li><a href="index.html"><i class="ti-home mr-2"></i>Publicações</a></li>
+          <li><a href="sobre.html"><i class="ti-book mr-2"></i>Sobre o GEPEA</a></li>
+          <li><a href="membros.html" class="active"><i class="ti-agenda mr-2"></i>Membros</a></li>
+          <li><a href="suporte.html"><i class="ti-user mr-2"></i>Suporte</a></li>
         </ul>
       </nav>
 
       <!-- CONTEÚDO PRINCIPAL -->
-      <div class="main-panel">
-        <div class="content-wrapper">
-          <div class="row">
-            <div class="col-md-12 grid-margin">
-              <div class="row">
-                <div class="col-12 col-xl-8 mb-4 mb-xl-0">
-                  <div class="titulo-publicacoes"> 
-                    <h3 class="font-weight-bold">Sobre o GEPEA</h3>
-                    <h6 class="font-weight-normal mb-0">Conheça nossa história e missão</h6>
-                  </div>
-                  <div class="d-flex justify-content-end mt-3">
-                    <button class="btn btn-primary btn-sm">
-                    <i class="ti-pencil mr-2"></i>Modificar Texto
-                    </button>
-                    </div>
-                </div>
-              </div>
-            </div>
+      <main class="biography-container">
+      <div class="biography-header">
+        <h1 class="biography-title">Biografia</h1>
+        <a href="membros.html" class="back-button">← Voltar aos membros</a>
+      </div>
+      
+      <div class="biography-content">
+        <div class="biography-photo">
+          <img src="imagens/estrela.jpg" alt="Foto do Professor Luciano Corsino" class="profile-image">
+        </div>
+        
+        <div class="biography-info">
+          <h2 class="member-name">Dr. Daniel Santana</h2>
+          <p class="member-role vice-coordenador">Vice-Coordenador do GEPEA</p>
+          
+          <div class="member-contacts">
+            <a href="http://lattes.cnpq.br/6302527743928486" target="_blank" class="lattes-link">
+              <img src="imagens/lattes-icon.png" alt="Currículo Lattes" class="contact-icon">
+              Currículo Lattes
+            </a>
+            <a href="mailto:luciano.corsino@universidade.edu.br" class="email-link">
+              <img src="imagens/email-icon.png" alt="Email" class="contact-icon">
+              luciano.corsino@universidade.edu.br
+            </a>
           </div>
-
-          <div class="sobre-container">
-            <div class="sobre-content">
-              <div class="sobre-imagem">
-                <img src="imagens/logo-gepea.png" alt="Equipe do GEPEA" class="img-fluid">
-              </div>
-              
-              <div class="sobre-texto">
-                <h4>Quem Somos</h4>
-                <p>O Grupo de Estudos e Pesquisas em Educação Antirracista (GEPEA) é uma iniciativa acadêmica comprometida com a produção de conhecimento e intervenções sociais que promovam a equidade racial na educação.</p>
-                
-                <h4>Nossa História</h4>
-                <p>Fundado em 2010 por pesquisadores da área de educação e ciências sociais, o GEPEA surgiu da necessidade de criar espaços de reflexão crítica sobre as relações raciais no ambiente educacional brasileiro.</p>
-                
-                <h4>Missão</h4>
-                <p>Promover pesquisas, debates e ações educativas que contribuam para a construção de uma sociedade antirracista, com foco especial nos espaços de formação escolar e universitária.</p>
-                
-                <h4>Principais Áreas de Atuação</h4>
-                <ul>
-                  <li>Formação de professores para educação étnico-racial</li>
-                  <li>Produção de materiais didáticos antirracistas</li>
-                  <li>Pesquisas sobre desigualdades educacionais</li>
-                  <li>Ações comunitárias em territórios periféricos</li>
-                </ul>
-              </div>
-            </div>
+          
+          <div class="biography-text">
+            <p>Professor Luciano Corsino é Doutor em Engenharia Elétrica pela Universidade de São Paulo (USP) e atualmente é professor titular do Departamento de Engenharia da Universidade XYZ.</p>
+            
+            <p>Sua pesquisa concentra-se nas áreas de sistemas embarcados, automação industrial e desenvolvimento de hardware. Coordena o GEPEA desde sua fundação em 2015, liderando projetos inovadores em parceria com a indústria local.</p>
+            
+            <p>Possui mais de 20 artigos publicados em periódicos internacionais e orientou mais de 30 trabalhos de conclusão de curso. Recebeu o Prêmio de Inovação Tecnológica em 2020 por seu trabalho em sistemas de controle automatizado.</p>
           </div>
+        </div>
+      </div>
+    </main>
         
         <!-- FOOTER -->
         <footer class="footer">
           <div class="d-sm-flex justify-content-center justify-content-sm-between">
             <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">GEPEA © 2023. Todos os direitos reservados.</span>
-            <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Desenvolvido com<i class="ti-heart text-danger ml-1">estresse </i> </span>
           </div>
         </footer>
       </div>

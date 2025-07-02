@@ -266,7 +266,206 @@ body {
   display: block !important; 
 }
 
+/* ============ ESTILOS DA PÁGINA DE BIOGRAFIA ============ */
+.biography-container {
+  
+    padding: 2rem;
+    max-width: 1000px;
+    margin: 0 auto;
+    margin-left: 280px;
+    transition: var(--transicao-normal);
+}
 
+.biography-header {
+  margin-top: 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.biography-title {
+    color: var(--primary-color);
+    font-size: 2rem;
+}
+
+.back-button {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+}
+
+.back-button:hover {
+    text-decoration: underline;
+    color: #c82333;
+}
+
+.biography-content {
+    display: flex;
+    gap: 3rem;
+    align-items: flex-start;
+}
+
+.biography-photo {
+    flex: 0 0 300px;
+}
+
+.profile-image {
+    width: 100%;
+    border-radius: var(--border-radius);
+    border: 4px solid var(--primary-color);
+    box-shadow: var(--sombra-media);
+}
+
+.biography-info {
+    flex: 1;
+}
+
+.member-name {
+    color: var(--dark-color);
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+}
+
+.member-role {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    display: inline-block;
+    margin-bottom: 1.5rem;
+    font-size: 1rem;
+}
+
+.member-contacts {
+  margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.lattes-link, .email-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.lattes-link:hover {
+    color: var(--amarelo);
+}
+
+.email-link:hover {
+    color: var(--amarelo);
+}
+
+.contact-icon {
+    width: 24px;
+    height: 24px;
+}
+
+.biography-text {
+    line-height: 1.6;
+    color: var(--dark-color);
+}
+
+.biography-text p {
+    margin-bottom: 1rem;
+}
+
+/* Responsividade */
+@media (max-width: 992px) {
+    .biography-container {
+        margin-left: 0;
+    }
+    
+    .biography-content {
+        flex-direction: column;
+        gap: 2rem;
+    }
+    
+    .biography-photo {
+        flex: 0 0 auto;
+        width: 100%;
+        max-width: 300px;
+        margin: 0 auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .biography-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .biography-title {
+        font-size: 1.5rem;
+    }
+    
+    .member-name {
+        font-size: 1.5rem;
+    }
+}
+
+/* ============ ESTILOS DO BOTÃO EDITAR BIOGRAFIA ============ */
+.biography-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.biography-title-wrapper {
+    flex: 1;
+    min-width: 200px;
+}
+
+.edit-button {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transicao-normal);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: var(--sombra-leve);
+    margin-top: 0.5rem;
+}
+
+.edit-button:hover {
+    background-color: var(--vermelho);
+    transform: translateY(-2px);
+    box-shadow: var(--sombra-media);
+}
+
+.edit-button i {
+    font-size: 1rem;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .biography-header {
+        flex-direction: column;
+    }
+    
+    .edit-button {
+        width: 100%;
+        justify-content: center;
+    }
+}
 /* ============= CONTEÚDO PRINCIPAL ============ */
 .main-panel {
   margin-left: 0;
@@ -527,7 +726,342 @@ body {
   transform: translateY(-2px);
   color: var(--branco);
 }
+/* ============ ESTILOS DOS BOTÕES DE AÇÃO ============ */
+.members-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
 
+.members-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.add-member-button {
+    background-color: var(--verde);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transicao-normal);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: var(--sombra-leve);
+    text-decoration: none;
+}
+
+.delete-member-button {
+    background-color: var(--vermelho);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transicao-normal);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: var(--sombra-leve);
+}
+
+.add-member-button:hover {
+    background-color: var(--amarelo);
+    transform: translateY(-2px);
+    box-shadow: var(--sombra-media);
+}
+
+.delete-member-button:hover {
+    background-color: #c82333;
+    transform: translateY(-2px);
+    box-shadow: var(--sombra-media);
+}
+
+.member-card-wrapper {
+    position: relative;
+}
+
+.member-checkbox {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 20px;
+    height: 20px;
+    z-index: 10;
+    cursor: pointer;
+    accent-color: var(--vermelho);
+}
+
+.member-card-wrapper:hover .member-checkbox {
+    display: block;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .members-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .members-actions {
+        width: 100%;
+    }
+    
+    .add-member-button, .delete-member-button {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* ============ ESTILOS MELHORADOS PARA O FORMULÁRIO ============ */
+.form-group {
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: var(--dark-color);
+  font-size: 0.95rem;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid var(--cinza-medio);
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background-color: white;
+}
+
+/* Estilo dos inputs */
+.form-group input {
+  padding-left: 40px;
+  background-repeat: no-repeat;
+  background-position: 12px center;
+  background-size: 18px;
+}
+
+#nomeMembro {
+  background-image: url('imagens/icon-user.svg');
+}
+
+#emailMembro {
+  background-image: url('imagens/icon-email.svg');
+}
+
+#senhaMembro {
+  background-image: url('imagens/icon-password.svg');
+}
+
+/* Estilo do select premium */
+#cargoMembro {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url('imagens/icon-arrow-down.svg');
+  background-repeat: no-repeat;
+  background-position: right 15px center;
+  background-size: 12px;
+  padding-right: 40px;
+  cursor: pointer;
+}
+
+/* Estilo dos botões */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2.5rem;
+}
+
+.cancel-button,
+.submit-button {
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: none;
+}
+
+.cancel-button {
+  background-color: white;
+  color: var(--vermelho);
+  border: 1px solid var(--vermelho);
+}
+
+.cancel-button:hover {
+  background-color: #ffeeee;
+}
+
+.submit-button {
+  background: linear-gradient(135deg, var(--verde), #006341);
+  color: white;
+  box-shadow: 0 4px 6px rgba(0, 115, 77, 0.2);
+}
+
+.submit-button:hover {
+  background: linear-gradient(135deg, var(--vermelho), var(--amarelo));
+  transform: translateY(-2px);
+  box-shadow: 0 6px 8px rgba(0, 115, 77, 0.3);
+}
+
+/* Efeitos de foco */
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: var(--verde);
+  box-shadow: 0 0 0 2px rgba(0, 135, 81, 0.2);
+}
+
+/* Estilo do file input */
+#fotoMembro {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}
+
+#fotoMembro + label {
+  display: block;
+  padding: 12px 15px;
+  border: 1px dashed var(--cinza-medio);
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background-color: #f9f9f9;
+}
+
+#fotoMembro + label:hover {
+  border-color: var(--verde);
+  background-color: #f0f9f5;
+}
+
+#fotoMembro + label::before {
+  content: '📷 ';
+}
+
+/* Ícones nos botões */
+.cancel-button::before {
+  content: '✕';
+}
+
+.submit-button::before {
+  content: '✓';
+}
+
+/* ============ ESTILOS DO MODAL ============ */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal-container {
+  background-color: white;
+  border-radius: var(--border-radius);
+  box-shadow: var(--sombra-forte);
+  width: 100%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  transform: translateY(-20px);
+  transition: transform 0.3s ease;
+}
+
+.modal-overlay.active .modal-container {
+  transform: translateY(0);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--cinza-medio);
+}
+
+.modal-header h3 {
+  margin: 0;
+  color: var(--primary-color);
+}
+
+.close-modal {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #666;
+}
+
+.modal-body {
+  padding: 1.5rem;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.cancel-button {
+  background-color: var(--cinza-medio);
+  color: var(--dark-color);
+}
+
+.submit-button {
+  background-color: var(--verde);
+  color: white;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+body.modal-open .members-container {
+  filter: blur(2px);
+  opacity: 0.7;
+  pointer-events: none;
+  transition: all 0.3s ease;
+}
 /* ================== LOGIN =================== */
 
 :root {

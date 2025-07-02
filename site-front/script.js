@@ -62,4 +62,50 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     }
+
+    // Modal de Cadastro
+const addMemberButton = document.querySelector('.add-member-button');
+const modalOverlay = document.getElementById('modalCadastro');
+const closeModalButton = document.querySelector('.close-modal');
+const cancelButton = document.querySelector('.cancel-button');
+
+// Abrir modal
+addMemberButton.addEventListener('click', (e) => {
+  e.preventDefault();
+  document.body.classList.add('modal-open');
+  modalOverlay.classList.add('active');
+});
+
+// Fechar modal (3 formas)
+function closeModal() {
+  document.body.classList.remove('modal-open');
+  modalOverlay.classList.remove('active');
+}
+
+closeModalButton.addEventListener('click', closeModal);
+cancelButton.addEventListener('click', closeModal);
+modalOverlay.addEventListener('click', (e) => {
+  if (e.target === modalOverlay) {
+    closeModal();
+  }
+});
+
+// Formulário de cadastro
+document.getElementById('formCadastroMembro').addEventListener('submit', (e) => {
+  e.preventDefault();
+  
+  // Aqui você pode adicionar a lógica para cadastrar o membro
+  // Exemplo básico:
+  const nome = document.getElementById('nomeMembro').value;
+  const email = document.getElementById('emailMembro').value;
+  const cargo = document.getElementById('cargoMembro').value;
+  
+  console.log('Novo membro:', { nome, email, cargo });
+  
+  // Fechar modal após cadastro
+  closeModal();
+  
+  // Mostrar mensagem de sucesso (opcional)
+  alert('Membro cadastrado com sucesso!');
+});
 });
