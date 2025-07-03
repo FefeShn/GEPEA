@@ -63,20 +63,17 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Modal de Cadastro
 const addMemberButton = document.querySelector('.add-member-button');
 const modalOverlay = document.getElementById('modalCadastro');
 const closeModalButton = document.querySelector('.close-modal');
 const cancelButton = document.querySelector('.cancel-button');
 
-// Abrir modal
 addMemberButton.addEventListener('click', (e) => {
   e.preventDefault();
   document.body.classList.add('modal-open');
   modalOverlay.classList.add('active');
 });
 
-// Fechar modal (3 formas)
 function closeModal() {
   document.body.classList.remove('modal-open');
   modalOverlay.classList.remove('active');
@@ -90,22 +87,17 @@ modalOverlay.addEventListener('click', (e) => {
   }
 });
 
-// Formulário de cadastro
 document.getElementById('formCadastroMembro').addEventListener('submit', (e) => {
   e.preventDefault();
   
-  // Aqui você pode adicionar a lógica para cadastrar o membro
-  // Exemplo básico:
   const nome = document.getElementById('nomeMembro').value;
   const email = document.getElementById('emailMembro').value;
   const cargo = document.getElementById('cargoMembro').value;
   
   console.log('Novo membro:', { nome, email, cargo });
   
-  // Fechar modal após cadastro
   closeModal();
   
-  // Mostrar mensagem de sucesso (opcional)
   alert('Membro cadastrado com sucesso!');
 });
 
@@ -117,36 +109,30 @@ document.getElementById('formCadastroMembro').addEventListener('submit', (e) => 
     const closeExcluirModalButton = document.querySelector('#modalExcluirMembro .close-modal');
 
     if (deleteMemberButton && modalExcluirOverlay) {
-        // Abrir modal de exclusão
         deleteMemberButton.addEventListener('click', (e) => {
             e.preventDefault();
             
-            // Verificar se algum membro está selecionado
             const checkboxes = document.querySelectorAll('.member-checkbox:checked');
             if (checkboxes.length === 0) {
                 alert('Por favor, selecione pelo menos um membro para excluir.');
                 return;
             }
             
-            // Mostrar modal de confirmação
             document.body.classList.add('modal-open');
             modalExcluirOverlay.classList.add('active');
         });
 
-        // Fechar modal de exclusão
         function closeDeleteModal() {
             document.body.classList.remove('modal-open');
             modalExcluirOverlay.classList.remove('active');
         }
 
-        // Event listeners para fechar o modal
         if (cancelarExclusaoButton) {
             cancelarExclusaoButton.addEventListener('click', closeDeleteModal);
         }
 
         if (confirmarExclusaoButton) {
             confirmarExclusaoButton.addEventListener('click', () => {
-                // Lógica para excluir membros selecionados
                 const checkboxes = document.querySelectorAll('.member-checkbox:checked');
             
                 closeDeleteModal();
@@ -158,7 +144,6 @@ document.getElementById('formCadastroMembro').addEventListener('submit', (e) => 
             closeExcluirModalButton.addEventListener('click', closeDeleteModal);
         }
 
-        // Fechar modal ao clicar fora
         modalExcluirOverlay.addEventListener('click', (e) => {
             if (e.target === modalExcluirOverlay) {
                 closeDeleteModal();
@@ -166,4 +151,46 @@ document.getElementById('formCadastroMembro').addEventListener('submit', (e) => 
         });
     }
 
+const supportForm = document.getElementById('supportForm');
+const modalConfirmacao = document.getElementById('modalConfirmacao');
+const fecharConfirmacao = document.getElementById('fecharConfirmacao');
+const closeModalBtn = document.querySelector('#modalConfirmacao .close-modal');
+
+function openConfirmationModal() {
+  document.body.classList.add('modal-open');
+  modalConfirmacao.classList.add('active');
+}
+
+function closeConfirmationModal() {
+  document.body.classList.remove('modal-open');
+  modalConfirmacao.classList.remove('active');
+}
+
+if (supportForm) {
+  supportForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const nome = document.getElementById('nome').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const mensagem = document.getElementById('mensagem').value.trim();
+    
+    if (!nome || !email || !mensagem) {
+      alert('Por favor, preencha todos os campos obrigatórios.');
+      return;
+    }
+    
+    openConfirmationModal();
+  });
+}
+
+if (fecharConfirmacao) fecharConfirmacao.addEventListener('click', closeConfirmationModal);
+if (closeModalBtn) closeModalBtn.addEventListener('click', closeConfirmationModal);
+
+if (modalConfirmacao) {
+  modalConfirmacao.addEventListener('click', function(e) {
+    if (e.target === modalConfirmacao) {
+      closeConfirmationModal();
+    }
+  });
+}
 });

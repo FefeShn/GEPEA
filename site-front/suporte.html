@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GEPEA</title>
+  <link rel="shortcut icon" href="imagens/gepea.png" />
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container-scroller">
+    <!-- NAV BAR-->
+    
+    <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+      <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
+        <img src="imagens/gepea.png" alt="logo-gepea" class="logo-nav">
+        <p class="titulo-logo">GEPEA</p>
+      </div>
+      <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
+          <span class="icon-menu"></span>
+        </button>
+        
+
+        <ul class="navbar-nav navbar-nav-right">
+          
+          <li class="nav-item nav-profile dropdown">
+            <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
+              <div class="profile-img">
+                
+              </div>
+            </a>
+            
+          </li>
+        </ul>
+        <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
+          <span class="icon-menu"></span>
+        </button>
+      </div>
+    </nav>
+    <!-- FIM DA NAV BAR -->
+
+      <!-- partial -->
+      <!-- MENU LATERAL -->
+      <button id="botao-menu" aria-label="Abrir menu">☰</button>
+      <nav class="menu-lateral" id="menuLateral">
+        <ul>
+          <li><a href="index-membro.html"><i class="ti-home mr-2"></i>Publicações</a></li>
+          <li><a href="sobre-membro.html"><i class="ti-book mr-2"></i>Sobre o GEPEA</a></li>
+          <li><a href="membros-membro.html"><i class="ti-agenda mr-2"></i>Membros</a></li>
+          <li><a href="biblioteca.html"><i class="ti-agenda mr-2"></i>Biblioteca</a></li>
+          <li><a href="agenda.html"><i class="ti-agenda mr-2"></i>Agenda</a></li>
+          <li><a href="forum.html"><i class="ti-agenda mr-2"></i>Fórum</a></li>
+          <li><a href="suporte.html"><i class="ti-user mr-2"></i>Suporte</a></li>
+        </ul>
+      </nav>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="support-container">
+      <div class="support-header">
+        <h1 class="page-title">Suporte</h1>
+        <p class="page-subtitle">Preencha o formulário abaixo para entrar em contato com nossa equipe</p>
+      </div>
+      
+      <div class="support-form-container">
+        <form id="supportForm">
+          <div class="form-group">
+            <label for="nome">Seu Nome</label>
+            <input type="text" id="nome" placeholder="Digite seu nome completo" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="email">Seu E-mail</label>
+            <input type="email" id="email" placeholder="seu@email.com" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="mensagem">Descrição do Problema/Dúvida</label>
+            <textarea id="mensagem" rows="6" placeholder="Descreva detalhadamente seu problema ou dúvida..." required></textarea>
+          </div>
+          
+          <div class="form-actions">
+            <button type="submit" class="submit-button">
+              <i class="ti-send"></i> Enviar Mensagem
+            </button>
+          </div>
+        </form>
+      </div>
+    </main>
+
+    <!-- Modal de Confirmação -->
+<div class="modal-overlay" id="modalConfirmacao">
+  <div class="modal-container">
+    <div class="modal-header">
+      <h3>Mensagem Enviada!</h3>
+      <button class="close-modal">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="success-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#4CAF50" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+          <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        </svg>
+      </div>
+      <p>Sua mensagem foi enviada com sucesso!</p>
+      <p class="confirmation-text">Nossa equipe entrará em contato pelo e-mail fornecido em breve.</p>
+    </div>
+    <div class="modal-actions">
+      <button class="submit-button" id="fecharConfirmacao">OK</button>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="d-sm-flex justify-content-center justify-content-sm-between">
+    <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">GEPEA © 2023. Todos os direitos reservados.</span>
+  </div>
+</footer>
+  
+  <script src="script.js"></script>
+</body>
+</html>
