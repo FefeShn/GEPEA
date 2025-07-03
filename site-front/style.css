@@ -1259,6 +1259,101 @@ body {
         font-size: 1.3rem;
     }
 }
+/* ============ ESTILOS DA BIBLIOTECA ============ */
+.library-container {
+  padding: 2rem;
+  margin-left: 80px;
+  transition: margin-left 0.3s;
+}
+
+.menu-lateral.ativo + .library-container {
+  margin-left: 250px;
+}
+
+/* CARD LONGO E RETANGULAR */
+.document-card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: var(--sombra-leve);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 140px;
+  padding-left: 100px;
+  padding-right: 100px;
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+  margin: 1rem 0;
+  width: 100%;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+}
+
+/* CONTEÚDO NA ESQUERDA */
+.document-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  flex-grow: 1;
+}
+
+/* BOTÃO NA DIREITA */
+.download-button {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 0.7rem 1.5rem;
+  border-radius: 6px;
+  white-space: nowrap;
+  margin-left: 300px;
+  text-decoration: none;
+}
+
+/* EFEITOS */
+.download-button:hover {
+  background-color: var(--amarelo);
+}
+.document-card:hover {
+  transform: translateY(-5px);
+  background-color: #e1e0e0;
+}
+
+/* RESPONSIVO */
+@media (max-width: 1600px) {
+  .document-card {
+    padding-left: 150px;
+    padding-right: 150px;
+  }
+}
+@media (max-width: 1200px) {
+  .document-card {
+    padding-left: 80px;
+    padding-right: 80px;
+  }
+}
+@media (max-width: 768px) {
+  .library-container {
+    margin-left: 0;
+    padding: 1rem;
+  }
+
+  .menu-lateral.ativo + .library-container {
+    margin-left: 0;
+  }
+
+  .document-card {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1.5rem;
+  }
+
+  .download-button {
+    margin-top: 1rem;
+    margin-left: 0;
+    align-self: flex-end;
+  }
+}
+
 
 /* ============ ESTILOS DA PÁGINA DE SUPORTE ============ */
 /* Estilos para o modal de confirmação */
