@@ -67,15 +67,15 @@ body {
   font-weight: 700;
   font-size: 1.8rem;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
   margin: 0;
   margin-left: 30px;
 }
 
 .logo-nav{
   margin-left: 80px;
-  width: 65px;
-  height: 65px;
+  width: 55px;
+  height: 55px;
 }
 
 .profile-img {
@@ -569,7 +569,7 @@ body {
 
 .sobre-imagem img {
   width: 100%;
-  border-radius: 8px;
+  border-radius: 50%;
   box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 
@@ -973,6 +973,41 @@ body {
 }
 
 /* ============ ESTILOS DO MODAL ============ */
+/* Modal de Confirmação */
+.confirm-modal {
+  max-width: 400px;
+  text-align: center;
+}
+
+.confirm-modal .modal-body p {
+  margin-bottom: 20px;
+  font-size: 16px;
+}
+
+.delete-button {
+  background-color: #ff4444;
+  border: none;
+}
+
+.delete-button:hover {
+  background-color: #cc0000;
+}
+
+/* Estilo para os checkboxes de seleção */
+.member-card-wrapper {
+  position: relative;
+}
+
+.member-checkbox {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 20px;
+  height: 20px;
+  z-index: 10;
+  cursor: pointer;
+}
+
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -998,69 +1033,27 @@ body {
   background-color: white;
   border-radius: var(--border-radius);
   box-shadow: var(--sombra-forte);
-  width: 100%;
+  width: 90%; /* Alterado para 90% para melhor responsividade */
   max-width: 500px;
   max-height: 90vh;
   overflow-y: auto;
   transform: translateY(-20px);
   transition: transform 0.3s ease;
+  position: relative; /* Adicionado */
+  z-index: 1001; /* Garante que fique acima do overlay */
 }
 
 .modal-overlay.active .modal-container {
   transform: translateY(0);
 }
 
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1.5rem;
-  border-bottom: 1px solid var(--cinza-medio);
-}
-
-.modal-header h3 {
-  margin: 0;
-  color: var(--primary-color);
-}
-
-.close-modal {
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  cursor: pointer;
-  color: #666;
-}
-
-.modal-body {
-  padding: 1.5rem;
-}
-
-.modal-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 1rem;
-  margin-top: 2rem;
-}
-
-.cancel-button {
-  background-color: var(--cinza-medio);
-  color: var(--dark-color);
-}
-
-.submit-button {
-  background-color: var(--verde);
-  color: white;
-}
-
 body.modal-open {
   overflow: hidden;
 }
 
-body.modal-open .members-container {
+body.modal-open main:not(.modal-overlay) {
   filter: blur(2px);
-  opacity: 0.7;
-  pointer-events: none;
-  transition: all 0.3s ease;
+  transition: filter 0.3s ease;
 }
 /* ================== LOGIN =================== */
 
@@ -1435,6 +1428,8 @@ body {
         font-size: 1.5rem;
     }
 }
+
+
 
 /* ================== FOOTER =================== */
 .footer {

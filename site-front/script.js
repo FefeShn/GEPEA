@@ -108,4 +108,62 @@ document.getElementById('formCadastroMembro').addEventListener('submit', (e) => 
   // Mostrar mensagem de sucesso (opcional)
   alert('Membro cadastrado com sucesso!');
 });
+
+// Modal de Exclusão de Membro - NOVO CÓDIGO ADICIONADO
+    const deleteMemberButton = document.querySelector('.delete-member-button');
+    const modalExcluirOverlay = document.getElementById('modalExcluirMembro');
+    const cancelarExclusaoButton = document.getElementById('cancelarExclusao');
+    const confirmarExclusaoButton = document.getElementById('confirmarExclusao');
+    const closeExcluirModalButton = document.querySelector('#modalExcluirMembro .close-modal');
+
+    if (deleteMemberButton && modalExcluirOverlay) {
+        // Abrir modal de exclusão
+        deleteMemberButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            
+            // Verificar se algum membro está selecionado
+            const checkboxes = document.querySelectorAll('.member-checkbox:checked');
+            if (checkboxes.length === 0) {
+                alert('Por favor, selecione pelo menos um membro para excluir.');
+                return;
+            }
+            
+            // Mostrar modal de confirmação
+            document.body.classList.add('modal-open');
+            modalExcluirOverlay.classList.add('active');
+        });
+
+        // Fechar modal de exclusão
+        function closeDeleteModal() {
+            document.body.classList.remove('modal-open');
+            modalExcluirOverlay.classList.remove('active');
+        }
+
+        // Event listeners para fechar o modal
+        if (cancelarExclusaoButton) {
+            cancelarExclusaoButton.addEventListener('click', closeDeleteModal);
+        }
+
+        if (confirmarExclusaoButton) {
+            confirmarExclusaoButton.addEventListener('click', () => {
+                // Lógica para excluir membros selecionados
+                const checkboxes = document.querySelectorAll('.member-checkbox:checked');
+            
+                closeDeleteModal();
+                alert(`${checkboxes.length} membro(s) excluído(s) com sucesso!`);
+            });
+        }
+
+        if (closeExcluirModalButton) {
+            closeExcluirModalButton.addEventListener('click', closeDeleteModal);
+        }
+
+        // Fechar modal ao clicar fora
+        modalExcluirOverlay.addEventListener('click', (e) => {
+            if (e.target === modalExcluirOverlay) {
+                closeDeleteModal();
+            }
+        });
+    }
+
 });
