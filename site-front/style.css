@@ -1309,11 +1309,19 @@ body.modal-open main:not(.modal-overlay) {
     padding: 0;
 }
 
-body {
-    font-family: 'Poppins', 'Segoe UI', sans-serif;
-    background-color: var(--gray-light);
-    color: var(--dark-color);
-    line-height: 1.6;
+.body-login {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    background-image: url('https://img.freepik.com/vetores-premium/ornamento-de-choque-tribal-etnico-africano-sem-costura-de-fundo-linhas-simples-triangulos_499817-1131.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.login-container {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -1321,18 +1329,27 @@ body {
     padding: 20px;
 }
 
-.login-container {
-  margin-top: 5%;
-    width: 100%;
-    max-width: 400px;
+.login-container::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.3); /* Overlay escuro semi-transparente */
+    z-index: 0;
 }
 
 .login-card {
-    background: var(--light-color);
-    border-radius: var(--border-radius);
-    box-shadow: var(--box-shadow);
+    background-color: rgba(255, 255, 255, 0.92); /* Fundo semi-transparente */
+    backdrop-filter: blur(5px); /* Efeito de desfoque no fundo */
+    border-radius: 10px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
     padding: 40px;
     width: 100%;
+    max-width: 450px;
+    position: relative;
+    z-index: 1;
 }
 
 .logo-container {
@@ -1477,6 +1494,20 @@ body {
     cursor: pointer;
     transition: var(--transition);
 }
+.login-button-adm {
+    width: 100%;
+    padding: 14px;
+    background-color: var(--amarelo);
+    color: var(--preto);
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    text-decoration: none;
+    margin-bottom: 10px;
+}
 
 .login-button:hover {
     background-color: #007544;
@@ -1617,9 +1648,20 @@ body {
 }
 
 .support-container {
-  padding: 2rem;
+    padding: 2rem;
   max-width: 800px;
   margin: 0 auto;
+}
+
+.support-container::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.3); /* Overlay escuro semi-transparente */
+    z-index: 0;
 }
 
 .support-header {
@@ -1637,6 +1679,8 @@ body {
   padding: 2rem;
   border-radius: var(--border-radius);
   box-shadow: var(--sombra-leve);
+      backdrop-filter: blur(5px); /* Efeito de desfoque no fundo */
+
 }
 
 .support-form-container .form-group {
