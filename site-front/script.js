@@ -83,65 +83,57 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     };
 
-    // Modal de Exclusão - Versão Refatorada
-const setupExclusaoModal = () => {
-    const deleteButton = document.getElementById('openDeleteModal');
-    const modalExcluirOverlay = document.getElementById('modalExcluirMembro');
-    
-    if (!deleteButton || !modalExcluirOverlay) {
-        console.error('Elementos do modal de exclusão não encontrados!');
-        return;
-    }
-
-    const closeModal = () => {
-        document.body.classList.remove('modal-open');
-        modalExcluirOverlay.classList.remove('active');
-        document.body.style.overflow = '';
-    };
-
-    const openModal = () => {
-        const checkboxes = document.querySelectorAll('.file-checkbox:checked');
-        if (checkboxes.length === 0) {
-            alert('Por favor, selecione pelo menos um arquivo para excluir.');
+    // Modal de Exclusão
+    const setupExclusaoModal = () => {
+        const deleteButton = document.getElementById('openDeleteModal');
+        const modalExcluirOverlay = document.getElementById('modalExcluirMembro');
+        
+        if (!deleteButton || !modalExcluirOverlay) {
+            console.error('Elementos do modal de exclusão não encontrados!');
             return;
         }
-        document.body.classList.add('modal-open');
-        modalExcluirOverlay.classList.add('active');
-        document.body.style.overflow = 'hidden';
-    };
 
-    deleteButton.addEventListener('click', (e) => {
-        e.preventDefault();
-        openModal();
-    });
+        const closeModal = () => {
+            document.body.classList.remove('modal-open');
+            modalExcluirOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        };
 
-    // Event Listeners para fechar modal
-    document.getElementById('cancelarExclusao')?.addEventListener('click', closeModal);
-    document.querySelector('#modalExcluirMembro .modal-close')?.addEventListener('click', closeModal);
+        const openModal = () => {
+            const checkboxes = document.querySelectorAll('.file-checkbox:checked');
+            if (checkboxes.length === 0) {
+                alert('Por favor, selecione pelo menos um arquivo para excluir.');
+                return;
+            }
+            document.body.classList.add('modal-open');
+            modalExcluirOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        };
 
-    // Fechar modal ao clicar no overlay ou pressionar ESC
-    modalExcluirOverlay.addEventListener('click', (e) => {
-        if (e.target === modalExcluirOverlay) closeModal();
-    });
+        deleteButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            openModal();
+        });
 
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && modalExcluirOverlay.classList.contains('active')) {
+        document.getElementById('cancelarExclusao')?.addEventListener('click', closeModal);
+        document.querySelector('#modalExcluirMembro .modal-close')?.addEventListener('click', closeModal);
+
+        modalExcluirOverlay.addEventListener('click', (e) => {
+            if (e.target === modalExcluirOverlay) closeModal();
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && modalExcluirOverlay.classList.contains('active')) {
+                closeModal();
+            }
+        });
+
+        document.getElementById('confirmarExclusao')?.addEventListener('click', () => {
+            const checkboxes = document.querySelectorAll('.file-checkbox:checked');
+            alert(`${checkboxes.length} arquivo(s) excluído(s) com sucesso!`);
             closeModal();
-        }
-    });
-
-    document.getElementById('confirmarExclusao')?.addEventListener('click', () => {
-        const checkboxes = document.querySelectorAll('.file-checkbox:checked');
-        alert(`${checkboxes.length} arquivo(s) excluído(s) com sucesso!`);
-        closeModal();
-        
-        // Aqui você pode adicionar a lógica real de exclusão
-        // checkboxes.forEach(checkbox => {
-        //     const fileId = checkbox.dataset.fileId;
-        //     // Chamada AJAX para excluir o arquivo
-        // });
-    });
-};
+        });
+    };
 
     // Modal de Suporte
     const setupSupportModal = () => {
@@ -216,9 +208,68 @@ const setupExclusaoModal = () => {
         });
     };
 
-    // Inicializa todos os modais
-    setupCadastroModal();
-    setupExclusaoModal();
-    setupSupportModal();
-    setupUploadModal();
+const setupCarousel = () => {
+  const carousel = document.querySelector('#carouselExample');
+  if (!carousel) return;
+
+  const items = carousel.querySelectorAll('.carousel-item');
+  if (items.length === 0) return;
+
+  let currentIndex = 0;
+  let isTransitioning = false;
+  
+  function showItem(index) {
+    if (isTransitioning || index === currentIndex) return;
+    
+    isTransitioning = true;
+    
+    items[currentIndex].classList.remove('active');
+    items[index].classList.add('active');
+    
+    updateIndicators(index);
+    
+    currentIndex = index;
+    
+    setTimeout(() => {
+      isTransitioning = false;
+    }, 800);
+  }
+  
+  function updateIndicators(index) {
+    const indicators = document.querySelectorAll('.carousel-indicator');
+    indicators.forEach((indicator, i) => {
+      indicator.classList.toggle('active', i === index);
+    });
+  }
+  
+  carousel.querySelector('.carousel-control-next')?.addEventListener('click', () => {
+    const nextIndex = (currentIndex + 1) % items.length;
+    showItem(nextIndex);
+  });
+  
+  carousel.querySelector('.carousel-control-prev')?.addEventListener('click', () => {
+    const prevIndex = (currentIndex - 1 + items.length) % items.length;
+    showItem(prevIndex);
+  });
+  
+  const indicatorsContainer = document.createElement('div');
+  indicatorsContainer.className = 'carousel-indicators';
+  
+  items.forEach((_, index) => {
+    const indicator = document.createElement('button');
+    indicator.className = `carousel-indicator ${index === 0 ? 'active' : ''}`;
+    indicator.addEventListener('click', () => showItem(index));
+    indicatorsContainer.appendChild(indicator);
+  });
+  
+  carousel.appendChild(indicatorsContainer);
+  
+  showItem(0);
+};
+
+setupCadastroModal();
+setupExclusaoModal();
+setupSupportModal();
+setupUploadModal();
+setupCarousel(); 
 });
