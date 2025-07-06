@@ -1448,6 +1448,218 @@ body {
 .modal-publicacao-submit:hover {
   background-color: #3e8e41;
 }
+
+/*==================== TELA DE AGENDA =======================*/
+.fc-toolbar h2 {
+  font-size: 1.5rem;
+  margin: 0;
+}
+
+/* Adicione no seu CSS */
+#calendar {
+  min-height: 650px; /* Altura mínima garantida */
+  margin: 0 auto;
+}
+
+.fc {
+  width: 100%;
+  height: 100%;
+}
+
+/* Garanta que o container principal não está escondendo o calendário */
+.main-panel {
+  overflow: visible;
+}
+
+.content-wrapper {
+  min-height: calc(100vh - 120px);
+}
+
+.fc-event {
+  font-size: 0.85em;
+  padding: 2px 4px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.modal-evento-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-evento-overlay.active {
+  display: flex;
+}
+
+.modal-evento-container {
+  background-color: white;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+}
+
+#calendar {
+  width: 100%;
+  background-color: #FFFFFF;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  padding: 20px;
+  margin-top: 20px;
+  
+}
+
+.fc-event {
+  font-size: 0.85em;
+  padding: 2px 4px;
+  cursor: pointer;
+}
+
+.fc-day-grid-event .fc-content {
+  white-space: normal;
+}
+
+.fc-button {
+  background-color: var(--verde) !important;
+  border-color: var(--verde) !important;
+  color: white !important;
+  text-transform: capitalize;
+  padding: 6px 12px !important;
+}
+
+.fc-button:hover {
+  background-color: var(--amarelo) !important;
+  border-color: var(--amarelo) !important;
+}
+
+.fc-button-active {
+  background-color: #2d6a30 !important;
+  border-color: #2d6a30 !important;
+}
+
+.fc-today {
+  background-color: #d1ffc6 !important;
+}
+
+.fc-event.important {
+  background-color: #f44336;
+  border-color: #f44336;
+}
+
+.fc-event.info {
+  background-color: #2196F3;
+  border-color: #2196F3;
+}
+
+.fc-event.success {
+  background-color: #4CAF50;
+  border-color: #4CAF50;
+}
+.fc-event.warning {
+  background-color: var(--amarelo);
+  border-color: var(--amarelo);
+}
+.fc-event.rosa {
+  background-color: #ef3d96;
+  border-color: #ef3d96;
+}
+.fc-event.roxo {
+  background-color: #6f42c1;
+  border-color: #6f42c1;
+}
+
+
+/* Modal de Evento */
+.modal-evento-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-evento-overlay.active {
+  display: flex;
+}
+
+.modal-evento-container {
+  background-color: white;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+  animation: modalFadeIn 0.3s ease;
+}
+
+@keyframes modalFadeIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.modal-evento-header {
+  padding: 15px 20px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-evento-header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #333;
+}
+
+.modal-evento-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #777;
+}
+
+.modal-evento-content {
+  padding: 20px;
+}
+
+.modal-evento-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid #eee;
+}
+
+.btn-cancelar {
+  background-color: var(--vermelho);
+  color: #ffffff;
+}
+.btn-cancelar:hover {
+  background-color:#880000;
+  color: #ffffff;
+}
+
+.btn-salvar {
+  background-color: #4CAF50;
+  color: white;
+}
+.btn-salvar:hover {
+  background-color: var(--amarelo);
+  color: white;
+}
+
 /* ============ MODAL DE UPLOAD ============ */
 .modal-overlay {
   position: fixed;

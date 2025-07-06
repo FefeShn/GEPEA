@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // ============ FUNÇÕES GERAIS ============
+    
     // Menu Lateral
     const botaoMenu = document.getElementById('botao-menu');
     const menuLateral = document.getElementById('menuLateral');
@@ -45,6 +47,8 @@ document.addEventListener('DOMContentLoaded', function() {
             setTimeout(() => this.style.transform = '', 200);
         });
     });
+
+    // ============ FUNÇÕES DE MODAIS ============
 
     // Modal de Cadastro
     const setupCadastroModal = () => {
@@ -208,122 +212,252 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     };
 
-const setupCarousel = () => {
-  const carousel = document.querySelector('#carouselExample');
-  if (!carousel) return;
+    // Modal de Publicação
+    const setupPublicacaoModal = () => {
+        const btnAdicionar = document.querySelector('.btn-adicionar');
+        const modalPublicacao = document.getElementById('modalPublicacao');
+        
+        if (!btnAdicionar || !modalPublicacao) return;
 
-  const items = carousel.querySelectorAll('.carousel-item');
-  if (items.length === 0) return;
+        const closeModal = () => {
+            modalPublicacao.classList.remove('active');
+            document.body.style.overflow = '';
+        };
 
-  let currentIndex = 0;
-  let isTransitioning = false;
-  
-  function showItem(index) {
-    if (isTransitioning || index === currentIndex) return;
-    
-    isTransitioning = true;
-    
-    items[currentIndex].classList.remove('active');
-    items[index].classList.add('active');
-    
-    updateIndicators(index);
-    
-    currentIndex = index;
-    
-    setTimeout(() => {
-      isTransitioning = false;
-    }, 800);
-  }
-  
-  function updateIndicators(index) {
-    const indicators = document.querySelectorAll('.carousel-indicator');
-    indicators.forEach((indicator, i) => {
-      indicator.classList.toggle('active', i === index);
-    });
-  }
-  
-  carousel.querySelector('.carousel-control-next')?.addEventListener('click', () => {
-    const nextIndex = (currentIndex + 1) % items.length;
-    showItem(nextIndex);
-  });
-  
-  carousel.querySelector('.carousel-control-prev')?.addEventListener('click', () => {
-    const prevIndex = (currentIndex - 1 + items.length) % items.length;
-    showItem(prevIndex);
-  });
-  
-  const indicatorsContainer = document.createElement('div');
-  indicatorsContainer.className = 'carousel-indicators';
-  
-  items.forEach((_, index) => {
-    const indicator = document.createElement('button');
-    indicator.className = `carousel-indicator ${index === 0 ? 'active' : ''}`;
-    indicator.addEventListener('click', () => showItem(index));
-    indicatorsContainer.appendChild(indicator);
-  });
-  
-  carousel.appendChild(indicatorsContainer);
-  
-  showItem(0);
-};
+        const openModal = () => {
+            const dataAtual = new Date();
+            const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+            document.getElementById('dataAtual').textContent = dataAtual.toLocaleDateString('pt-BR', options);
+            
+            modalPublicacao.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        };
 
-const setupPublicacaoModal = () => {
-  const btnAdicionar = document.querySelector('.btn-adicionar');
-  const modalPublicacao = document.getElementById('modalPublicacao');
-  
-  if (!btnAdicionar || !modalPublicacao) return;
+        btnAdicionar.addEventListener('click', openModal);
 
-  const closeModal = () => {
-    modalPublicacao.classList.remove('active');
-    document.body.style.overflow = '';
-  };
+        document.querySelectorAll('.modal-publicacao-close, .modal-publicacao-cancel').forEach(btn => {
+            btn.addEventListener('click', closeModal);
+        });
 
-  const openModal = () => {
-    const dataAtual = new Date();
-    const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
-    document.getElementById('dataAtual').textContent = dataAtual.toLocaleDateString('pt-BR', options);
-    
-    modalPublicacao.classList.add('active');
-    document.body.style.overflow = 'hidden';
-  };
+        modalPublicacao.addEventListener('click', (e) => {
+            if (e.target === modalPublicacao) closeModal();
+        });
 
-  btnAdicionar.addEventListener('click', openModal);
+        document.getElementById('formPublicacao')?.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const titulo = document.getElementById('tituloPublicacao').value;
+            const resumo = document.getElementById('resumoPublicacao').value;
+            const imagem = document.getElementById('imagemPublicacao').files[0];
+            
+            console.log('Nova publicação:', { titulo, resumo, imagem });
+            alert('Publicação criada com sucesso!');
+            
+            e.target.reset();
+            closeModal();
+        });
 
-  document.querySelectorAll('.modal-publicacao-close, .modal-publicacao-cancel').forEach(btn => {
-    btn.addEventListener('click', closeModal);
-  });
+        document.getElementById('imagemPublicacao')?.addEventListener('change', function() {
+            const label = this.nextElementSibling;
+            if (this.files.length > 0) {
+                label.textContent = this.files[0].name;
+            } else {
+                label.innerHTML = '<i class="ti-image mr-2"></i>Selecione uma imagem';
+            }
+        });
+    };
 
-  modalPublicacao.addEventListener('click', (e) => {
-    if (e.target === modalPublicacao) closeModal();
-  });
+    // Carrossel
+    const setupCarousel = () => {
+        const carousel = document.querySelector('#carouselExample');
+        if (!carousel) return;
 
-  document.getElementById('formPublicacao')?.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const titulo = document.getElementById('tituloPublicacao').value;
-    const resumo = document.getElementById('resumoPublicacao').value;
-    const imagem = document.getElementById('imagemPublicacao').files[0];
-    
-    console.log('Nova publicação:', { titulo, resumo, imagem });
-    alert('Publicação criada com sucesso!');
-    
-    e.target.reset();
-    closeModal();
-  });
+        const items = carousel.querySelectorAll('.carousel-item');
+        if (items.length === 0) return;
 
-  document.getElementById('imagemPublicacao')?.addEventListener('change', function() {
-    const label = this.nextElementSibling;
-    if (this.files.length > 0) {
-      label.textContent = this.files[0].name;
-    } else {
-      label.innerHTML = '<i class="ti-image mr-2"></i>Selecione uma imagem';
+        let currentIndex = 0;
+        let isTransitioning = false;
+        
+        function showItem(index) {
+            if (isTransitioning || index === currentIndex) return;
+            
+            isTransitioning = true;
+            
+            items[currentIndex].classList.remove('active');
+            items[index].classList.add('active');
+            
+            updateIndicators(index);
+            
+            currentIndex = index;
+            
+            setTimeout(() => {
+                isTransitioning = false;
+            }, 800);
+        }
+        
+        function updateIndicators(index) {
+            const indicators = document.querySelectorAll('.carousel-indicator');
+            indicators.forEach((indicator, i) => {
+                indicator.classList.toggle('active', i === index);
+            });
+        }
+        
+        carousel.querySelector('.carousel-control-next')?.addEventListener('click', () => {
+            const nextIndex = (currentIndex + 1) % items.length;
+            showItem(nextIndex);
+        });
+        
+        carousel.querySelector('.carousel-control-prev')?.addEventListener('click', () => {
+            const prevIndex = (currentIndex - 1 + items.length) % items.length;
+            showItem(prevIndex);
+        });
+        
+        const indicatorsContainer = document.createElement('div');
+        indicatorsContainer.className = 'carousel-indicators';
+        
+        items.forEach((_, index) => {
+            const indicator = document.createElement('button');
+            indicator.className = `carousel-indicator ${index === 0 ? 'active' : ''}`;
+            indicator.addEventListener('click', () => showItem(index));
+            indicatorsContainer.appendChild(indicator);
+        });
+        
+        carousel.appendChild(indicatorsContainer);
+        
+        showItem(0);
+    };
+
+    // ============ FUNÇÕES DA AGENDA ============
+
+    // Inicializa o calendário com tratamento de erros
+    if (document.getElementById('calendar')) {
+        try {
+            console.log('Inicializando FullCalendar...');
+            
+            // Verifique se jQuery e FullCalendar estão carregados
+            if (!window.jQuery || !$.fullCalendar) {
+                throw new Error('Bibliotecas necessárias não carregadas');
+            }
+
+            var calendar = $('#calendar').fullCalendar({
+                header: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'month,agendaWeek,agendaDay'
+                },
+                defaultView: 'month',
+                locale: 'pt-br',
+                editable: true,
+                selectable: true,
+                eventLimit: true,
+                height: 'auto',
+                contentHeight: 'auto',
+                events: [
+                    {
+                        title: 'Reunião de Planejamento',
+                        start: new Date(),
+                        className: 'important'
+                    },
+                    {
+                        title: 'Evento Semanal',
+                        start: moment().add(3, 'days').hour(14).minute(0),
+                        end: moment().add(3, 'days').hour(16).minute(0),
+                        className: 'info'
+                    }
+                ],
+                select: function(start, end) {
+                    abrirModalEvento({
+                        start: start,
+                        end: end
+                    });
+                },
+                eventClick: function(event) {
+                    abrirModalEvento(event);
+                }
+            });
+
+            console.log('Calendário inicializado com sucesso!');
+        } catch (error) {
+            console.error('Erro ao inicializar calendário:', error);
+            // Mostra mensagem de erro para o usuário
+            $('#calendar').html('<div class="alert alert-danger">Erro ao carregar o calendário. Recarregue a página.</div>');
+        }
+
+        // Elementos do modal de evento
+        const modalEvento = document.getElementById('modalEvento');
+        const modalTitulo = document.getElementById('modalEventoTitulo');
+        const formEvento = document.getElementById('formEvento');
+        const tituloInput = document.getElementById('tituloEvento');
+        const dataInicioInput = document.getElementById('dataInicio');
+        const dataFimInput = document.getElementById('dataFim');
+        const corSelect = document.getElementById('corEvento');
+        const btnCancelar = document.querySelector('.btn-cancelar');
+        const btnFechar = document.querySelector('.modal-evento-close');
+        const btnAdicionarEvento = document.getElementById('adicionarEvento');
+
+        // Função para abrir o modal de evento
+        function abrirModalEvento(evento) {
+            modalTitulo.textContent = evento.title ? 'Editar Evento' : 'Novo Evento';
+            tituloInput.value = evento.title || '';
+            dataInicioInput.value = moment(evento.start).format('YYYY-MM-DDTHH:mm');
+            dataFimInput.value = evento.end ? moment(evento.end).format('YYYY-MM-DDTHH:mm') : '';
+            corSelect.value = evento.className || '';
+            
+            modalEvento.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            formEvento.dataset.eventoId = evento.id || '';
+        }
+
+        // Fechar modal de evento
+        function fecharModalEvento() {
+            modalEvento.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Event listeners do modal de evento
+        btnCancelar.addEventListener('click', fecharModalEvento);
+        btnFechar.addEventListener('click', fecharModalEvento);
+        modalEvento.addEventListener('click', (e) => {
+            if (e.target === modalEvento) fecharModalEvento();
+        });
+
+        // Submit do formulário de evento
+        formEvento.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const novoEvento = {
+                title: tituloInput.value,
+                start: dataInicioInput.value,
+                end: dataFimInput.value || null,
+                className: corSelect.value || ''
+            };
+
+            if (formEvento.dataset.eventoId) {
+                novoEvento.id = formEvento.dataset.eventoId;
+                calendar.fullCalendar('updateEvent', novoEvento);
+            } else {
+                calendar.fullCalendar('renderEvent', novoEvento, true);
+            }
+
+            fecharModalEvento();
+        });
+
+        // Botão Adicionar Evento
+        if (btnAdicionarEvento) {
+            btnAdicionarEvento.addEventListener('click', () => {
+                abrirModalEvento({
+                    start: new Date(),
+                    end: moment().add(1, 'hour').toDate()
+                });
+            });
+        }
     }
-  });
-};
 
-setupPublicacaoModal();
-setupCadastroModal();
-setupExclusaoModal();
-setupSupportModal();
-setupUploadModal();
-setupCarousel(); 
+    // ============ INICIALIZAÇÃO ============
+    setupPublicacaoModal();
+    setupCadastroModal();
+    setupExclusaoModal();
+    setupSupportModal();
+    setupUploadModal();
+    setupCarousel();
 });
