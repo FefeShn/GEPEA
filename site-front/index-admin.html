@@ -12,7 +12,7 @@
 </head>
 
 <body>
-  
+
   <div class="container-scroller">
     <!-- NAV BAR -->
     <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
@@ -21,11 +21,17 @@
         <p class="titulo-logo">GEPEA</p>
       </div>
       <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
+        <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+          <span class="icon-menu"></span>
+        </button>
         
         <ul class="navbar-nav mr-lg-2">
           <li class="nav-item nav-search d-none d-lg-block">
             <div class="input-group busca-box">
             <div class="input-group-prepend" id="navbar-search-icon">
+              <span class="input-group-text" id="search">
+                <i class="icon-search"></i>
+              </span>
               
             </div>
             <input type="text" class="form-control busca" id="navbar-search-input" placeholder="Busca" aria-label="search" aria-describedby="search">
@@ -34,7 +40,7 @@
         </ul>
 
         <ul class="navbar-nav navbar-nav-right">
-          
+
           <li class="nav-item nav-profile dropdown">
             <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
               <div class="profile-img">
@@ -97,7 +103,7 @@
                     </div>
                 </div>
                 </div>
-                
+
               </div>
             </div>
           </div>
@@ -114,8 +120,8 @@
                   <h5 class="card-title">Reunião de Leitura</h5>
                   <p class="card-text">Reunião de leitura para discutir o capítulo do livro "Pensamento Feminista Negro", de Patricia Hill Collins.</p>
                   <div class="mt-auto d-flex justify-content-between align-items-center">
-                    <a href="#" class="btn btn-success">Ver detalhes</a>
-                    
+                    <a href="publicacao1.html" class="btn btn-success">Ver detalhes</a>
+
                   </div>
                 </div>
               </div>
@@ -132,7 +138,7 @@
                   <h5 class="card-title">Inauguração de Espaços Afrocentrados</h5>
                   <p class="card-text">Evento de inauguração que contou com a presença de artistas locais.</p>
                   <div class="mt-auto d-flex justify-content-between align-items-center">
-                    <a href="#" class="btn btn-success">Ver detalhes</a>
+                    <a href="publicacao2.html" class="btn btn-success">Ver detalhes</a>
                   </div>
                 </div>
               </div>
@@ -149,13 +155,53 @@
                   <h5 class="card-title">Reunião presencial em Alvorada</h5>
                   <p class="card-text">Membros do GEPEA e bolsistas do grupo se reuniram em Alvorada para planejar próximos passos.</p>
                   <div class="mt-auto d-flex justify-content-between align-items-center">
-                    <a href="#" class="btn btn-success">Ver detalhes</a>
+                    <a href="publicacao3.html" class="btn btn-success">Ver detalhes</a>
                   </div>
                 </div>
               </div>
             </div>
           </div>
+
+          <!-- Modal de Adicionar Publicação -->
+          <div class="modal-publicacao-overlay" id="modalPublicacao">
+            <div class="modal-publicacao-container">
+              <div class="modal-publicacao-header">
+                <h3>Nova Publicação</h3>
+                <button class="modal-publicacao-close">&times;</button>
+              </div>
+              <div class="modal-publicacao-content">
+                <form id="formPublicacao">
+                  <div class="form-group-publicacao">
+                    <label for="tituloPublicacao">Título</label>
+                    <input type="text" id="tituloPublicacao" placeholder="Digite o título da publicação" required>
+                  </div>
         
+                  <div class="form-group-publicacao">
+                    <label for="resumoPublicacao">Resumo</label>
+                    <textarea id="resumoPublicacao" placeholder="Digite um resumo da publicação" required></textarea>
+                  </div>
+        
+                  <div class="form-group-publicacao">
+                    <label for="imagemPublicacao">Imagem</label>
+                    <input type="file" id="imagemPublicacao" accept="image/*">
+                    <label for="imagemPublicacao" class="file-upload-label">
+                      <i class="ti-image mr-2"></i>Selecione uma imagem
+                    </label>
+                  </div>
+        
+                  <div class="data-atual-publicacao">
+                    Data da publicação: <span id="dataAtual"></span>
+                  </div>
+        
+                  <div class="modal-publicacao-actions">
+                    <button type="button" class="modal-publicacao-cancel">Cancelar</button>
+                    <button type="submit" class="modal-publicacao-submit">Publicar</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          
         <!-- FOOTER -->
         <footer class="footer">
           <div class="d-sm-flex justify-content-center justify-content-sm-between">
@@ -168,5 +214,3 @@
   </div>
   <script src="script.js"></script>
 </body>
-
-</html>

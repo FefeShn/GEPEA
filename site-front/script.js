@@ -267,6 +267,60 @@ const setupCarousel = () => {
   showItem(0);
 };
 
+const setupPublicacaoModal = () => {
+  const btnAdicionar = document.querySelector('.btn-adicionar');
+  const modalPublicacao = document.getElementById('modalPublicacao');
+  
+  if (!btnAdicionar || !modalPublicacao) return;
+
+  const closeModal = () => {
+    modalPublicacao.classList.remove('active');
+    document.body.style.overflow = '';
+  };
+
+  const openModal = () => {
+    const dataAtual = new Date();
+    const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+    document.getElementById('dataAtual').textContent = dataAtual.toLocaleDateString('pt-BR', options);
+    
+    modalPublicacao.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  };
+
+  btnAdicionar.addEventListener('click', openModal);
+
+  document.querySelectorAll('.modal-publicacao-close, .modal-publicacao-cancel').forEach(btn => {
+    btn.addEventListener('click', closeModal);
+  });
+
+  modalPublicacao.addEventListener('click', (e) => {
+    if (e.target === modalPublicacao) closeModal();
+  });
+
+  document.getElementById('formPublicacao')?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const titulo = document.getElementById('tituloPublicacao').value;
+    const resumo = document.getElementById('resumoPublicacao').value;
+    const imagem = document.getElementById('imagemPublicacao').files[0];
+    
+    console.log('Nova publicação:', { titulo, resumo, imagem });
+    alert('Publicação criada com sucesso!');
+    
+    e.target.reset();
+    closeModal();
+  });
+
+  document.getElementById('imagemPublicacao')?.addEventListener('change', function() {
+    const label = this.nextElementSibling;
+    if (this.files.length > 0) {
+      label.textContent = this.files[0].name;
+    } else {
+      label.innerHTML = '<i class="ti-image mr-2"></i>Selecione uma imagem';
+    }
+  });
+};
+
+setupPublicacaoModal();
 setupCadastroModal();
 setupExclusaoModal();
 setupSupportModal();

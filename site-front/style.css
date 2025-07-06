@@ -767,6 +767,83 @@ body {
   transform: scale(1.2);
 }
 
+/* Estilos do Modal */
+.modal-content {
+  border-radius: 10px;
+  border: none;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
+  padding: 15px 20px;
+}
+
+.modal-title {
+  color: #333;
+  font-weight: bold;
+  font-size: 1.25rem;
+}
+
+.modal-body {
+  padding: 20px;
+}
+
+.modal-footer {
+  border-top: 1px solid #dee2e6;
+  padding: 15px 20px;
+}
+
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+.form-group label {
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.form-control {
+  border-radius: 4px;
+  border: 1px solid #ced4da;
+  padding: 0.5rem 0.75rem;
+  width: 100%;
+}
+
+.custom-file-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.data-atual {
+  font-weight: bold;
+  color: #495057;
+  padding: 0.375rem 0.75rem;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.btn-primary:hover {
+  background-color: #0069d9;
+  border-color: #0062cc;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  border-color: #6c757d;
+}
+
+.btn-secondary:hover {
+  background-color: #5a6268;
+  border-color: #545b62;
+}
+
 /* ===== ESTILOS DO TEXTO ===== */
 .sobre-texto {
   max-width: 800px;
@@ -1167,7 +1244,210 @@ body {
 .btn-danger:hover {
   background-color: #c0392b;
 }
+/* ============ MODAL PUBLICAÇÃO ============ */
+.modal-publicacao-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
 
+.modal-publicacao-overlay.active {
+  display: flex;
+}
+
+.modal-publicacao-container {
+  background-color: white;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+  animation: modalFadeIn 0.3s ease;
+}
+
+@keyframes modalFadeIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.modal-publicacao-header {
+  padding: 15px 20px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-publicacao-header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #333;
+}
+
+.modal-publicacao-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #777;
+}
+
+.modal-publicacao-content {
+  padding: 20px;
+}
+
+/* Formulário */
+.form-group-publicacao {
+  margin-bottom: 15px;
+}
+
+.form-group-publicacao label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.form-group-publicacao input[type="text"],
+.form-group-publicacao textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.form-group-publicacao textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.data-atual-publicacao {
+  padding: 10px;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+  color: #555;
+  font-size: 0.9rem;
+}
+
+/* File Upload */
+.form-group-publicacao input[type="file"] {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  position: absolute;
+}
+
+.file-upload-label {
+  display: block;
+  padding: 10px;
+  border: 1px dashed #ccc;
+  border-radius: 4px;
+  text-align: center;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.file-upload-label:hover {
+  border-color: #4CAF50;
+}
+
+/* Botões */
+.modal-publicacao-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.modal-publicacao-cancel,
+.modal-publicacao-submit {
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  border: none;
+}
+
+.modal-publicacao-cancel {
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+.modal-publicacao-submit {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.modal-publicacao-submit:hover {
+  background-color: #3e8e41;
+}
+
+/* Estilos adicionais para o modal de publicação */
+.file-upload-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 15px;
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: #555;
+  transition: all 0.3s ease;
+}
+
+.file-upload-label:hover {
+  border-color: #4CAF50;
+  background-color: #f8f8f8;
+}
+
+.file-upload-label i {
+  margin-right: 8px;
+  font-size: 1.2rem;
+}
+
+.data-atual-publicacao {
+  padding: 12px;
+  background-color: #f5f5f5;
+  border-radius: 6px;
+  color: #555;
+  font-size: 0.9rem;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.modal-publicacao-actions {
+  padding-top: 15px;
+  border-top: 1px solid #eee;
+}
+
+.modal-publicacao-cancel {
+  background-color: #f5f5f5;
+  color: #333;
+  transition: all 0.3s ease;
+}
+
+.modal-publicacao-cancel:hover {
+  background-color: #e0e0e0;
+}
+
+.modal-publicacao-submit {
+  background-color: #4CAF50;
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.modal-publicacao-submit:hover {
+  background-color: #3e8e41;
+}
 /* ============ MODAL DE UPLOAD ============ */
 .modal-overlay {
   position: fixed;
