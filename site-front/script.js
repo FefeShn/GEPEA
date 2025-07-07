@@ -87,9 +87,9 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     };
 
-    // Modal de Exclusão
+    // Modal de Exclusão - VERSÃO SIMULADA (sem remoção real)
     const setupExclusaoModal = () => {
-        const deleteButton = document.getElementById('openDeleteModal');
+        const deleteButton = document.querySelector('.delete-member-button');
         const modalExcluirOverlay = document.getElementById('modalExcluirMembro');
         
         if (!deleteButton || !modalExcluirOverlay) {
@@ -101,12 +101,17 @@ document.addEventListener('DOMContentLoaded', function() {
             document.body.classList.remove('modal-open');
             modalExcluirOverlay.classList.remove('active');
             document.body.style.overflow = '';
+            
+            // Limpa as seleções ao fechar o modal
+            document.querySelectorAll('.member-checkbox:checked').forEach(checkbox => {
+                checkbox.checked = false;
+            });
         };
 
         const openModal = () => {
-            const checkboxes = document.querySelectorAll('.file-checkbox:checked');
+            const checkboxes = document.querySelectorAll('.member-checkbox:checked');
             if (checkboxes.length === 0) {
-                alert('Por favor, selecione pelo menos um arquivo para excluir.');
+                alert('Por favor, selecione pelo menos um membro para excluir.');
                 return;
             }
             document.body.classList.add('modal-open');
@@ -120,21 +125,20 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         document.getElementById('cancelarExclusao')?.addEventListener('click', closeModal);
-        document.querySelector('#modalExcluirMembro .modal-close')?.addEventListener('click', closeModal);
 
         modalExcluirOverlay.addEventListener('click', (e) => {
             if (e.target === modalExcluirOverlay) closeModal();
         });
 
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && modalExcluirOverlay.classList.contains('active')) {
-                closeModal();
-            }
-        });
-
         document.getElementById('confirmarExclusao')?.addEventListener('click', () => {
-            const checkboxes = document.querySelectorAll('.file-checkbox:checked');
-            alert(`${checkboxes.length} arquivo(s) excluído(s) com sucesso!`);
+            const checkboxes = document.querySelectorAll('.member-checkbox:checked');
+            alert(`Simulação: ${checkboxes.length} membro(s) marcado(s) para exclusão!`);
+            
+            // Apenas simulação - não remove realmente
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = false; // Desmarca os checkboxes
+            });
+            
             closeModal();
         });
     };
@@ -456,7 +460,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // ============ INICIALIZAÇÃO ============
     setupPublicacaoModal();
     setupCadastroModal();
-    setupExclusaoModal();
+    setupExclusaoModal(); // Agora apenas simulação
     setupSupportModal();
     setupUploadModal();
     setupCarousel();

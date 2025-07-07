@@ -2561,6 +2561,10 @@ body.membros-page {
     font-size: 0.875rem;
 }
 
+.member-role.dev{
+  background-color:#b341ec;
+  color: white;
+}
 /* Cores diferentes para cada cargo */
 .member-role.coordenador {
     background-color: var(--secondary-color);
