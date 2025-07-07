@@ -121,6 +121,7 @@
                   </div>
                 </div>
               </div>
+              <input type="checkbox" class="publi-checkbox">
             </div>
 
             <!-- Card 2 -->
@@ -138,6 +139,7 @@
                   </div>
                 </div>
               </div>
+              <input type="checkbox" class="publi-checkbox">
             </div>
 
             <!-- Card 3 -->
@@ -155,6 +157,7 @@
                   </div>
                 </div>
               </div>
+              <input type="checkbox" class="publi-checkbox">
             </div>
           </div>
 
@@ -197,6 +200,22 @@
               </div>
             </div>
           </div>
+
+          <!-- Modal de Confirmação de Exclusão de Publicações -->
+<div class="modal-overlay" id="modalExcluirPublicacao">
+  <div class="modal-container confirm-modal">
+    <div class="modal-header">
+      <h3>Confirmar Exclusão</h3>
+    </div>
+    <div class="modal-body">
+      <p>Tem certeza que deseja excluir a(s) publicação(ões) selecionada(s)? Esta ação não pode ser desfeita.</p>
+    </div>
+    <div class="modal-actions">
+      <button class="cancel-button" id="cancelarExclusaoPubli">Não, cancelar</button>
+      <button class="submit-button delete-button" id="confirmarExclusaoPubli">Sim, excluir</button>
+    </div>
+  </div>
+</div>
           
         <!-- FOOTER -->
         <footer class="footer">

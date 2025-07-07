@@ -457,10 +457,66 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    // Modal de Exclusão de Publicações - VERSÃO SIMULADA
+const setupExclusaoPublicacaoModal = () => {
+    const deleteButton = document.querySelector('.btn-excluir');
+    const modalExcluirOverlay = document.getElementById('modalExcluirPublicacao');
+    
+    if (!deleteButton || !modalExcluirOverlay) {
+        console.error('Elementos do modal de exclusão de publicações não encontrados!');
+        return;
+    }
+
+    const closeModal = () => {
+        document.body.classList.remove('modal-open');
+        modalExcluirOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+        
+        // Limpa as seleções ao fechar o modal
+        document.querySelectorAll('.publi-checkbox:checked').forEach(checkbox => {
+            checkbox.checked = false;
+        });
+    };
+
+    const openModal = () => {
+        const checkboxes = document.querySelectorAll('.publi-checkbox:checked');
+        if (checkboxes.length === 0) {
+            alert('Por favor, selecione pelo menos uma publicação para excluir.');
+            return;
+        }
+        document.body.classList.add('modal-open');
+        modalExcluirOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    };
+
+    deleteButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        openModal();
+    });
+
+    document.getElementById('cancelarExclusaoPubli')?.addEventListener('click', closeModal);
+
+    modalExcluirOverlay.addEventListener('click', (e) => {
+        if (e.target === modalExcluirOverlay) closeModal();
+    });
+
+    document.getElementById('confirmarExclusaoPubli')?.addEventListener('click', () => {
+        const checkboxes = document.querySelectorAll('.publi-checkbox:checked');
+        alert(`Simulação: ${checkboxes.length} publicação(ões) marcada(s) para exclusão!`);
+        
+        // Apenas simulação - não remove realmente
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = false; // Desmarca os checkboxes
+        });
+        
+        closeModal();
+    });
+};
     // ============ INICIALIZAÇÃO ============
     setupPublicacaoModal();
     setupCadastroModal();
-    setupExclusaoModal(); // Agora apenas simulação
+    setupExclusaoModal(); 
+    setupExclusaoPublicacaoModal();
     setupSupportModal();
     setupUploadModal();
     setupCarousel();
