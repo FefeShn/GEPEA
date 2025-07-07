@@ -2475,48 +2475,32 @@ body.modal-open {
 
 /* ============ ESTILOS DA PÁGINA DE MEMBROS ============ */
 
-/* Reset do body para a página de membros */
 /* Página de membros */
 body.membros-page {
-    background-color: #f5f7fa; /* Cor de fundo sólida e neutra */
+    background-color: #f5f7fa;
 }
 
 .members-container {
-    padding: 2rem;
+    padding: 2rem 1rem;
     max-width: 1200px;
     margin: 0 auto;
-    margin-left: 100px;
-    transition: all 0.3s ease;
-}
-
-.members-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 1.5rem;
-    width: 100%;
-}
-
-.member-card {
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    padding: 1.5rem;
-    text-align: center;
-    transition: all 0.3s ease;
-}
-
-.members-container {
-    padding: 2rem;
-    max-width: 1200px;
-    margin: 0 auto;
-    margin-left: 100px; /* Ajuste para o menu lateral */
     transition: var(--transicao-normal);
-    background: transparent; /* Garante que o container seja transparente */
+    background: transparent;
+}
+
+.page-title {
+    margin-top: 110px;
+    color: var(--primary-color);
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 2rem;
+    position: relative;
+    z-index: 1;
 }
 
 .members-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr); /* 4 colunas por padrão */
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 1.5rem;
     width: 100%;
 }
@@ -2533,16 +2517,6 @@ body.membros-page {
     display: flex;
     flex-direction: column;
     align-items: center;
-    position: relative;
-    z-index: 1;
-}
-
-.page-title {
-    margin-top: 40px;
-    color: var(--primary-color);
-    text-align: center;
-    margin-bottom: 2rem;
-    font-size: 2rem;
     position: relative;
     z-index: 1;
 }
@@ -2617,7 +2591,6 @@ body.membros-page {
 
 @media (max-width: 992px) {
     .members-container {
-        margin-left: 0;
         padding: 2rem 1.5rem;
     }
     
@@ -2656,8 +2629,39 @@ body.membros-page {
 
 /* Ajuste quando o menu lateral está ativo */
 .menu-lateral.ativo + .main-panel .members-container {
-    margin-left: 0;
     transition: var(--transicao-normal);
+}
+
+.members-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 colunas por padrão */
+    gap: 1.5rem;
+    width: 100%;
+}
+
+/* Responsividade */
+@media (max-width: 1200px) {
+    .members-grid {
+        grid-template-columns: repeat(3, 1fr); /* 3 colunas para telas menores */
+    }
+}
+
+@media (max-width: 992px) {
+    .members-container {
+        padding: 2rem 1.5rem;
+    }
+    
+    .members-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 colunas para tablets */
+    }
+}
+
+@media (max-width: 768px) {
+    .members-grid {
+        grid-template-columns: 1fr; /* 1 coluna para mobile */
+        max-width: 400px;
+        margin: 0 auto;
+    }
 }
 /* ================== FOOTER =================== */
 .footer {
