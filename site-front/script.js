@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     // ============ FUNÇÕES GERAIS ============
-    
-    // Menu Lateral
+    // MENU
     const botaoMenu = document.getElementById('botao-menu');
     const menuLateral = document.getElementById('menuLateral');
 
@@ -12,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Toggle Password
+    // Toggle Password (para páginas de login)
     const togglePassword = document.querySelector('.toggle-password');
     const passwordInput = document.getElementById('password');
     
@@ -40,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Member Cards
+    // Member Cards (para página de membros)
     document.querySelectorAll('.member-card').forEach(card => {
         card.addEventListener('click', function() {
             this.style.transform = 'scale(0.98)';
@@ -50,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // ============ FUNÇÕES DE MODAIS ============
 
-    // Modal de Cadastro
+    // Modal de Cadastro (para admin)
     const setupCadastroModal = () => {
         const addMemberButton = document.querySelector('.add-member-button');
         const modalOverlay = document.getElementById('modalCadastro');
@@ -87,7 +86,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     };
 
-    // Modal de Exclusão - VERSÃO SIMULADA (sem remoção real)
+    // Modal de Exclusão -(para admin)
     const setupExclusaoModal = () => {
         const deleteButton = document.querySelector('.delete-member-button');
         const modalExcluirOverlay = document.getElementById('modalExcluirMembro');
@@ -96,13 +95,11 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('Elementos do modal de exclusão não encontrados!');
             return;
         }
-
         const closeModal = () => {
             document.body.classList.remove('modal-open');
             modalExcluirOverlay.classList.remove('active');
             document.body.style.overflow = '';
             
-            // Limpa as seleções ao fechar o modal
             document.querySelectorAll('.member-checkbox:checked').forEach(checkbox => {
                 checkbox.checked = false;
             });
@@ -134,16 +131,16 @@ document.addEventListener('DOMContentLoaded', function() {
             const checkboxes = document.querySelectorAll('.member-checkbox:checked');
             alert(`Simulação: ${checkboxes.length} membro(s) marcado(s) para exclusão!`);
             
-            // Apenas simulação - não remove realmente
+            // Apenas simulação, não remove realmente
             checkboxes.forEach(checkbox => {
-                checkbox.checked = false; // Desmarca os checkboxes
+                checkbox.checked = false;
             });
             
             closeModal();
         });
     };
 
-    // Modal de Suporte
+    // Modal de Suporte (pra todos)
     const setupSupportModal = () => {
         const supportForm = document.getElementById('supportForm');
         const modalConfirmacao = document.getElementById('modalConfirmacao');
@@ -178,7 +175,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     };
 
-    // Modal de Upload
+    // Modal de Upload (para admin)
     const setupUploadModal = () => {
         const openModalButton = document.querySelector('.add-file-button');
         const modalUpload = document.getElementById('modalUpload');
@@ -216,7 +213,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     };
 
-    // Modal de Publicação
+    // Modal de Publicação (para admin)
     const setupPublicacaoModal = () => {
         const btnAdicionar = document.querySelector('.btn-adicionar');
         const modalPublicacao = document.getElementById('modalPublicacao');
@@ -330,134 +327,7 @@ document.addEventListener('DOMContentLoaded', function() {
         showItem(0);
     };
 
-    // ============ FUNÇÕES DA AGENDA ============
-
-    // Inicializa o calendário com tratamento de erros
-    if (document.getElementById('calendar')) {
-        try {
-            console.log('Inicializando FullCalendar...');
-            
-            // Verifique se jQuery e FullCalendar estão carregados
-            if (!window.jQuery || !$.fullCalendar) {
-                throw new Error('Bibliotecas necessárias não carregadas');
-            }
-
-            var calendar = $('#calendar').fullCalendar({
-                header: {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'month,agendaWeek,agendaDay'
-                },
-                defaultView: 'month',
-                locale: 'pt-br',
-                editable: true,
-                selectable: true,
-                eventLimit: true,
-                height: 'auto',
-                contentHeight: 'auto',
-                events: [
-                    {
-                        title: 'Reunião de Planejamento',
-                        start: new Date(),
-                        className: 'important'
-                    },
-                    {
-                        title: 'Evento Semanal',
-                        start: moment().add(3, 'days').hour(14).minute(0),
-                        end: moment().add(3, 'days').hour(16).minute(0),
-                        className: 'info'
-                    }
-                ],
-                select: function(start, end) {
-                    abrirModalEvento({
-                        start: start,
-                        end: end
-                    });
-                },
-                eventClick: function(event) {
-                    abrirModalEvento(event);
-                }
-            });
-
-            console.log('Calendário inicializado com sucesso!');
-        } catch (error) {
-            console.error('Erro ao inicializar calendário:', error);
-            // Mostra mensagem de erro para o usuário
-            $('#calendar').html('<div class="alert alert-danger">Erro ao carregar o calendário. Recarregue a página.</div>');
-        }
-
-        // Elementos do modal de evento
-        const modalEvento = document.getElementById('modalEvento');
-        const modalTitulo = document.getElementById('modalEventoTitulo');
-        const formEvento = document.getElementById('formEvento');
-        const tituloInput = document.getElementById('tituloEvento');
-        const dataInicioInput = document.getElementById('dataInicio');
-        const dataFimInput = document.getElementById('dataFim');
-        const corSelect = document.getElementById('corEvento');
-        const btnCancelar = document.querySelector('.btn-cancelar');
-        const btnFechar = document.querySelector('.modal-evento-close');
-        const btnAdicionarEvento = document.getElementById('adicionarEvento');
-
-        // Função para abrir o modal de evento
-        function abrirModalEvento(evento) {
-            modalTitulo.textContent = evento.title ? 'Editar Evento' : 'Novo Evento';
-            tituloInput.value = evento.title || '';
-            dataInicioInput.value = moment(evento.start).format('YYYY-MM-DDTHH:mm');
-            dataFimInput.value = evento.end ? moment(evento.end).format('YYYY-MM-DDTHH:mm') : '';
-            corSelect.value = evento.className || '';
-            
-            modalEvento.classList.add('active');
-            document.body.style.overflow = 'hidden';
-            
-            formEvento.dataset.eventoId = evento.id || '';
-        }
-
-        // Fechar modal de evento
-        function fecharModalEvento() {
-            modalEvento.classList.remove('active');
-            document.body.style.overflow = '';
-        }
-
-        // Event listeners do modal de evento
-        btnCancelar.addEventListener('click', fecharModalEvento);
-        btnFechar.addEventListener('click', fecharModalEvento);
-        modalEvento.addEventListener('click', (e) => {
-            if (e.target === modalEvento) fecharModalEvento();
-        });
-
-        // Submit do formulário de evento
-        formEvento.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const novoEvento = {
-                title: tituloInput.value,
-                start: dataInicioInput.value,
-                end: dataFimInput.value || null,
-                className: corSelect.value || ''
-            };
-
-            if (formEvento.dataset.eventoId) {
-                novoEvento.id = formEvento.dataset.eventoId;
-                calendar.fullCalendar('updateEvent', novoEvento);
-            } else {
-                calendar.fullCalendar('renderEvent', novoEvento, true);
-            }
-
-            fecharModalEvento();
-        });
-
-        // Botão Adicionar Evento
-        if (btnAdicionarEvento) {
-            btnAdicionarEvento.addEventListener('click', () => {
-                abrirModalEvento({
-                    start: new Date(),
-                    end: moment().add(1, 'hour').toDate()
-                });
-            });
-        }
-    }
-
-    // Modal de Exclusão de Publicações - VERSÃO SIMULADA
+    // Modal de Exclusão de Publicações
     const setupExclusaoPublicacaoModal = () => {
         const deleteButton = document.querySelector('.btn-excluir');
         const modalExcluirOverlay = document.getElementById('modalExcluirPublicacao');
@@ -504,17 +374,267 @@ document.addEventListener('DOMContentLoaded', function() {
             const checkboxes = document.querySelectorAll('.publi-checkbox:checked');
             alert(`Simulação: ${checkboxes.length} publicação(ões) marcada(s) para exclusão!`);
             
-            // Apenas simulação - não remove realmente
+            // Apenas simulação, não remove realmente
             checkboxes.forEach(checkbox => {
-                checkbox.checked = false; // Desmarca os checkboxes
+                checkbox.checked = false;
             });
             
             closeModal();
         });
     };
 
-    // ============ FUNÇÕES DO FÓRUM ============
+    // ============ FUNÇÕES DA AGENDA ============
 
+    // Funções específicas para a agenda de membros
+    const setupAgendaMembro = () => {
+        try {
+            // Dados simulados de eventos
+            const eventos = [
+                {
+                    id: 1,
+                    title: 'Reunião de Planejamento',
+                    start: moment().format('YYYY-MM-DD'),
+                    className: 'important'
+                },
+                {
+                    id: 2,
+                    title: 'Apresentação de Trabalhos',
+                    start: moment().add(3, 'days').format('YYYY-MM-DD') + 'T14:00:00',
+                    end: moment().add(3, 'days').format('YYYY-MM-DD') + 'T16:00:00',
+                    className: 'info'
+                },
+                {
+                    id: 3,
+                    title: 'Workshop de Pesquisa',
+                    start: moment().add(7, 'days').format('YYYY-MM-DD') + 'T09:00:00',
+                    end: moment().add(7, 'days').format('YYYY-MM-DD') + 'T12:00:00',
+                    className: 'success'
+                }
+            ];
+
+            // Variável temporária para simular presenças (não mantem)
+            let presencasTemporarias = {};
+
+            // Inicializa o calendário
+            var calendar = $('#calendar').fullCalendar({
+                header: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'month,agendaWeek,agendaDay'
+                },
+                defaultView: 'month',
+                locale: 'pt-br',
+                editable: false,
+                selectable: false,
+                eventLimit: true,
+                height: 'auto',
+                events: eventos,
+                eventClick: function(event) {
+                    abrirModalEvento(event);
+                }
+            });
+
+            // Elementos do modal de evento
+            const modalEvento = document.getElementById('modalEvento');
+            const modalTitulo = document.getElementById('modalEventoTitulo');
+            const eventoTitulo = document.getElementById('evento-titulo');
+            const eventoData = document.getElementById('evento-data');
+            const eventoHorario = document.getElementById('evento-horario');
+            const presencaStatus = document.getElementById('presenca-status');
+            const statusText = document.getElementById('status-text');
+            const btnPresente = document.getElementById('btn-presente');
+            const btnAusente = document.getElementById('btn-ausente');
+            const btnFechar = document.querySelector('.modal-evento-close');
+
+            // Função para abrir o modal de evento
+            function abrirModalEvento(evento) {
+                modalTitulo.textContent = evento.title;
+                eventoTitulo.textContent = evento.title;
+                
+                // Formata a data
+                const dataInicio = moment(evento.start);
+                eventoData.textContent = dataInicio.format('DD/MM/YYYY');
+                
+                // Formata o horário
+                if (evento.start.hasTime()) {
+                    eventoHorario.textContent = dataInicio.format('HH:mm');
+                    if (evento.end) {
+                        eventoHorario.textContent += ' - ' + moment(evento.end).format('HH:mm');
+                    }
+                } else {
+                    eventoHorario.textContent = 'Dia todo';
+                }
+                
+                // Verifica status de presença (da variável temporária)
+                const status = presencasTemporarias[evento.id] || 'nao_informado';
+                atualizarStatusPresenca(status);
+                
+                // Configura os botões de presença (apenas simulação)
+                btnPresente.onclick = function() {
+                    presencasTemporarias[evento.id] = 'presente';
+                    atualizarStatusPresenca('presente');
+                    alert('Presença marcada com sucesso!');
+                };
+                
+                btnAusente.onclick = function() {
+                    presencasTemporarias[evento.id] = 'ausente';
+                    atualizarStatusPresenca('ausente');
+                    alert('Ausência registrada! ');
+                };
+                
+                modalEvento.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+
+            // Função para atualizar o status de presença no modal
+            function atualizarStatusPresenca(status) {
+                presencaStatus.className = 'presenca-status';
+                if (status === 'presente') {
+                    presencaStatus.classList.add('presente');
+                    statusText.textContent = 'Confirmado';
+                } else if (status === 'ausente') {
+                    presencaStatus.classList.add('ausente');
+                    statusText.textContent = 'Não vou comparecer';
+                } else {
+                    statusText.textContent = 'Não informado';
+                }
+            }
+
+            // Fechar modal de evento
+            function fecharModalEvento() {
+                modalEvento.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+
+            // Event listeners do modal de evento
+            btnFechar.addEventListener('click', fecharModalEvento);
+            modalEvento.addEventListener('click', (e) => {
+                if (e.target === modalEvento) fecharModalEvento();
+            });
+
+        } catch (error) {
+            console.error('Erro ao inicializar calendário:', error);
+            $('#calendar').html('<div class="alert alert-danger">Erro ao carregar o calendário. Recarregue a página.</div>');
+        }
+    };
+
+    // Funções específicas para a agenda de admin
+    const setupAgendaAdmin = () => {
+        try {
+            var calendar = $('#calendar').fullCalendar({
+                header: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'month,agendaWeek,agendaDay'
+                },
+                defaultView: 'month',
+                locale: 'pt-br',
+                editable: true,
+                selectable: true,
+                eventLimit: true,
+                height: 'auto',
+                contentHeight: 'auto',
+                events: [
+                    {
+                        title: 'Reunião de Planejamento',
+                        start: new Date(),
+                        className: 'important'
+                    },
+                    {
+                        title: 'Evento Semanal',
+                        start: moment().add(3, 'days').hour(14).minute(0),
+                        end: moment().add(3, 'days').hour(16).minute(0),
+                        className: 'info'
+                    }
+                ],
+                select: function(start, end) {
+                    abrirModalEventoAdmin({
+                        start: start,
+                        end: end
+                    });
+                },
+                eventClick: function(event) {
+                    abrirModalEventoAdmin(event);
+                }
+            });
+
+            // Elementos do modal de evento admin
+            const modalEvento = document.getElementById('modalEvento');
+            const modalTitulo = document.getElementById('modalEventoTitulo');
+            const formEvento = document.getElementById('formEvento');
+            const tituloInput = document.getElementById('tituloEvento');
+            const dataInicioInput = document.getElementById('dataInicio');
+            const dataFimInput = document.getElementById('dataFim');
+            const corSelect = document.getElementById('corEvento');
+            const btnCancelar = document.querySelector('.btn-cancelar');
+            const btnFechar = document.querySelector('.modal-evento-close');
+            const btnAdicionarEvento = document.getElementById('adicionarEvento');
+
+            // Função para abrir o modal de evento admin
+            function abrirModalEventoAdmin(evento) {
+                modalTitulo.textContent = evento.title ? 'Editar Evento' : 'Novo Evento';
+                tituloInput.value = evento.title || '';
+                dataInicioInput.value = moment(evento.start).format('YYYY-MM-DDTHH:mm');
+                dataFimInput.value = evento.end ? moment(evento.end).format('YYYY-MM-DDTHH:mm') : '';
+                corSelect.value = evento.className || '';
+                
+                modalEvento.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                
+                formEvento.dataset.eventoId = evento.id || '';
+            }
+
+            // Fechar modal de evento admin
+            function fecharModalEventoAdmin() {
+                modalEvento.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+
+            // Event listeners do modal de evento admin
+            btnCancelar.addEventListener('click', fecharModalEventoAdmin);
+            btnFechar.addEventListener('click', fecharModalEventoAdmin);
+            modalEvento.addEventListener('click', (e) => {
+                if (e.target === modalEvento) fecharModalEventoAdmin();
+            });
+
+            // Submit do formulário de evento admin
+            formEvento.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const novoEvento = {
+                    title: tituloInput.value,
+                    start: dataInicioInput.value,
+                    end: dataFimInput.value || null,
+                    className: corSelect.value || ''
+                };
+
+                if (formEvento.dataset.eventoId) {
+                    novoEvento.id = formEvento.dataset.eventoId;
+                    calendar.fullCalendar('updateEvent', novoEvento);
+                } else {
+                    calendar.fullCalendar('renderEvent', novoEvento, true);
+                }
+
+                fecharModalEventoAdmin();
+            });
+
+            // Botão Adicionar Evento
+            if (btnAdicionarEvento) {
+                btnAdicionarEvento.addEventListener('click', () => {
+                    abrirModalEventoAdmin({
+                        start: new Date(),
+                        end: moment().add(1, 'hour').toDate()
+                    });
+                });
+            }
+
+        } catch (error) {
+            console.error('Erro ao inicializar calendário admin:', error);
+            $('#calendar').html('<div class="alert alert-danger">Erro ao carregar o calendário. Recarregue a página.</div>');
+        }
+    };
+
+    // ============ FÓRUM ============
     // Dados simulados (substituir por API real depois)
     const forumData = {
         discussoes: [
@@ -548,7 +668,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 criador: "Danieri Ribeiro",
                 data: "10/03/2025",
                 mensagens: 8,
-                membrosComAcesso: [1, 3, 5], // IDs dos membros
+                membrosComAcesso: [1, 3, 5], 
                 mensagens: [
                     {
                         id: 1,
@@ -828,26 +948,30 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function abrirDiscussao(id) {
-        // Em uma implementação real, isso redirecionaria para discussao.html com o ID
         const discussao = forumData.discussoes.find(d => d.id == id);
         if (!discussao) return;
         
-        // Simulação - em produção seria um redirecionamento
         window.location.href = `discussao-ex.html?id=${id}`;
     }
 
     function isAdmin() {
-        // Simula verificação se o usuário é admin
-        // Na implementação real, isso viria do sistema de login
-        return true; // ou false para membros comuns
+        return true; 
     }
 
     // ============ INICIALIZAÇÃO ============
-    setupPublicacaoModal();
-    setupCadastroModal();
-    setupExclusaoModal(); 
-    setupExclusaoPublicacaoModal();
-    setupSupportModal();
-    setupUploadModal();
-    setupCarousel();
+    if (document.getElementById('calendar')) {
+        if (document.querySelector('.btn-adicionar')) {
+            setupAgendaAdmin();
+        } else {
+            setupAgendaMembro();
+        }
+    }
+    
+    if (document.querySelector('.btn-adicionar')) setupPublicacaoModal();
+    if (document.querySelector('.add-member-button')) setupCadastroModal();
+    if (document.querySelector('.delete-member-button')) setupExclusaoModal();
+    if (document.querySelector('.btn-excluir')) setupExclusaoPublicacaoModal();
+    if (document.getElementById('supportForm')) setupSupportModal();
+    if (document.querySelector('.add-file-button')) setupUploadModal();
+    if (document.querySelector('#carouselExample')) setupCarousel();
 });
