@@ -458,60 +458,390 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Modal de Exclusão de Publicações - VERSÃO SIMULADA
-const setupExclusaoPublicacaoModal = () => {
-    const deleteButton = document.querySelector('.btn-excluir');
-    const modalExcluirOverlay = document.getElementById('modalExcluirPublicacao');
-    
-    if (!deleteButton || !modalExcluirOverlay) {
-        console.error('Elementos do modal de exclusão de publicações não encontrados!');
-        return;
-    }
-
-    const closeModal = () => {
-        document.body.classList.remove('modal-open');
-        modalExcluirOverlay.classList.remove('active');
-        document.body.style.overflow = '';
+    const setupExclusaoPublicacaoModal = () => {
+        const deleteButton = document.querySelector('.btn-excluir');
+        const modalExcluirOverlay = document.getElementById('modalExcluirPublicacao');
         
-        // Limpa as seleções ao fechar o modal
-        document.querySelectorAll('.publi-checkbox:checked').forEach(checkbox => {
-            checkbox.checked = false;
-        });
-    };
-
-    const openModal = () => {
-        const checkboxes = document.querySelectorAll('.publi-checkbox:checked');
-        if (checkboxes.length === 0) {
-            alert('Por favor, selecione pelo menos uma publicação para excluir.');
+        if (!deleteButton || !modalExcluirOverlay) {
+            console.error('Elementos do modal de exclusão de publicações não encontrados!');
             return;
         }
-        document.body.classList.add('modal-open');
-        modalExcluirOverlay.classList.add('active');
-        document.body.style.overflow = 'hidden';
+
+        const closeModal = () => {
+            document.body.classList.remove('modal-open');
+            modalExcluirOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+            
+            // Limpa as seleções ao fechar o modal
+            document.querySelectorAll('.publi-checkbox:checked').forEach(checkbox => {
+                checkbox.checked = false;
+            });
+        };
+
+        const openModal = () => {
+            const checkboxes = document.querySelectorAll('.publi-checkbox:checked');
+            if (checkboxes.length === 0) {
+                alert('Por favor, selecione pelo menos uma publicação para excluir.');
+                return;
+            }
+            document.body.classList.add('modal-open');
+            modalExcluirOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        };
+
+        deleteButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            openModal();
+        });
+
+        document.getElementById('cancelarExclusaoPubli')?.addEventListener('click', closeModal);
+
+        modalExcluirOverlay.addEventListener('click', (e) => {
+            if (e.target === modalExcluirOverlay) closeModal();
+        });
+
+        document.getElementById('confirmarExclusaoPubli')?.addEventListener('click', () => {
+            const checkboxes = document.querySelectorAll('.publi-checkbox:checked');
+            alert(`Simulação: ${checkboxes.length} publicação(ões) marcada(s) para exclusão!`);
+            
+            // Apenas simulação - não remove realmente
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = false; // Desmarca os checkboxes
+            });
+            
+            closeModal();
+        });
     };
 
-    deleteButton.addEventListener('click', (e) => {
-        e.preventDefault();
-        openModal();
-    });
+    // ============ FUNÇÕES DO FÓRUM ============
 
-    document.getElementById('cancelarExclusaoPubli')?.addEventListener('click', closeModal);
+    // Dados simulados (substituir por API real depois)
+    const forumData = {
+        discussoes: [
+            {
+                id: 1,
+                titulo: "Planejamento do próximo encontro",
+                criador: "Dr. Luciano Corsino",
+                data: "15/03/2025",
+                mensagens: 12,
+                membrosComAcesso: ["all"],
+                mensagens: [
+                    {
+                        id: 1,
+                        sender: "Dr. Luciano Corsino",
+                        text: "Vamos marcar nosso próximo encontro para discutir o capítulo 3 do livro.",
+                        time: "15/03/2025 10:30",
+                        isCurrentUser: false
+                    },
+                    {
+                        id: 2,
+                        sender: "Fernanda Sehn",
+                        text: "Prefiro na semana que vem, na quarta-feira.",
+                        time: "15/03/2025 11:45",
+                        isCurrentUser: true
+                    }
+                ]
+            },
+            {
+                id: 2,
+                titulo: "Divisão de tarefas para o evento",
+                criador: "Danieri Ribeiro",
+                data: "10/03/2025",
+                mensagens: 8,
+                membrosComAcesso: [1, 3, 5], // IDs dos membros
+                mensagens: [
+                    {
+                        id: 1,
+                        sender: "Danieri Ribeiro",
+                        text: "Precisamos dividir quem vai cuidar de cada parte do evento.",
+                        time: "10/03/2025 09:15",
+                        isCurrentUser: false
+                    }
+                ]
+            }
+        ],
+        membros: [
+            { id: 1, nome: "Dr. Luciano Corsino", cargo: "Coordenador" },
+            { id: 2, nome: "Dr. Daniel Santana", cargo: "Vice-Coordenador" },
+            { id: 3, nome: "Fernanda Sehn", cargo: "Bolsista" },
+            { id: 4, nome: "Danieri Ribeiro", cargo: "Membro" },
+            { id: 5, nome: "Brenda Marins", cargo: "Bolsista" },
+            { id: 6, nome: "Deisi Franco", cargo: "Bolsista" },
+            { id: 7, nome: "Me. Leandro Mendes", cargo: "Membro" },
+            { id: 8, nome: "Ma. Myllena Camargo", cargo: "Membro" }
+        ]
+    };
 
-    modalExcluirOverlay.addEventListener('click', (e) => {
-        if (e.target === modalExcluirOverlay) closeModal();
-    });
+    // Verifica se está na página do fórum
+    if (window.location.pathname.includes('forum-admin.html')) {
+        setupForum();
+    }
 
-    document.getElementById('confirmarExclusaoPubli')?.addEventListener('click', () => {
-        const checkboxes = document.querySelectorAll('.publi-checkbox:checked');
-        alert(`Simulação: ${checkboxes.length} publicação(ões) marcada(s) para exclusão!`);
+    // Verifica se está na página de discussão
+    if (document.querySelector('.chat-container')) {
+        setupChat();
+    }
+
+    function setupForum() {
+        // Carrega as discussões
+        carregarDiscussoes();
         
-        // Apenas simulação - não remove realmente
-        checkboxes.forEach(checkbox => {
-            checkbox.checked = false; // Desmarca os checkboxes
+        // Configura o modal de nova discussão
+        setupModalNovaDiscussao();
+        
+        // Configura o modal de exclusão (só para admin)
+        setupModalExcluirDiscussao();
+    }
+
+    function setupChat() {
+        // Simulação de envio de mensagem
+        const btnEnviar = document.querySelector('.btn-enviar');
+        const chatInput = document.querySelector('.chat-input textarea');
+        const chatMessages = document.querySelector('.chat-messages');
+
+        if (btnEnviar && chatInput) {
+            btnEnviar.addEventListener('click', function() {
+                const messageText = chatInput.value.trim();
+                if (messageText) {
+                    // Cria nova mensagem
+                    const newMessage = document.createElement('div');
+                    newMessage.className = 'message message-self';
+                    newMessage.innerHTML = `
+                        <div class="message-sender">Você</div>
+                        <div class="message-text">${messageText}</div>
+                        <div class="message-time">${new Date().toLocaleString('pt-BR')}</div>
+                    `;
+                    
+                    // Adiciona ao chat
+                    chatMessages.appendChild(newMessage);
+                    
+                    // Limpa o input
+                    chatInput.value = '';
+                    
+                    // Rola para a nova mensagem
+                    newMessage.scrollIntoView({ behavior: 'smooth' });
+                    
+                    // Simula resposta após 1-2 segundos
+                    setTimeout(() => {
+                        const replies = [
+                            "Ótima sugestão!",
+                            "Vamos considerar isso na próxima reunião.",
+                            "Concordo plenamente.",
+                            "Precisamos discutir isso com mais detalhes."
+                        ];
+                        const randomReply = replies[Math.floor(Math.random() * replies.length)];
+                        
+                        const replyMessage = document.createElement('div');
+                        replyMessage.className = 'message message-other';
+                        replyMessage.innerHTML = `
+                            <div class="message-sender">Dr. Luciano Corsino</div>
+                            <div class="message-text">${randomReply}</div>
+                            <div class="message-time">${new Date().toLocaleString('pt-BR')}</div>
+                        `;
+                        
+                        chatMessages.appendChild(replyMessage);
+                        replyMessage.scrollIntoView({ behavior: 'smooth' });
+                    }, 1000 + Math.random() * 1000);
+                }
+            });
+            
+            // Permite enviar com Enter (Shift+Enter para nova linha)
+            chatInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    btnEnviar.click();
+                }
+            });
+        }
+
+        // Botão de emoji (simulação)
+        const btnEmoji = document.querySelector('.btn-emoji');
+        if (btnEmoji) {
+            btnEmoji.addEventListener('click', function() {
+                alert('Em um sistema real, isso abriria um seletor de emojis');
+            });
+        }
+        
+        // Rolagem automática para a última mensagem
+        if (chatMessages) {
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+    }
+
+    function carregarDiscussoes() {
+        const container = document.getElementById('discussoes-container');
+        if (!container) return;
+        
+        container.innerHTML = '';
+        
+        forumData.discussoes.forEach(discussao => {
+            const discussaoHTML = `
+                <div class="discussao-card">
+                    <h4>${discussao.titulo}</h4>
+                    <p>Criado por: ${discussao.criador}</p>
+                    <div class="discussao-meta">
+                        <span>${discussao.data}</span>
+                        <span>${discussao.mensagens} mensagens</span>
+                    </div>
+                    <div class="discussao-acoes">
+                        <button class="btn-acessar" data-id="${discussao.id}">Acessar</button>
+                        ${isAdmin() ? `<button class="btn-excluir-discussao" data-id="${discussao.id}">Excluir</button>` : ''}
+                    </div>
+                </div>
+            `;
+            container.innerHTML += discussaoHTML;
         });
         
-        closeModal();
-    });
-};
+        // Adiciona eventos aos botões
+        document.querySelectorAll('.btn-acessar').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const discussaoId = this.getAttribute('data-id');
+                abrirDiscussao(discussaoId);
+            });
+        });
+        
+        if (isAdmin()) {
+            document.querySelectorAll('.btn-excluir-discussao').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const discussaoId = this.getAttribute('data-id');
+                    abrirModalExclusaoDiscussao(discussaoId);
+                });
+            });
+        }
+    }
+
+    function setupModalNovaDiscussao() {
+        const btnNovaDiscussao = document.querySelector('.btn-nova-discussao');
+        const modal = document.getElementById('modalNovaDiscussao');
+        
+        if (!btnNovaDiscussao || !modal) return;
+        
+        const closeModal = () => {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        };
+        
+        const openModal = () => {
+            // Carrega a lista de membros
+            const listaMembros = document.getElementById('listaMembros');
+            listaMembros.innerHTML = '';
+            
+            forumData.membros.forEach(membro => {
+                const membroHTML = `
+                    <div class="membro-item">
+                        <input type="checkbox" id="membro-${membro.id}" name="membros" value="${membro.id}">
+                        <label for="membro-${membro.id}">${membro.nome} (${membro.cargo})</label>
+                    </div>
+                `;
+                listaMembros.innerHTML += membroHTML;
+            });
+            
+            // Configura o "Selecionar todos"
+            document.getElementById('selecionarTodos').addEventListener('change', function() {
+                const checkboxes = document.querySelectorAll('#listaMembros input[type="checkbox"]');
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = this.checked;
+                });
+            });
+            
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        };
+        
+        btnNovaDiscussao.addEventListener('click', openModal);
+        
+        // Fechar modal
+        document.querySelector('#modalNovaDiscussao .modal-close').addEventListener('click', closeModal);
+        document.querySelector('#modalNovaDiscussao .cancel-button').addEventListener('click', closeModal);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+        
+        // Formulário de nova discussão
+        document.getElementById('formNovaDiscussao')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const titulo = document.getElementById('tituloDiscussao').value;
+            const mensagem = document.getElementById('mensagemDiscussao').value;
+            const membrosSelecionados = Array.from(document.querySelectorAll('#listaMembros input:checked')).map(el => el.value);
+            
+            // Simula a criação de uma nova discussão
+            const novaDiscussao = {
+                id: forumData.discussoes.length + 1,
+                titulo: titulo,
+                criador: "Usuário Atual", // Substituir pelo nome real
+                data: new Date().toLocaleDateString('pt-BR'),
+                mensagens: mensagem ? 1 : 0,
+                membrosComAcesso: membrosSelecionados.length > 0 ? membrosSelecionados : ["all"],
+                mensagens: mensagem ? [{
+                    id: 1,
+                    sender: "Usuário Atual",
+                    text: mensagem,
+                    time: new Date().toLocaleString('pt-BR'),
+                    isCurrentUser: true
+                }] : []
+            };
+            
+            forumData.discussoes.push(novaDiscussao);
+            carregarDiscussoes();
+            closeModal();
+            this.reset();
+            
+            alert('Discussão criada com sucesso!');
+        });
+    }
+
+    function setupModalExcluirDiscussao() {
+        const modal = document.getElementById('modalExcluirDiscussao');
+        if (!modal) return;
+        
+        let discussaoIdParaExcluir = null;
+        
+        const closeModal = () => {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        };
+        
+        const abrirModalExclusaoDiscussao = (id) => {
+            discussaoIdParaExcluir = id;
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        };
+        
+        document.getElementById('cancelarExclusaoDiscussao')?.addEventListener('click', closeModal);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+        
+        document.getElementById('confirmarExclusaoDiscussao')?.addEventListener('click', () => {
+            if (discussaoIdParaExcluir) {
+                // Simula a exclusão
+                forumData.discussoes = forumData.discussoes.filter(d => d.id != discussaoIdParaExcluir);
+                carregarDiscussoes();
+                alert('Discussão excluída com sucesso!');
+            }
+            closeModal();
+        });
+        
+        window.abrirModalExclusaoDiscussao = abrirModalExclusaoDiscussao;
+    }
+
+    function abrirDiscussao(id) {
+        // Em uma implementação real, isso redirecionaria para discussao.html com o ID
+        const discussao = forumData.discussoes.find(d => d.id == id);
+        if (!discussao) return;
+        
+        // Simulação - em produção seria um redirecionamento
+        window.location.href = `discussao-ex.html?id=${id}`;
+    }
+
+    function isAdmin() {
+        // Simula verificação se o usuário é admin
+        // Na implementação real, isso viria do sistema de login
+        return true; // ou false para membros comuns
+    }
+
     // ============ INICIALIZAÇÃO ============
     setupPublicacaoModal();
     setupCadastroModal();

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Discussão | Fórum GEPEA</title>
+  <link rel="shortcut icon" href="imagens/gepea.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container-scroller">
+    <!-- NAV BAR -->
+    <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+      <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
+        <img src="imagens/gepea.png" alt="logo-gepea" class="logo-nav">
+        <p class="titulo-logo">GEPEA</p>
+      </div>
+      <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
+        <ul class="navbar-nav mr-lg-2">
+          <li class="nav-item nav-search d-none d-lg-block">
+            <div class="input-group busca-box">
+              <input type="text" class="form-control busca" placeholder="Buscar">
+            </div>
+          </li>
+        </ul>
+        <ul class="navbar-nav navbar-nav-right">
+          <li class="nav-item nav-profile dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="profileDropdown">
+              <img src="imagens/admin-icon.jpg" alt="profile" class="profile-img">
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- MENU LATERAL -->
+    <button id="botao-menu" aria-label="Abrir menu">☰</button>
+    <nav class="menu-lateral" id="menuLateral">
+      <ul>
+        <li><a href="index-admin.html"><i class="ti-home mr-2"></i>Publicações</a></li>
+        <li><a href="sobre-admin.html"><i class="ti-book mr-2"></i>Sobre o GEPEA</a></li>
+        <li><a href="membros-admin.html"><i class="ti-agenda mr-2"></i>Membros</a></li>
+        <li><a href="biblioteca-admin.html"><i class="ti-agenda mr-2"></i>Biblioteca</a></li>
+        <li><a href="agenda-admin.html"><i class="ti-agenda mr-2"></i>Agenda</a></li>
+        <li><a href="forum-admin.html" class="active"><i class="ti-agenda mr-2"></i>Fórum</a></li>
+        <li><a href="suporte.html"><i class="ti-user mr-2"></i>Suporte</a></li>
+      </ul>
+    </nav>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <div class="main-panel">
+      <div class="content-wrapper">
+        <div class="chat-header-with-back">
+          <a href="forum-admin.html" class="btn-voltar">
+            <i class="fas fa-arrow-left"></i> Voltar
+          </a>
+          <div class="chat-header-info">
+            <h3>Planejamento do próximo encontro</h3>
+            <p>Criado por Dr. Luciano Corsino • 12 mensagens</p>
+          </div>
+        </div>
+
+        <div class="chat-container">
+          <div class="chat-messages">
+            <!-- Mensagens da discussão -->
+            <div class="message message-other">
+              <div class="message-sender">Dr. Luciano Corsino</div>
+              <div class="message-text">Vamos marcar nosso próximo encontro para discutir o capítulo 3 do livro. Precisamos definir uma data que funcione para todos os membros.</div>
+              <div class="message-time">15/03/2025 10:30</div>
+            </div>
+            
+            <div class="message message-self">
+              <div class="message-sender">Fernanda Sehn</div>
+              <div class="message-text">Prefiro na semana que vem, na quarta-feira. Estarei disponível a partir das 14h. O que acham?</div>
+              <div class="message-time">15/03/2025 11:45</div>
+            </div>
+            
+            <div class="message message-other">
+              <div class="message-sender">Danieri Ribeiro</div>
+              <div class="message-text">Para mim a quarta está ótima, mas só posso no período da manhã. Seria possível fazermos às 10h?</div>
+              <div class="message-time">15/03/2025 12:20</div>
+            </div>
+            
+            <div class="message message-self">
+              <div class="message-sender">Fernanda Sehn</div>
+              <div class="message-text">Infelizmente de manhã tenho aula. E na quinta-feira? Vocês estão disponíveis?</div>
+              <div class="message-time">15/03/2025 13:05</div>
+            </div>
+            
+            <div class="message message-other">
+              <div class="message-sender">Dr. Daniel Santana</div>
+              <div class="message-text">Na quinta eu posso no período da tarde, a partir das 15h. Podemos fazer uma reunião mais curta, só para alinhar os pontos principais.</div>
+              <div class="message-time">15/03/2025 14:30</div>
+            </div>
+            
+            <div class="message message-self">
+              <div class="message-sender">Fernanda Sehn</div>
+              <div class="message-text">Para mim está ótimo! Podemos marcar para quinta às 15h então?</div>
+              <div class="message-time">15/03/2025 15:12</div>
+            </div>
+          </div>
+          
+          <div class="chat-input-container">
+            <div class="chat-input">
+              <textarea placeholder="Digite sua mensagem..."></textarea>
+            </div>
+            <div class="chat-actions">
+              <button type="button" class="btn-emoji">😊</button>
+              <button type="button" class="btn-enviar">Enviar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <div class="d-sm-flex justify-content-center justify-content-sm-between">
+        <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">GEPEA © 2025. Todos os direitos reservados.</span>
+      </div>
+    </footer>
+  </div>
+  
+  <script src="script-discussao.js"></script>
+</body>
+</html>
