@@ -914,7 +914,7 @@ body {
   transition: var(--transicao-normal);
   margin-bottom: 1.5rem;
   background: var(--branco);
-  height: 100%;
+  height: 480px; /* Altura fixa aumentada para o card todo */
   display: flex;
   flex-direction: column;
 }
@@ -925,10 +925,11 @@ body {
 }
 
 .card-img-top {
-  height: 180px;
-  object-fit: cover;
+  height: 250px; /* Altura aumentada para a imagem */
   width: 100%;
+  object-fit: cover; /* Voltei para cover para preencher melhor */
   border-bottom: 3px solid var(--amarelo);
+  background-color: #f8f9fa;
 }
 
 .card-body {
@@ -936,6 +937,7 @@ body {
   flex: 1;
   display: flex;
   flex-direction: column;
+  min-height: 230px; /* Garante espaço mínimo para o conteúdo */
 }
 
 .card-title {
@@ -949,6 +951,7 @@ body {
   color: var(--preto);
   margin-bottom: 1rem;
   flex: 1;
+  overflow: hidden; /* Evita que textos muito longos estourem */
 }
 
 .text-muted {
@@ -973,6 +976,18 @@ body {
   background-color: var(--vermelho);
   transform: translateY(-2px);
   color: var(--branco);
+}
+
+/*======================= BOTÃO EDITAR BIO- SOBRE GEPEA =======================*/
+.edit-text{
+  background-color: var(--verde);
+  color: var(--branco);
+}
+
+.edit-text:hover{
+  background-color: var(--amarelo);
+  transform: translateY(-2px);
+  border-color: var(--amarelo);
 }
 /* ============ ESTILOS DOS BOTÕES DE AÇÃO ============ */
 .members-header {
