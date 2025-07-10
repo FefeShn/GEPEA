@@ -260,6 +260,28 @@ body {
   display: block !important; 
 }
 /* ============ ESTILOS DA PÁGINA DE BIOGRAFIA ============ */
+.change-photo-button {
+  display: block;
+  margin: 0px auto 0;
+  padding: 8px 30px;
+  background-color: var(--verde);
+  color: white;
+  
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.change-photo-button:hover {
+  background-color: var(--vermelho);
+}
+
+.change-photo-button i {
+  margin-right: 5px;
+}
+
 .biography-container {
   
     padding: 2rem;
@@ -3572,7 +3594,7 @@ body.membros-page {
   background-color:#b341ec;
   color: white;
 }
-/* Cores diferentes para cada cargo */
+
 .member-role.coordenador {
     background-color: var(--secondary-color);
     color: white;
