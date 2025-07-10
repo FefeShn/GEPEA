@@ -1555,6 +1555,81 @@ body {
 }
 /* ==================== PÁGINA DE DISCUSSÃO ==================== */
 
+/* Estilos para as mensagens do chat */
+.message-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.message-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  margin-right: 10px;
+  object-fit: cover;
+}
+
+.message-sender {
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+/* Cores para os cargos */
+.message-sender.coordenador {
+  color: var(--secondary-color);
+}
+
+.message-sender.vice-coordenador {
+  color: var(--primary-color);
+}
+
+.message-sender.bolsista {
+  color: var(--amarelo);
+}
+
+.message-sender.membro {
+  color: #6c757d;
+}
+
+/* Ajustes no layout das mensagens */
+.message {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+  max-width: 75%;
+  padding: 12px 15px;
+  border-radius: 18px;
+  position: relative;
+  animation: fadeIn 0.3s ease;
+}
+
+.message-self {
+  margin-left: auto;
+  background: var(--cor-primaria-clara);
+  border-top-right-radius: 4px;
+  color: #333;
+}
+
+.message-other {
+  margin-right: auto;
+  background: #f1f1f1;
+  border-top-left-radius: 4px;
+}
+
+.message-text {
+  line-height: 1.5;
+  margin-left: 42px; /* Espaço para a foto */
+}
+
+.message-time {
+  font-size: 0.75rem;
+  color: #888;
+  text-align: right;
+  margin-top: 5px;
+  margin-left: 42px; /* Espaço para a foto */
+}
+
 .chat-header-with-back {
   display: flex;
   align-items: center;
@@ -1697,36 +1772,109 @@ body {
 
 .chat-actions {
   display: flex;
-  gap: 10px;
   align-items: center;
-}
-
-.btn-emoji, .btn-enviar {
-  background: var(--verde);
-  color: white;
-  border: none;
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.btn-enviar {
-  width: auto;
-  padding: 0 20px;
-  border-radius: 25px;
-  font-weight: 500;
+  gap: 8px;
 }
 
 .btn-emoji:hover, .btn-enviar:hover {
-  background: var(--amarelo);
   transform: scale(1.05);
 }
 
+.btn-emoji:active, .btn-enviar:active {
+  transform: scale(0.98);
+}
+
+.btn-emoji img, .btn-enviar img {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+  transition: transform 0.2s ease;
+}
+
+/* ESTILOS DO FÓRUM */
+.discussoes-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.discussao-card {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    display: flex;
+    transition: all 0.3s ease;
+    border-left: 4px solid var(--verde);
+}
+
+.discussao-info {
+    flex: 1;
+    margin-right: 0; 
+}
+
+.discussao-info h4 {
+    margin: 0;
+    color: var(--verde);
+    font-size: 1.1rem;
+    text-align: left; 
+}
+
+.discussao-meta {
+    display: flex;
+    gap: 15px;
+    margin-top: 8px;
+    font-size: 0.85rem;
+    color: #666;
+    flex-wrap: wrap;
+}
+
+.discussao-meta i {
+    margin-right: 5px;
+    color: var(--verde-claro);
+}
+
+.discussao-acoes {
+    margin-left: auto; 
+}
+
+.btn-acessar {
+    background: var(--verde);
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.btn-acessar:hover {
+    background: var(--verde-escuro);
+}
+
+/* Responsividade*/
+@media (max-width: 768px) {
+    .discussao-card {
+        flex-direction: column;
+    }
+    
+    .discussao-acoes {
+        margin-left: 0;
+        margin-top: 10px;
+        align-self: flex-end;
+    }
+}
+/* Efeito hover nas imagens */
+.btn-enviar:hover img {
+  filter: brightness(0) saturate(100%) invert(34%) sepia(65%) saturate(666%) hue-rotate(100deg) brightness(94%) contrast(89%);
+}
 /* Responsividade */
 @media (max-width: 768px) {
   .chat-header-with-back {
@@ -1883,7 +2031,6 @@ body {
 .discussao-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-  border-color: var(--cor-primaria-clara);
 }
 
 .discussao-card::before {
@@ -2240,29 +2387,20 @@ body {
   font-family: inherit;
 }
 
-.chat-actions {
-  display: flex;
-  gap: 8px;
-}
-
 .btn-emoji, .btn-enviar {
-  background: var(--cor-primaria);
-  color: white;
+  background: var(--verde-claro);
   border: none;
-  width: 45px;
-  height: 45px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
+  padding: 8px;
 }
 
-.btn-emoji:hover, .btn-enviar:hover {
-  background: var(--cor-primaria-escura);
-  transform: scale(1.05);
-}
 
 /* Responsividade */
 @media (max-width: 768px) {
@@ -2278,6 +2416,49 @@ body {
   
   .message {
     max-width: 85%;
+  }
+}
+
+/* ==================== FÓRUM MEMBRO ==================== */
+
+/* Ajustes específicos para membros */
+.discussoes-container {
+  margin-top: 30px;
+}
+
+.discussao-card {
+  transition: transform 0.2s ease;
+}
+
+.discussao-card:hover {
+  transform: translateY(-3px);
+}
+
+/* Esconde o botão de excluir para membros */
+.btn-excluir-discussao {
+  display: none !important;
+}
+
+/* Ajustes no modal para membros */
+.membros-acesso {
+  display: none; /* Membros não podem selecionar quem tem acesso */
+}
+
+.select-all {
+  display: none;
+}
+
+/* Botão de nova discussão responsivo */
+@media (max-width: 576px) {
+  .titulo-forum {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+  
+  .btn-nova-discussao {
+    width: 100%;
+    justify-content: center;
   }
 }
 /*==================== TELA DE AGENDA =======================*/

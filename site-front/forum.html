@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Fórum GEPEA</title>
+  <title>GEPEA</title>
   <link rel="shortcut icon" href="imagens/gepea.png">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <link rel="stylesheet" href="style.css">
@@ -26,8 +26,8 @@
         </ul>
         <ul class="navbar-nav navbar-nav-right">
           <li class="nav-item nav-profile dropdown">
-            <a href="biografia-admin.html">
-                  <img src="imagens/admin-icon.jpg" alt="profile" class="profile-img">
+            <a href="biografia-membro.html">
+              <img src="imagens/snoopyy.png" alt="profile" class="profile-img">
             </a>
           </li>
         </ul>
@@ -38,13 +38,13 @@
     <button id="botao-menu" aria-label="Abrir menu">☰</button>
     <nav class="menu-lateral" id="menuLateral">
       <ul>
-        <li><a href="index-admin.html" ><i class="ti-home mr-2"></i>Publicações</a></li>
-          <li><a href="sobre-admin.html"><i class="ti-book mr-2"></i>Sobre o GEPEA</a></li>
-          <li><a href="membros-admin.html"><i class="ti-agenda mr-2"></i>Membros</a></li>
-          <li><a href="biblioteca-admin.html"><i class="ti-agenda mr-2"></i>Biblioteca</a></li>
-          <li><a href="agenda-admin.html"><i class="ti-agenda mr-2"></i>Agenda</a></li>
-          <li><a href="forum-admin.html" class="active"><i class="ti-agenda mr-2"></i>Fórum</a></li>
-          <li><a href="suporte.html"><i class="ti-user mr-2"></i>Suporte</a></li>
+        <li><a href="index-membro.html"><i class="ti-home mr-2"></i>Publicações</a></li>
+        <li><a href="sobre-membro.html"><i class="ti-book mr-2"></i>Sobre o GEPEA</a></li>
+        <li><a href="membros-membro.html"><i class="ti-agenda mr-2"></i>Membros</a></li>
+        <li><a href="biblioteca.html"><i class="ti-agenda mr-2"></i>Biblioteca</a></li>
+        <li><a href="agendahtml"><i class="ti-agenda mr-2"></i>Agenda</a></li>
+        <li><a href="forum.html" class="active"><i class="ti-agenda mr-2"></i>Fórum</a></li>
+        <li><a href="suporte.html"><i class="ti-user mr-2"></i>Suporte</a></li>
       </ul>
     </nav>
 
@@ -59,21 +59,7 @@
         </div>
 
         <div class="discussoes-container" id="discussoes-container">
-          <div class="discussao-card">
-            <div class="discussao-info">
-              <h4>Chat Geral</h4>
-              <div class="discussao-meta">
-                <span><i class="fas fa-user"></i> Fernanda Sehn</span>
-                <span><i class="fas fa-calendar-alt"></i> 10/07/2025</span>
-                <span><i class="fas fa-comment"></i> 4 mensagens</span>
-              </div>
-            </div>
-            <div class="discussao-acoes">
-              <a href="discussao-ex.html" class="btn-acessar">
-                <i class="fas fa-comments"></i> Participar
-              </a>
-            </div>
-          </div>
+          <!-- Discussões serão carregadas aqui via JS -->
         </div>
       </div>
     </div>
@@ -97,39 +83,11 @@
               <textarea id="mensagemDiscussao" placeholder="Descreva sua discussão com detalhes..."></textarea>
             </div>
             
-            <div class="form-group">
-              <label><i class="fas fa-user-friends"></i> Membros com acesso</label>
-              <div class="membros-acesso">
-                <div class="select-all">
-                  <input type="checkbox" id="selecionarTodos">
-                  <label for="selecionarTodos">Selecionar todos os membros</label>
-                </div>
-                <div class="membros-list" id="listaMembros">
-                </div>
-              </div>
-            </div>
-            
             <div class="modal-actions">
               <button type="button" class="cancel-button">Cancelar</button>
               <button type="submit" class="submit-button"><i class="fas"></i> Criar Discussão</button>
             </div>
           </form>
-        </div>
-      </div>
-    </div>
-
-    <!-- Modal Excluir Discussão -->
-    <div class="modal-overlay" id="modalExcluirDiscussao">
-      <div class="modal-container confirm-modal">
-        <div class="modal-header">
-          <h3><i class="fas fa-exclamation-triangle"></i> Confirmar Exclusão</h3>
-        </div>
-        <div class="modal-body">
-          <p>Tem certeza que deseja excluir esta discussão? Todas as mensagens serão perdidas permanentemente.</p>
-        </div>
-        <div class="modal-actions">
-          <button class="cancel-button" id="cancelarExclusaoDiscussao">Cancelar</button>
-          <button class="submit-button delete-button" id="confirmarExclusaoDiscussao"><i class="fas fa-trash"></i> Excluir</button>
         </div>
       </div>
     </div>
@@ -141,6 +99,6 @@
     </footer>
   </div>
   
-  <script src="script.js"></script>
+  <script src="script-forum-membro.js"></script>
 </body>
 </html>

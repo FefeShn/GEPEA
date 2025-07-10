@@ -635,158 +635,87 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     // ============ FÓRUM ============
-    // Dados simulados (substituir por API real depois)
-    const forumData = {
-        discussoes: [
-            {
-                id: 1,
-                titulo: "Planejamento do próximo encontro",
-                criador: "Dr. Luciano Corsino",
-                data: "15/03/2025",
-                mensagens: 12,
-                membrosComAcesso: ["all"],
-                mensagens: [
-                    {
-                        id: 1,
-                        sender: "Dr. Luciano Corsino",
-                        text: "Vamos marcar nosso próximo encontro para discutir o capítulo 3 do livro.",
-                        time: "15/03/2025 10:30",
-                        isCurrentUser: false
-                    },
-                    {
-                        id: 2,
-                        sender: "Fernanda Sehn",
-                        text: "Prefiro na semana que vem, na quarta-feira.",
-                        time: "15/03/2025 11:45",
-                        isCurrentUser: true
-                    }
-                ]
-            },
-            {
-                id: 2,
-                titulo: "Divisão de tarefas para o evento",
-                criador: "Danieri Ribeiro",
-                data: "10/03/2025",
-                mensagens: 8,
-                membrosComAcesso: [1, 3, 5], 
-                mensagens: [
-                    {
-                        id: 1,
-                        sender: "Danieri Ribeiro",
-                        text: "Precisamos dividir quem vai cuidar de cada parte do evento.",
-                        time: "10/03/2025 09:15",
-                        isCurrentUser: false
-                    }
-                ]
-            }
-        ],
-        membros: [
-            { id: 1, nome: "Dr. Luciano Corsino", cargo: "Coordenador" },
-            { id: 2, nome: "Dr. Daniel Santana", cargo: "Vice-Coordenador" },
-            { id: 3, nome: "Fernanda Sehn", cargo: "Bolsista" },
-            { id: 4, nome: "Danieri Ribeiro", cargo: "Membro" },
-            { id: 5, nome: "Brenda Marins", cargo: "Bolsista" },
-            { id: 6, nome: "Deisi Franco", cargo: "Bolsista" },
-            { id: 7, nome: "Me. Leandro Mendes", cargo: "Membro" },
-            { id: 8, nome: "Ma. Myllena Camargo", cargo: "Membro" }
-        ]
-    };
 
-    // Verifica se está na página do fórum
+    const forumData = {
+    discussoes: [
+        {
+            id: 1,
+            titulo: "Chat Geral",
+            criador: "Fernanda Sehn",
+            data: "10/07/2025",
+            mensagens: 4,
+            membrosComAcesso: ["all"]
+        }
+    ],
+    membros: [
+        { id: 1, nome: "Fernanda Sehn", cargo: "Admin" },
+        { id: 2, nome: "Outro Membro", cargo: "Pesquisador" }
+    ]
+    };
+    
     if (window.location.pathname.includes('forum-admin.html')) {
         setupForum();
     }
 
-    // Verifica se está na página de discussão
     if (document.querySelector('.chat-container')) {
         setupChat();
     }
 
     function setupForum() {
-        // Carrega as discussões
         carregarDiscussoes();
-        
-        // Configura o modal de nova discussão
         setupModalNovaDiscussao();
-        
-        // Configura o modal de exclusão (só para admin)
         setupModalExcluirDiscussao();
     }
 
     function setupChat() {
-        // Simulação de envio de mensagem
-        const btnEnviar = document.querySelector('.btn-enviar');
-        const chatInput = document.querySelector('.chat-input textarea');
-        const chatMessages = document.querySelector('.chat-messages');
+    // Simulação de envio de mensagem
+    const btnEnviar = document.querySelector('.btn-enviar');
+    const chatInput = document.querySelector('.chat-input textarea');
+    const chatMessages = document.querySelector('.chat-messages');
 
-        if (btnEnviar && chatInput) {
-            btnEnviar.addEventListener('click', function() {
-                const messageText = chatInput.value.trim();
-                if (messageText) {
-                    // Cria nova mensagem
-                    const newMessage = document.createElement('div');
-                    newMessage.className = 'message message-self';
-                    newMessage.innerHTML = `
-                        <div class="message-sender">Você</div>
-                        <div class="message-text">${messageText}</div>
-                        <div class="message-time">${new Date().toLocaleString('pt-BR')}</div>
-                    `;
-                    
-                    // Adiciona ao chat
-                    chatMessages.appendChild(newMessage);
-                    
-                    // Limpa o input
-                    chatInput.value = '';
-                    
-                    // Rola para a nova mensagem
-                    newMessage.scrollIntoView({ behavior: 'smooth' });
-                    
-                    // Simula resposta após 1-2 segundos
-                    setTimeout(() => {
-                        const replies = [
-                            "Ótima sugestão!",
-                            "Vamos considerar isso na próxima reunião.",
-                            "Concordo plenamente.",
-                            "Precisamos discutir isso com mais detalhes."
-                        ];
-                        const randomReply = replies[Math.floor(Math.random() * replies.length)];
-                        
-                        const replyMessage = document.createElement('div');
-                        replyMessage.className = 'message message-other';
-                        replyMessage.innerHTML = `
-                            <div class="message-sender">Dr. Luciano Corsino</div>
-                            <div class="message-text">${randomReply}</div>
-                            <div class="message-time">${new Date().toLocaleString('pt-BR')}</div>
-                        `;
-                        
-                        chatMessages.appendChild(replyMessage);
-                        replyMessage.scrollIntoView({ behavior: 'smooth' });
-                    }, 1000 + Math.random() * 1000);
-                }
-            });
-            
-            // Permite enviar com Enter (Shift+Enter para nova linha)
-            chatInput.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    btnEnviar.click();
-                }
-            });
-        }
-
-        // Botão de emoji (simulação)
-        const btnEmoji = document.querySelector('.btn-emoji');
-        if (btnEmoji) {
-            btnEmoji.addEventListener('click', function() {
-                alert('Em um sistema real, isso abriria um seletor de emojis');
-            });
-        }
+    if (btnEnviar && chatInput) {
+        btnEnviar.addEventListener('click', function() {
+            const messageText = chatInput.value.trim();
+            if (messageText) {
+                const newMessage = document.createElement('div');
+                newMessage.className = 'message message-self';
+                newMessage.innerHTML = `
+                    <div class="message-header">
+                        <img src="imagens/computer.jpg" alt="Você" class="message-avatar">
+                        <div class="message-sender bolsista">Fernanda Sehn</div>
+                    </div>
+                    <div class="message-text">${messageText}</div>
+                    <div class="message-time">${new Date().toLocaleString('pt-BR')}</div>
+                `;
+                
+                chatMessages.appendChild(newMessage);
+                
+                chatInput.value = '';
+                
+                newMessage.scrollIntoView({ behavior: 'smooth' });
+                
+            }
+        });
         
-        // Rolagem automática para a última mensagem
-        if (chatMessages) {
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
+        chatInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                btnEnviar.click();
+            }
+        });
     }
+
+    const btnEmoji = document.querySelector('.btn-emoji');
+    if (btnEmoji) {
+        btnEmoji.addEventListener('click', function() {
+            alert('simulação: vai abrir um seletor de emojis');
+        });
+    }
+    
+    if (chatMessages) {
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+}
 
     function carregarDiscussoes() {
         const container = document.getElementById('discussoes-container');
@@ -812,7 +741,6 @@ document.addEventListener('DOMContentLoaded', function() {
             container.innerHTML += discussaoHTML;
         });
         
-        // Adiciona eventos aos botões
         document.querySelectorAll('.btn-acessar').forEach(btn => {
             btn.addEventListener('click', function() {
                 const discussaoId = this.getAttribute('data-id');
@@ -843,7 +771,6 @@ document.addEventListener('DOMContentLoaded', function() {
         };
         
         const openModal = () => {
-            // Carrega a lista de membros
             const listaMembros = document.getElementById('listaMembros');
             listaMembros.innerHTML = '';
             
@@ -857,7 +784,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 listaMembros.innerHTML += membroHTML;
             });
             
-            // Configura o "Selecionar todos"
             document.getElementById('selecionarTodos').addEventListener('change', function() {
                 const checkboxes = document.querySelectorAll('#listaMembros input[type="checkbox"]');
                 checkboxes.forEach(checkbox => {
@@ -871,14 +797,12 @@ document.addEventListener('DOMContentLoaded', function() {
         
         btnNovaDiscussao.addEventListener('click', openModal);
         
-        // Fechar modal
         document.querySelector('#modalNovaDiscussao .modal-close').addEventListener('click', closeModal);
         document.querySelector('#modalNovaDiscussao .cancel-button').addEventListener('click', closeModal);
         modal.addEventListener('click', (e) => {
             if (e.target === modal) closeModal();
         });
         
-        // Formulário de nova discussão
         document.getElementById('formNovaDiscussao')?.addEventListener('submit', function(e) {
             e.preventDefault();
             
@@ -886,17 +810,16 @@ document.addEventListener('DOMContentLoaded', function() {
             const mensagem = document.getElementById('mensagemDiscussao').value;
             const membrosSelecionados = Array.from(document.querySelectorAll('#listaMembros input:checked')).map(el => el.value);
             
-            // Simula a criação de uma nova discussão
             const novaDiscussao = {
                 id: forumData.discussoes.length + 1,
                 titulo: titulo,
-                criador: "Usuário Atual", // Substituir pelo nome real
+                criador: "Fernanda Sehn",
                 data: new Date().toLocaleDateString('pt-BR'),
                 mensagens: mensagem ? 1 : 0,
                 membrosComAcesso: membrosSelecionados.length > 0 ? membrosSelecionados : ["all"],
                 mensagens: mensagem ? [{
-                    id: 1,
-                    sender: "Usuário Atual",
+                    id: 3,
+                    sender: "Fernanda Sehn",
                     text: mensagem,
                     time: new Date().toLocaleString('pt-BR'),
                     isCurrentUser: true
@@ -936,8 +859,6 @@ document.addEventListener('DOMContentLoaded', function() {
         
         document.getElementById('confirmarExclusaoDiscussao')?.addEventListener('click', () => {
             if (discussaoIdParaExcluir) {
-                // Simula a exclusão
-                forumData.discussoes = forumData.discussoes.filter(d => d.id != discussaoIdParaExcluir);
                 carregarDiscussoes();
                 alert('Discussão excluída com sucesso!');
             }
