@@ -194,12 +194,21 @@ body {
   height: 100vh;
   position: fixed;
   top: 0;
+  left: -280px; 
   background: linear-gradient(135deg, var(--verde), var(--preto));
   color: var(--branco);
   transition: var(--transicao-normal);
-  z-index: 1050;
-  padding-top: 80px;
+  z-index: 990; 
+  padding-top: 80px; 
   box-shadow: 3px 0 15px rgba(0,0,0,0.2);
+}
+
+.navbar {
+  z-index: 1000; 
+  position: relative; 
+  height: 70px;
+  display: flex;
+  position: fixed;
 }
 
 .menu-lateral.ativo {
@@ -239,14 +248,6 @@ body {
   font-size: 1.1rem;
 }
 
-.menu-lateral {
-  left: -280px;
-}
-
-.menu-lateral.ativo {
-  left: 0; 
-}
-
 .main-panel {
   transition: var(--transicao-normal); 
 }
@@ -255,15 +256,9 @@ body {
   margin-left: 280px;
 }
 
-.menu-lateral {
-  left: -280px;
-  transition: all 0.3s ease; 
-}
-
 #botao-menu {
   display: block !important; 
 }
-
 /* ============ ESTILOS DA PÁGINA DE BIOGRAFIA ============ */
 .biography-container {
   
