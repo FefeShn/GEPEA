@@ -383,7 +383,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     };
 
-    // ============ FUNÇÕES DA AGENDA - MEMBRO ============
+    // ============ FUNÇÕES DA AGENDA ============
     const setupAgendaMembro = () => {
     try {
         const eventos = [
@@ -625,88 +625,30 @@ document.addEventListener('DOMContentLoaded', function() {
 };
 
     // ============ FÓRUM ============
-
     const forumData = {
-    discussoes: [
-        {
-            id: 1,
-            titulo: "Chat Geral",
-            criador: "Fernanda Sehn",
-            data: "10/07/2025",
-            mensagens: 4,
-            membrosComAcesso: ["all"]
-        }
-    ],
-    membros: [
-        { id: 1, nome: "Fernanda Sehn", cargo: "Admin" },
-        { id: 2, nome: "Outro Membro", cargo: "Pesquisador" }
-    ]
+        discussoes: [
+            {
+                id: 1,
+                titulo: "Chat Geral",
+                criador: "Fernanda Sehn",
+                data: "10/07/2025",
+                mensagens: 4,
+                membrosComAcesso: ["all"]
+            }
+        ],
+        membros: [
+            { id: 1, nome: "Fernanda Sehn", cargo: "Admin" },
+            { id: 2, nome: "Outro Membro", cargo: "Pesquisador" }
+        ]
     };
 
-    if (document.querySelector('.forum-admin-container') || window.location.pathname.includes('forum-admin.html')) {
-        setupForum();
+    // Função específica para verificar se é admin ou membro
+    function isAdmin() {
+        return window.location.pathname.includes('-admin.html');
     }
 
-    if (document.querySelector('.chat-container')) {
-        setupChat();
-    }
-
-    function setupForum() {
-        carregarDiscussoes();
-        setupModalNovaDiscussao();
-        setupModalExcluirDiscussao();
-    }
-
-    function setupChat() {
-    const btnEnviar = document.querySelector('.btn-enviar');
-    const chatInput = document.querySelector('.chat-input textarea');
-    const chatMessages = document.querySelector('.chat-messages');
-
-    if (btnEnviar && chatInput) {
-        btnEnviar.addEventListener('click', function() {
-            const messageText = chatInput.value.trim();
-            if (messageText) {
-                const newMessage = document.createElement('div');
-                newMessage.className = 'message message-self';
-                newMessage.innerHTML = `
-                    <div class="message-header">
-                        <img src="imagens/computer.jpg" alt="Você" class="message-avatar">
-                        <div class="message-sender bolsista">Fernanda Sehn</div>
-                    </div>
-                    <div class="message-text">${messageText}</div>
-                    <div class="message-time">${new Date().toLocaleString('pt-BR')}</div>
-                `;
-                
-                chatMessages.appendChild(newMessage);
-                
-                chatInput.value = '';
-                
-                newMessage.scrollIntoView({ behavior: 'smooth' });
-                
-            }
-        });
-        
-        chatInput.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                btnEnviar.click();
-            }
-        });
-    }
-
-    const btnEmoji = document.querySelector('.btn-emoji');
-    if (btnEmoji) {
-        btnEmoji.addEventListener('click', function() {
-            alert('simulação: vai abrir um seletor de emojis');
-        });
-    }
-    
-    if (chatMessages) {
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-    }
-}
-
-    function carregarDiscussoes() {
+    // Carregar discussões (versão para membros sem botão de excluir)
+    function carregarDiscussoesMembro() {
         const container = document.getElementById('discussoes-container');
         if (!container) return;
         
@@ -714,196 +656,234 @@ document.addEventListener('DOMContentLoaded', function() {
         
         forumData.discussoes.forEach(discussao => {
             const discussaoHTML = `
-                <div class="discussao-card">
-                    <h4>${discussao.titulo}</h4>
-                    <p>Criado por: ${discussao.criador}</p>
-                    <div class="discussao-meta">
-                        <span>${discussao.data}</span>
-                        <span>${discussao.mensagens} mensagens</span>
+                <div class="discussao-card" data-id="${discussao.id}">
+                    <div class="discussao-info">
+                        <h4>${discussao.titulo}</h4>
+                        <div class="discussao-meta">
+                            <span><i class="fas fa-user"></i> ${discussao.criador}</span>
+                            <span><i class="fas fa-calendar-alt"></i> ${discussao.data}</span>
+                            <span><i class="fas fa-comment"></i> ${discussao.mensagens} mensagens</span>
+                        </div>
                     </div>
                     <div class="discussao-acoes">
-                        <button class="btn-acessar" data-id="${discussao.id}">Acessar</button>
-                        ${isAdmin() ? `<button class="btn-excluir-discussao" data-id="${discussao.id}">Excluir</button>` : ''}
+                        <a href="discussao-membros-ex.html?id=${discussao.id}" class="btn-acessar">
+                            <i class="fas fa-comments"></i> Acessar
+                        </a>
                     </div>
                 </div>
             `;
             container.innerHTML += discussaoHTML;
         });
+    }
+
+    // Carregar discussões (versão para admin com botão de excluir)
+    function carregarDiscussoesAdmin() {
+        const container = document.getElementById('discussoes-container');
+        if (!container) return;
         
-        document.querySelectorAll('.btn-acessar').forEach(btn => {
-            btn.addEventListener('click', function() {
+        container.innerHTML = '';
+        
+        forumData.discussoes.forEach(discussao => {
+            const discussaoHTML = `
+                <div class="discussao-card" data-id="${discussao.id}">
+                    <div class="discussao-info">
+                        <h4>${discussao.titulo}</h4>
+                        <div class="discussao-meta">
+                            <span><i class="fas fa-user"></i> ${discussao.criador}</span>
+                            <span><i class="fas fa-calendar-alt"></i> ${discussao.data}</span>
+                            <span><i class="fas fa-comment"></i> ${discussao.mensagens} mensagens</span>
+                        </div>
+                    </div>
+                    <div class="discussao-acoes">
+                        <a href="discussao-ex.html?id=${discussao.id}" class="btn-acessar">
+                            <i class="fas fa-comments"></i> Acessar
+                        </a>
+                        <button class="btn-excluir-discussao" data-id="${discussao.id}">
+                            <i class="fas fa-trash"></i> Excluir
+                        </button>
+                    </div>
+                </div>
+            `;
+            container.innerHTML += discussaoHTML;
+        });
+
+        // Configurar eventos dos botões de exclusão (apenas para admin)
+        document.querySelectorAll('.btn-excluir-discussao').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
                 const discussaoId = this.getAttribute('data-id');
-                abrirDiscussao(discussaoId);
+                abrirModalExclusaoDiscussao(discussaoId);
             });
         });
+    }
+
+    // Modal Nova Discussão para Membros
+    function setupModalNovaDiscussaoMembro() {
+        const btnNovaDiscussao = document.querySelector('.btn-nova-discussao');
+        const modal = document.getElementById('modalNovaDiscussaoMembro');
         
-        if (isAdmin()) {
-            document.querySelectorAll('.btn-excluir-discussao').forEach(btn => {
-                btn.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    const discussaoId = this.getAttribute('data-id');
-                    abrirModalExclusaoDiscussao(discussaoId);
-                });
+        if (!btnNovaDiscussao || !modal) {
+            console.error('Elementos do modal de membros não encontrados!');
+            return;
+        }
+        
+        const closeModal = () => {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        };
+        
+        const openModal = () => {
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        };
+        
+        btnNovaDiscussao.addEventListener('click', function(e) {
+            e.preventDefault();
+            openModal();
+        });
+        
+        modal.querySelector('.modal-close')?.addEventListener('click', closeModal);
+        modal.querySelector('.cancel-button')?.addEventListener('click', closeModal);
+        
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+        
+        const form = document.getElementById('formNovaDiscussaoMembro');
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const titulo = document.getElementById('tituloDiscussaoMembro').value;
+                const mensagem = document.getElementById('mensagemDiscussaoMembro').value;
+                
+                if (!titulo) {
+                    alert('Por favor, insira um título para a discussão');
+                    return;
+                }
+                
+                const novaDiscussao = {
+                    id: forumData.discussoes.length + 1,
+                    titulo: titulo,
+                    criador: "Você",
+                    data: new Date().toLocaleDateString('pt-BR'),
+                    mensagens: 0,
+                    membrosComAcesso: ["all"]
+                };
+                
+                forumData.discussoes.push(novaDiscussao);
+                
+                alert('Discussão criada com sucesso!');
+                closeModal();
+                form.reset();
+                
+                // Recarrega as discussões de acordo com o tipo de usuário
+                if (isAdmin()) {
+                    carregarDiscussoesAdmin();
+                } else {
+                    carregarDiscussoesMembro();
+                }
             });
         }
     }
 
-    function setupModalNovaDiscussao() {
-    console.log('Configurando modal de nova discussão...');
-    const btnNovaDiscussao = document.querySelector('.btn-nova-discussao');
-    const modal = document.getElementById('modalNovaDiscussao');
-    
-    if (!btnNovaDiscussao || !modal) {
-        console.error('Elementos do modal não encontrados!');
-        return;
-    }
-    
-    const closeModal = () => {
-        modal.classList.remove('active');
-        document.body.style.overflow = '';
-    };
-    
-    const openModal = () => {
-        const listaMembros = document.getElementById('listaMembros');
-        if (!listaMembros) {
-            console.error('Elemento listaMembros não encontrado!');
-            return;
-        }
+    // Modal Nova Discussão para Admin
+    function setupModalNovaDiscussaoAdmin() {
+        const btnNovaDiscussao = document.querySelector('.btn-nova-discussao');
+        const modal = document.getElementById('modalNovaDiscussao');
         
-        listaMembros.innerHTML = '';
+        if (!btnNovaDiscussao || !modal) return;
+
+        const closeModal = () => {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        };
         
-        const membros = [
-            { id: 1, nome: "Dr. Luciano Corsino", cargo: "Coordenador" },
-            { id: 2, nome: "Dr. Daniel Santana", cargo: "Vice-Coordenador" },
-            { id: 3, nome: "Fernanda Sehn", cargo: "Bolsista" },
-            { id: 4, nome: "Danieri Ribeiro", cargo: "Membro" },
-            { id: 5, nome: "Brenda Marins", cargo: "Bolsista" },
-            { id: 6, nome: "Deisi Franco", cargo: "Bolsista" },
-            { id: 7, nome: "Me. Leandro Mendes", cargo: "Membro" },
-            { id: 8, nome: "Ma. Myllena Camargo", cargo: "Membro" }
-        ];
+        const openModal = () => {
+            const listaMembros = document.getElementById('listaMembros');
+            if (!listaMembros) return;
+            
+            listaMembros.innerHTML = '';
+            
+            const membros = [
+                { id: 1, nome: "Dr. Luciano Corsino", cargo: "Coordenador" },
+                { id: 2, nome: "Dr. Daniel Santana", cargo: "Vice-Coordenador" },
+                { id: 3, nome: "Fernanda Sehn", cargo: "Bolsista" },
+                { id: 4, nome: "Danieri Ribeiro", cargo: "Membro" },
+                { id: 5, nome: "Brenda Marins", cargo: "Bolsista" },
+                { id: 6, nome: "Deisi Franco", cargo: "Bolsista" },
+                { id: 7, nome: "Me. Leandro Mendes", cargo: "Membro" },
+                { id: 8, nome: "Ma. Myllena Camargo", cargo: "Membro" }
+            ];
+            
+            membros.forEach(membro => {
+                const membroItem = document.createElement('div');
+                membroItem.className = 'membro-item';
+                
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.id = `membro-${membro.id}`;
+                checkbox.name = 'membros';
+                checkbox.value = membro.id;
+                
+                const label = document.createElement('label');
+                label.htmlFor = `membro-${membro.id}`;
+                label.textContent = `${membro.nome} (${membro.cargo})`;
+                
+                membroItem.appendChild(checkbox);
+                membroItem.appendChild(label);
+                listaMembros.appendChild(membroItem);
+            });
+            
+            const selecionarTodos = document.getElementById('selecionarTodos');
+            if (selecionarTodos) {
+                selecionarTodos.addEventListener('change', function() {
+                    const checkboxes = document.querySelectorAll('#listaMembros input[type="checkbox"]');
+                    checkboxes.forEach(checkbox => {
+                        checkbox.checked = this.checked;
+                    });
+                });
+            }
+            
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        };
         
-        membros.forEach(membro => {
-            const membroItem = document.createElement('div');
-            membroItem.className = 'membro-item';
-            
-            const checkbox = document.createElement('input');
-            checkbox.type = 'checkbox';
-            checkbox.id = `membro-${membro.id}`;
-            checkbox.name = 'membros';
-            checkbox.value = membro.id;
-            
-            const label = document.createElement('label');
-            label.htmlFor = `membro-${membro.id}`;
-            label.textContent = `${membro.nome} (${membro.cargo})`;
-            
-            membroItem.appendChild(checkbox);
-            membroItem.appendChild(label);
-            listaMembros.appendChild(membroItem);
+        btnNovaDiscussao.addEventListener('click', function(e) {
+            e.preventDefault();
+            openModal();
         });
         
-        const selecionarTodos = document.getElementById('selecionarTodos');
-        if (selecionarTodos) {
-            selecionarTodos.addEventListener('change', function() {
-                const checkboxes = document.querySelectorAll('#listaMembros input[type="checkbox"]');
-                checkboxes.forEach(checkbox => {
-                    checkbox.checked = this.checked;
-                });
-            });
-        }
+        document.querySelector('#modalNovaDiscussao .modal-close')?.addEventListener('click', closeModal);
+        document.querySelector('#modalNovaDiscussao .cancel-button')?.addEventListener('click', closeModal);
         
-        listaMembros.style.display = 'block';
-        listaMembros.style.visibility = 'visible';
-        listaMembros.style.opacity = '1';
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
         
-        modal.classList.add('active');
-        document.body.style.overflow = 'hidden';
-    };
-    
-    btnNovaDiscussao.addEventListener('click', function(e) {
-        e.preventDefault();
-        openModal();
-    });
-    
-    document.querySelector('#modalNovaDiscussao .modal-close')?.addEventListener('click', closeModal);
-    document.querySelector('#modalNovaDiscussao .cancel-button')?.addEventListener('click', closeModal);
-    
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
+        document.getElementById('formNovaDiscussao')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const titulo = document.getElementById('tituloDiscussao').value;
+            const mensagem = document.getElementById('mensagemDiscussao').value;
+            const membrosSelecionados = Array.from(
+                document.querySelectorAll('#listaMembros input[type="checkbox"]:checked')
+            ).map(el => el.value);
+            
+            if (!titulo) {
+                alert('Por favor, insira um título para a discussão');
+                return;
+            }
+            
+            console.log('Nova discussão:', { titulo, mensagem, membrosSelecionados });
+            alert('Discussão criada com sucesso!');
             closeModal();
-        }
-    });
-    
-    // Submissão do formulário
-    document.getElementById('formNovaDiscussao')?.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        const titulo = document.getElementById('tituloDiscussao').value;
-        const mensagem = document.getElementById('mensagemDiscussao').value;
-        const membrosSelecionados = Array.from(
-            document.querySelectorAll('#listaMembros input[type="checkbox"]:checked')
-        ).map(el => el.value);
-        
-        if (!titulo) {
-            alert('Por favor, insira um título para a discussão');
-            return;
-        }
-        
-        console.log('Nova discussão:', {
-            titulo,
-            mensagem,
-            membrosSelecionados
+            this.reset();
+            carregarDiscussoesAdmin();
         });
-        
-        alert('Discussão criada com sucesso!');
-        closeModal();
-        this.reset();
-    });
-}
-// Modal Esqueceu Senha
-const setupEsqueceuSenhaModal = () => {
-    const forgotPasswordLink = document.querySelector('.forgot-password');
-    const modalEsqueceuSenha = document.getElementById('modalEsqueceuSenha');
-    
-    if (!forgotPasswordLink || !modalEsqueceuSenha) return;
+    }
 
-    const closeModal = () => {
-        modalEsqueceuSenha.classList.remove('active');
-        document.body.classList.remove('modal-open');
-    };
-
-    const openModal = (e) => {
-        e.preventDefault();
-        modalEsqueceuSenha.classList.add('active');
-        document.body.classList.add('modal-open');
-    };
-
-    forgotPasswordLink.addEventListener('click', openModal);
-
-    document.querySelectorAll('#modalEsqueceuSenha .close-modal').forEach(btn => {
-        btn.addEventListener('click', closeModal);
-    });
-
-    modalEsqueceuSenha.addEventListener('click', (e) => {
-        if (e.target === modalEsqueceuSenha) closeModal();
-    });
-
-    document.getElementById('formEsqueceuSenha')?.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const email = document.getElementById('emailRecuperacao').value.trim();
-        
-        if (!email) {
-            alert('Por favor, insira seu e-mail');
-            return;
-        }
-        
-        alert(`Instruções de recuperação de senha foram enviadas para: ${email}`);
-        closeModal();
-    });
-};
-
-if (document.querySelector('.forgot-password')) setupEsqueceuSenhaModal();
-
+    // Modal de Exclusão de Discussão (apenas para admin)
     function setupModalExcluirDiscussao() {
         const modal = document.getElementById('modalExcluirDiscussao');
         if (!modal) return;
@@ -928,8 +908,13 @@ if (document.querySelector('.forgot-password')) setupEsqueceuSenhaModal();
         
         document.getElementById('confirmarExclusaoDiscussao')?.addEventListener('click', () => {
             if (discussaoIdParaExcluir) {
-                carregarDiscussoes();
+                // Simulação de exclusão
+                const index = forumData.discussoes.findIndex(d => d.id == discussaoIdParaExcluir);
+                if (index !== -1) {
+                    forumData.discussoes.splice(index, 1);
+                }
                 alert('Discussão excluída com sucesso!');
+                carregarDiscussoesAdmin();
             }
             closeModal();
         });
@@ -937,67 +922,140 @@ if (document.querySelector('.forgot-password')) setupEsqueceuSenhaModal();
         window.abrirModalExclusaoDiscussao = abrirModalExclusaoDiscussao;
     }
 
-    function abrirDiscussao(id) {
-        const discussao = forumData.discussoes.find(d => d.id == id);
-        if (!discussao) return;
-        
-        window.location.href = `discussao-ex.html?id=${id}`;
-    }
+    // Configuração do Chat
+    function setupChat() {
+        const btnEnviar = document.querySelector('.btn-enviar');
+        const chatInput = document.querySelector('.chat-input textarea');
+        const chatMessages = document.querySelector('.chat-messages');
 
-    function isAdmin() {
-        return true; 
-    }
-
-// Função para edição de biografia
-const setupBiografiaEdicao = () => {
-    const editButton = document.querySelector('.edit-text');
-    const sobreTexto = document.querySelector('.sobre-texto');
-    
-    if (!editButton || !sobreTexto) return;
-
-    let originalContent = '';
-
-    editButton.addEventListener('click', () => {
-        originalContent = sobreTexto.innerHTML;
-        
-        sobreTexto.classList.add('editing');
-        
-        const elementosEditaveis = sobreTexto.querySelectorAll('h4, p, li');
-        elementosEditaveis.forEach(el => {
-            el.setAttribute('contenteditable', 'true');
-        });
-        
-        const buttonsDiv = document.createElement('div');
-        buttonsDiv.className = 'edit-buttons';
-        buttonsDiv.innerHTML = `
-            <button class="btn-salvar">Salvar Alterações</button>
-            <button class="btn-cancelar">Cancelar</button>
-        `;
-        
-        sobreTexto.appendChild(buttonsDiv);
-        
-        buttonsDiv.querySelector('.btn-salvar').addEventListener('click', () => {
-            sobreTexto.classList.remove('editing');
-            elementosEditaveis.forEach(el => {
-                el.removeAttribute('contenteditable');
+        if (btnEnviar && chatInput) {
+            btnEnviar.addEventListener('click', function() {
+                const messageText = chatInput.value.trim();
+                if (messageText) {
+                    const newMessage = document.createElement('div');
+                    newMessage.className = 'message message-self';
+                    newMessage.innerHTML = `
+                        <div class="message-header">
+                            <img src="imagens/computer.jpg" alt="Você" class="message-avatar">
+                            <div class="message-sender bolsista">Fernanda Sehn</div>
+                        </div>
+                        <div class="message-text">${messageText}</div>
+                        <div class="message-time">${new Date().toLocaleString('pt-BR')}</div>
+                    `;
+                    
+                    chatMessages.appendChild(newMessage);
+                    chatInput.value = '';
+                    newMessage.scrollIntoView({ behavior: 'smooth' });
+                }
             });
             
-            buttonsDiv.remove();
-            
-            alert('Alterações salvas com sucesso! (Simulação)');
-            
-        });
-        
-        buttonsDiv.querySelector('.btn-cancelar').addEventListener('click', () => {
-            sobreTexto.innerHTML = originalContent;
-            sobreTexto.classList.remove('editing');
-            
-            setupBiografiaEdicao();
-        });
-    });
-};
+            chatInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    btnEnviar.click();
+                }
+            });
+        }
 
-setupBiografiaEdicao();
+        const btnEmoji = document.querySelector('.btn-emoji');
+        if (btnEmoji) {
+            btnEmoji.addEventListener('click', function() {
+                alert('simulação: vai abrir um seletor de emojis');
+            });
+        }
+        
+        if (chatMessages) {
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+    }
+
+    // Função para edição de biografia
+    const setupBiografiaEdicao = () => {
+        const editButton = document.querySelector('.edit-text');
+        const sobreTexto = document.querySelector('.sobre-texto');
+        
+        if (!editButton || !sobreTexto) return;
+
+        let originalContent = '';
+
+        editButton.addEventListener('click', () => {
+            originalContent = sobreTexto.innerHTML;
+            
+            sobreTexto.classList.add('editing');
+            
+            const elementosEditaveis = sobreTexto.querySelectorAll('h4, p, li');
+            elementosEditaveis.forEach(el => {
+                el.setAttribute('contenteditable', 'true');
+            });
+            
+            const buttonsDiv = document.createElement('div');
+            buttonsDiv.className = 'edit-buttons';
+            buttonsDiv.innerHTML = `
+                <button class="btn-salvar">Salvar Alterações</button>
+                <button class="btn-cancelar">Cancelar</button>
+            `;
+            
+            sobreTexto.appendChild(buttonsDiv);
+            
+            buttonsDiv.querySelector('.btn-salvar').addEventListener('click', () => {
+                sobreTexto.classList.remove('editing');
+                elementosEditaveis.forEach(el => {
+                    el.removeAttribute('contenteditable');
+                });
+                
+                buttonsDiv.remove();
+                alert('Alterações salvas com sucesso! (Simulação)');
+            });
+            
+            buttonsDiv.querySelector('.btn-cancelar').addEventListener('click', () => {
+                sobreTexto.innerHTML = originalContent;
+                sobreTexto.classList.remove('editing');
+                setupBiografiaEdicao();
+            });
+        });
+    };
+
+    // Modal Esqueceu Senha
+    const setupEsqueceuSenhaModal = () => {
+        const forgotPasswordLink = document.querySelector('.forgot-password');
+        const modalEsqueceuSenha = document.getElementById('modalEsqueceuSenha');
+        
+        if (!forgotPasswordLink || !modalEsqueceuSenha) return;
+
+        const closeModal = () => {
+            modalEsqueceuSenha.classList.remove('active');
+            document.body.classList.remove('modal-open');
+        };
+
+        const openModal = (e) => {
+            e.preventDefault();
+            modalEsqueceuSenha.classList.add('active');
+            document.body.classList.add('modal-open');
+        };
+
+        forgotPasswordLink.addEventListener('click', openModal);
+
+        document.querySelectorAll('#modalEsqueceuSenha .close-modal').forEach(btn => {
+            btn.addEventListener('click', closeModal);
+        });
+
+        modalEsqueceuSenha.addEventListener('click', (e) => {
+            if (e.target === modalEsqueceuSenha) closeModal();
+        });
+
+        document.getElementById('formEsqueceuSenha')?.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('emailRecuperacao').value.trim();
+            
+            if (!email) {
+                alert('Por favor, insira seu e-mail');
+                return;
+            }
+            
+            alert(`Instruções de recuperação de senha foram enviadas para: ${email}`);
+            closeModal();
+        });
+    };
 
     // ============ INICIALIZAÇÃO ============
     if (document.getElementById('calendar')) {
@@ -1007,7 +1065,7 @@ setupBiografiaEdicao();
             setupAgendaMembro();
         }
     }
-    
+
     if (document.querySelector('.btn-adicionar')) setupPublicacaoModal();
     if (document.querySelector('.add-member-button')) setupCadastroModal();
     if (document.querySelector('.delete-member-button')) setupExclusaoModal();
@@ -1015,4 +1073,24 @@ setupBiografiaEdicao();
     if (document.getElementById('supportForm')) setupSupportModal();
     if (document.querySelector('.add-file-button')) setupUploadModal();
     if (document.querySelector('#carouselExample')) setupCarousel();
+    if (document.querySelector('.forgot-password')) setupEsqueceuSenhaModal();
+    if (document.querySelector('.edit-text')) setupBiografiaEdicao();
+
+    // Inicialização específica para o fórum
+    if (document.querySelector('.forum-membro-container') || window.location.pathname.includes('forum.html')) {
+        if (isAdmin()) {
+            // Configurações para admin
+            carregarDiscussoesAdmin();
+            setupModalNovaDiscussaoAdmin();
+            setupModalExcluirDiscussao();
+        } else {
+            // Configurações para membros
+            carregarDiscussoesMembro();
+            setupModalNovaDiscussaoMembro();
+        }
+    }
+
+    if (document.querySelector('.chat-container')) {
+        setupChat();
+    }
 });
