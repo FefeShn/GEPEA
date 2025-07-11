@@ -383,256 +383,246 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     };
 
-    // ============ FUNÇÕES DA AGENDA ============
-
-    // Funções específicas para a agenda de membros
+    // ============ FUNÇÕES DA AGENDA - MEMBRO ============
     const setupAgendaMembro = () => {
-        try {
-            // Dados simulados de eventos
-            const eventos = [
-                {
-                    id: 1,
-                    title: 'Reunião de Planejamento',
-                    start: moment().format('YYYY-MM-DD'),
-                    className: 'important'
-                },
-                {
-                    id: 2,
-                    title: 'Apresentação de Trabalhos',
-                    start: moment().add(3, 'days').format('YYYY-MM-DD') + 'T14:00:00',
-                    end: moment().add(3, 'days').format('YYYY-MM-DD') + 'T16:00:00',
-                    className: 'info'
-                },
-                {
-                    id: 3,
-                    title: 'Workshop de Pesquisa',
-                    start: moment().add(7, 'days').format('YYYY-MM-DD') + 'T09:00:00',
-                    end: moment().add(7, 'days').format('YYYY-MM-DD') + 'T12:00:00',
-                    className: 'success'
-                }
-            ];
+    try {
+        const eventos = [
+            {
+                id: 1,
+                title: 'Submissão de trabalhos',
+                start: '2025-07-18T00:00:00',
+                end: '2023-08-18T23:59:59',
+                className: 'success'
+            },
+            {
+                id: 2,
+                title: 'Reunião de Leitura',
+                start: '2025-07-10T19:00:00',
+                className: 'important'
+            },
+        ];
 
-            // Variável temporária para simular presenças (não mantem)
-            let presencasTemporarias = {};
+        let presencasTemporarias = {};
 
-            // Inicializa o calendário
-            var calendar = $('#calendar').fullCalendar({
-                header: {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'month,agendaWeek,agendaDay'
-                },
-                defaultView: 'month',
-                locale: 'pt-br',
-                editable: false,
-                selectable: false,
-                eventLimit: true,
-                height: 'auto',
-                events: eventos,
-                eventClick: function(event) {
-                    abrirModalEvento(event);
-                }
-            });
-
-            // Elementos do modal de evento
-            const modalEvento = document.getElementById('modalEvento');
-            const modalTitulo = document.getElementById('modalEventoTitulo');
-            const eventoTitulo = document.getElementById('evento-titulo');
-            const eventoData = document.getElementById('evento-data');
-            const eventoHorario = document.getElementById('evento-horario');
-            const presencaStatus = document.getElementById('presenca-status');
-            const statusText = document.getElementById('status-text');
-            const btnPresente = document.getElementById('btn-presente');
-            const btnAusente = document.getElementById('btn-ausente');
-            const btnFechar = document.querySelector('.modal-evento-close');
-
-            // Função para abrir o modal de evento
-            function abrirModalEvento(evento) {
-                modalTitulo.textContent = evento.title;
-                eventoTitulo.textContent = evento.title;
-                
-                // Formata a data
-                const dataInicio = moment(evento.start);
-                eventoData.textContent = dataInicio.format('DD/MM/YYYY');
-                
-                // Formata o horário
-                if (evento.start.hasTime()) {
-                    eventoHorario.textContent = dataInicio.format('HH:mm');
-                    if (evento.end) {
-                        eventoHorario.textContent += ' - ' + moment(evento.end).format('HH:mm');
-                    }
-                } else {
-                    eventoHorario.textContent = 'Dia todo';
-                }
-                
-                // Verifica status de presença (da variável temporária)
-                const status = presencasTemporarias[evento.id] || 'nao_informado';
-                atualizarStatusPresenca(status);
-                
-                // Configura os botões de presença (apenas simulação)
-                btnPresente.onclick = function() {
-                    presencasTemporarias[evento.id] = 'presente';
-                    atualizarStatusPresenca('presente');
-                    alert('Presença marcada com sucesso!');
-                };
-                
-                btnAusente.onclick = function() {
-                    presencasTemporarias[evento.id] = 'ausente';
-                    atualizarStatusPresenca('ausente');
-                    alert('Ausência registrada! ');
-                };
-                
-                modalEvento.classList.add('active');
-                document.body.style.overflow = 'hidden';
+        var calendar = $('#calendar').fullCalendar({
+            header: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'month,agendaWeek,agendaDay'
+            },
+            defaultView: 'month',
+            locale: 'pt-br',
+            editable: false,
+            selectable: false,
+            eventLimit: true,
+            height: 'auto',
+            events: eventos,
+            eventClick: function(event) {
+                abrirModalEvento(event);
             }
+        });
 
-            // Função para atualizar o status de presença no modal
-            function atualizarStatusPresenca(status) {
-                presencaStatus.className = 'presenca-status';
-                if (status === 'presente') {
-                    presencaStatus.classList.add('presente');
-                    statusText.textContent = 'Confirmado';
-                } else if (status === 'ausente') {
-                    presencaStatus.classList.add('ausente');
-                    statusText.textContent = 'Não vou comparecer';
-                } else {
-                    statusText.textContent = 'Não informado';
+        // Elementos do modal de evento
+        const modalEvento = document.getElementById('modalEvento');
+        const modalTitulo = document.getElementById('modalEventoTitulo');
+        const eventoTitulo = document.getElementById('evento-titulo');
+        const eventoData = document.getElementById('evento-data');
+        const eventoHorario = document.getElementById('evento-horario');
+        const presencaStatus = document.getElementById('presenca-status');
+        const statusText = document.getElementById('status-text');
+        const btnPresente = document.getElementById('btn-presente');
+        const btnAusente = document.getElementById('btn-ausente');
+        const btnFechar = document.querySelector('.modal-evento-close');
+
+        function abrirModalEvento(evento) {
+            modalTitulo.textContent = evento.title;
+            eventoTitulo.textContent = evento.title;
+            
+            const dataInicio = moment(evento.start);
+            eventoData.textContent = dataInicio.format('DD/MM/YYYY');
+            
+            if (evento.start.hasTime()) {
+                eventoHorario.textContent = dataInicio.format('HH:mm');
+                if (evento.end) {
+                    eventoHorario.textContent += ' - ' + moment(evento.end).format('HH:mm');
                 }
+            } else {
+                eventoHorario.textContent = 'Dia todo';
             }
-
-            // Fechar modal de evento
-            function fecharModalEvento() {
-                modalEvento.classList.remove('active');
-                document.body.style.overflow = '';
-            }
-
-            // Event listeners do modal de evento
-            btnFechar.addEventListener('click', fecharModalEvento);
-            modalEvento.addEventListener('click', (e) => {
-                if (e.target === modalEvento) fecharModalEvento();
-            });
-
-        } catch (error) {
-            console.error('Erro ao inicializar calendário:', error);
-            $('#calendar').html('<div class="alert alert-danger">Erro ao carregar o calendário. Recarregue a página.</div>');
+            
+            const status = presencasTemporarias[evento.id] || 'nao_informado';
+            atualizarStatusPresenca(status);
+            
+            btnPresente.onclick = function() {
+                presencasTemporarias[evento.id] = 'presente';
+                atualizarStatusPresenca('presente');
+                alert('Presença marcada com sucesso!');
+            };
+            
+            btnAusente.onclick = function() {
+                presencasTemporarias[evento.id] = 'ausente';
+                atualizarStatusPresenca('ausente');
+                alert('Ausência registrada! ');
+            };
+            
+            modalEvento.classList.add('active');
+            document.body.style.overflow = 'hidden';
         }
-    };
+
+        function atualizarStatusPresenca(status) {
+            presencaStatus.className = 'presenca-status';
+            if (status === 'presente') {
+                presencaStatus.classList.add('presente');
+                statusText.textContent = 'Confirmado';
+            } else if (status === 'ausente') {
+                presencaStatus.classList.add('ausente');
+                statusText.textContent = 'Não vou comparecer';
+            } else {
+                statusText.textContent = 'Não informado';
+            }
+        }
+
+        function fecharModalEvento() {
+            modalEvento.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        btnFechar.addEventListener('click', fecharModalEvento);
+        modalEvento.addEventListener('click', (e) => {
+            if (e.target === modalEvento) fecharModalEvento();
+        });
+
+    } catch (error) {
+        console.error('Erro ao inicializar calendário:', error);
+        $('#calendar').html('<div class="alert alert-danger">Erro ao carregar o calendário. Recarregue a página.</div>');
+    }
+};
 
     // Funções específicas para a agenda de admin
     const setupAgendaAdmin = () => {
-        try {
-            var calendar = $('#calendar').fullCalendar({
-                header: {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'month,agendaWeek,agendaDay'
-                },
-                defaultView: 'month',
-                locale: 'pt-br',
-                editable: true,
-                selectable: true,
-                eventLimit: true,
-                height: 'auto',
-                contentHeight: 'auto',
-                events: [
-                    {
-                        title: 'Reunião de Planejamento',
-                        start: new Date(),
-                        className: 'important'
-                    },
-                    {
-                        title: 'Evento Semanal',
-                        start: moment().add(3, 'days').hour(14).minute(0),
-                        end: moment().add(3, 'days').hour(16).minute(0),
-                        className: 'info'
-                    }
-                ],
-                select: function(start, end) {
-                    abrirModalEventoAdmin({
-                        start: start,
-                        end: end
-                    });
-                },
-                eventClick: function(event) {
-                    abrirModalEventoAdmin(event);
-                }
-            });
+    try {
+        const eventosFixos = [
+            {
+                id: 1,
+                title: 'Submissão de trabalhos',
+                start: '2025-07-18T00:00:00',
+                end: '2023-08-18T23:59:59',
+                className: 'success'
+            },
+            {
+                id: 2,
+                title: 'Reunião de Leitura',
+                start: '2025-07-10T19:00:00',
+                className: 'important'
+            },
+        ];
 
-            // Elementos do modal de evento admin
-            const modalEvento = document.getElementById('modalEvento');
-            const modalTitulo = document.getElementById('modalEventoTitulo');
-            const formEvento = document.getElementById('formEvento');
-            const tituloInput = document.getElementById('tituloEvento');
-            const dataInicioInput = document.getElementById('dataInicio');
-            const dataFimInput = document.getElementById('dataFim');
-            const corSelect = document.getElementById('corEvento');
-            const btnCancelar = document.querySelector('.btn-cancelar');
-            const btnFechar = document.querySelector('.modal-evento-close');
-            const btnAdicionarEvento = document.getElementById('adicionarEvento');
-
-            // Função para abrir o modal de evento admin
-            function abrirModalEventoAdmin(evento) {
-                modalTitulo.textContent = evento.title ? 'Editar Evento' : 'Novo Evento';
-                tituloInput.value = evento.title || '';
-                dataInicioInput.value = moment(evento.start).format('YYYY-MM-DDTHH:mm');
-                dataFimInput.value = evento.end ? moment(evento.end).format('YYYY-MM-DDTHH:mm') : '';
-                corSelect.value = evento.className || '';
-                
-                modalEvento.classList.add('active');
-                document.body.style.overflow = 'hidden';
-                
-                formEvento.dataset.eventoId = evento.id || '';
-            }
-
-            // Fechar modal de evento admin
-            function fecharModalEventoAdmin() {
-                modalEvento.classList.remove('active');
-                document.body.style.overflow = '';
-            }
-
-            // Event listeners do modal de evento admin
-            btnCancelar.addEventListener('click', fecharModalEventoAdmin);
-            btnFechar.addEventListener('click', fecharModalEventoAdmin);
-            modalEvento.addEventListener('click', (e) => {
-                if (e.target === modalEvento) fecharModalEventoAdmin();
-            });
-
-            // Submit do formulário de evento admin
-            formEvento.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                const novoEvento = {
-                    title: tituloInput.value,
-                    start: dataInicioInput.value,
-                    end: dataFimInput.value || null,
-                    className: corSelect.value || ''
-                };
-
-                if (formEvento.dataset.eventoId) {
-                    novoEvento.id = formEvento.dataset.eventoId;
-                    calendar.fullCalendar('updateEvent', novoEvento);
-                } else {
-                    calendar.fullCalendar('renderEvent', novoEvento, true);
-                }
-
-                fecharModalEventoAdmin();
-            });
-
-            // Botão Adicionar Evento
-            if (btnAdicionarEvento) {
-                btnAdicionarEvento.addEventListener('click', () => {
-                    abrirModalEventoAdmin({
-                        start: new Date(),
-                        end: moment().add(1, 'hour').toDate()
-                    });
+        var calendar = $('#calendar').fullCalendar({
+            header: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'month,agendaWeek,agendaDay'
+            },
+            defaultView: 'month',
+            defaultDate: moment().format('YYYY-MM-DD'), 
+            locale: 'pt-br',
+            editable: true, 
+            selectable: true,
+            eventLimit: true,
+            height: 'auto',
+            contentHeight: 'auto',
+            events: eventosFixos, 
+            select: function(start, end) {
+                abrirModalEventoAdmin({
+                    start: start,
+                    end: end
                 });
+            },
+            eventClick: function(event) {
+                abrirModalEventoAdmin(event);
+            },
+            eventDrop: function(event, delta, revertFunc) {
+                if(!confirm("Tem certeza que deseja alterar a data deste evento?")) {
+                    revertFunc(); 
+                }
+            }
+        });
+
+        const modalEvento = document.getElementById('modalEvento');
+        const modalTitulo = document.getElementById('modalEventoTitulo');
+        const formEvento = document.getElementById('formEvento');
+        const tituloInput = document.getElementById('tituloEvento');
+        const dataInicioInput = document.getElementById('dataInicio');
+        const dataFimInput = document.getElementById('dataFim');
+        const corSelect = document.getElementById('corEvento');
+        const btnCancelar = document.querySelector('.btn-cancelar');
+        const btnFechar = document.querySelector('.modal-evento-close');
+        const btnAdicionarEvento = document.getElementById('adicionarEvento');
+
+        function abrirModalEventoAdmin(evento) {
+            modalTitulo.textContent = evento.title ? 'Editar Evento' : 'Novo Evento';
+            tituloInput.value = evento.title || '';
+            dataInicioInput.value = moment(evento.start).format('YYYY-MM-DDTHH:mm');
+            dataFimInput.value = evento.end ? moment(evento.end).format('YYYY-MM-DDTHH:mm') : '';
+            corSelect.value = evento.className || '';
+            
+            modalEvento.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            formEvento.dataset.eventoId = evento.id || '';
+        }
+
+        function fecharModalEventoAdmin() {
+            modalEvento.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        btnCancelar.addEventListener('click', fecharModalEventoAdmin);
+        btnFechar.addEventListener('click', fecharModalEventoAdmin);
+        modalEvento.addEventListener('click', (e) => {
+            if (e.target === modalEvento) fecharModalEventoAdmin();
+        });
+
+        formEvento.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const novoEvento = {
+                title: tituloInput.value,
+                start: dataInicioInput.value,
+                end: dataFimInput.value || null,
+                className: corSelect.value || ''
+            };
+
+            if (formEvento.dataset.eventoId) {
+                novoEvento.id = formEvento.dataset.eventoId;
+                const eventoExistente = eventosFixos.find(e => e.id == novoEvento.id);
+                if (eventoExistente) {
+                    Object.assign(eventoExistente, novoEvento);
+                }
+                calendar.fullCalendar('updateEvent', novoEvento);
+            } else {
+                novoEvento.id = Math.max(...eventosFixos.map(e => e.id)) + 1;
+                eventosFixos.push(novoEvento);
+                calendar.fullCalendar('renderEvent', novoEvento, true);
             }
 
-        } catch (error) {
-            console.error('Erro ao inicializar calendário admin:', error);
-            $('#calendar').html('<div class="alert alert-danger">Erro ao carregar o calendário. Recarregue a página.</div>');
+            fecharModalEventoAdmin();
+        });
+
+        if (btnAdicionarEvento) {
+            btnAdicionarEvento.addEventListener('click', () => {
+                abrirModalEventoAdmin({
+                    start: new Date(),
+                    end: moment().add(1, 'hour').toDate()
+                });
+            });
         }
-    };
+
+    } catch (error) {
+        console.error('Erro ao inicializar calendário admin:', error);
+        $('#calendar').html('<div class="alert alert-danger">Erro ao carregar o calendário. Recarregue a página.</div>');
+    }
+};
 
     // ============ FÓRUM ============
 
@@ -668,7 +658,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function setupChat() {
-    // Simulação de envio de mensagem
     const btnEnviar = document.querySelector('.btn-enviar');
     const chatInput = document.querySelector('.chat-input textarea');
     const chatMessages = document.querySelector('.chat-messages');
@@ -781,10 +770,8 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         
-        // Limpa a lista antes de popular
         listaMembros.innerHTML = '';
         
-        // Dados dos membros (pode ser substituído por uma chamada API)
         const membros = [
             { id: 1, nome: "Dr. Luciano Corsino", cargo: "Coordenador" },
             { id: 2, nome: "Dr. Daniel Santana", cargo: "Vice-Coordenador" },
@@ -796,7 +783,6 @@ document.addEventListener('DOMContentLoaded', function() {
             { id: 8, nome: "Ma. Myllena Camargo", cargo: "Membro" }
         ];
         
-        // Adiciona cada membro à lista
         membros.forEach(membro => {
             const membroItem = document.createElement('div');
             membroItem.className = 'membro-item';
@@ -816,7 +802,6 @@ document.addEventListener('DOMContentLoaded', function() {
             listaMembros.appendChild(membroItem);
         });
         
-        // Configura o "Selecionar todos"
         const selecionarTodos = document.getElementById('selecionarTodos');
         if (selecionarTodos) {
             selecionarTodos.addEventListener('change', function() {
@@ -827,7 +812,6 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
         
-        // Força a exibição dos elementos
         listaMembros.style.display = 'block';
         listaMembros.style.visibility = 'visible';
         listaMembros.style.opacity = '1';
@@ -836,17 +820,14 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.style.overflow = 'hidden';
     };
     
-    // Adiciona evento de clique ao botão
     btnNovaDiscussao.addEventListener('click', function(e) {
         e.preventDefault();
         openModal();
     });
     
-    // Fecha o modal ao clicar no X ou no botão Cancelar
     document.querySelector('#modalNovaDiscussao .modal-close')?.addEventListener('click', closeModal);
     document.querySelector('#modalNovaDiscussao .cancel-button')?.addEventListener('click', closeModal);
     
-    // Fecha o modal ao clicar fora do conteúdo
     modal.addEventListener('click', (e) => {
         if (e.target === modal) {
             closeModal();
@@ -916,13 +897,11 @@ const setupEsqueceuSenhaModal = () => {
             return;
         }
         
-        // Simulação de envio
         alert(`Instruções de recuperação de senha foram enviadas para: ${email}`);
         closeModal();
     });
 };
 
-// Adicione esta linha na seção de inicialização, junto com os outros setups:
 if (document.querySelector('.forgot-password')) setupEsqueceuSenhaModal();
 
     function setupModalExcluirDiscussao() {
@@ -979,19 +958,15 @@ const setupBiografiaEdicao = () => {
     let originalContent = '';
 
     editButton.addEventListener('click', () => {
-        // Entrar no modo de edição
         originalContent = sobreTexto.innerHTML;
         
-        // Adicionar classe de edição
         sobreTexto.classList.add('editing');
         
-        // Tornar todo o conteúdo editável
         const elementosEditaveis = sobreTexto.querySelectorAll('h4, p, li');
         elementosEditaveis.forEach(el => {
             el.setAttribute('contenteditable', 'true');
         });
         
-        // Criar botões de ação
         const buttonsDiv = document.createElement('div');
         buttonsDiv.className = 'edit-buttons';
         buttonsDiv.innerHTML = `
@@ -1001,36 +976,27 @@ const setupBiografiaEdicao = () => {
         
         sobreTexto.appendChild(buttonsDiv);
         
-        // Evento para salvar
         buttonsDiv.querySelector('.btn-salvar').addEventListener('click', () => {
-            // Sair do modo de edição
             sobreTexto.classList.remove('editing');
             elementosEditaveis.forEach(el => {
                 el.removeAttribute('contenteditable');
             });
             
-            // Remover botões
             buttonsDiv.remove();
             
-            // Simular salvamento (apenas front-end)
             alert('Alterações salvas com sucesso! (Simulação)');
             
-            // Aqui normalmente faria uma requisição AJAX para salvar no servidor
         });
         
-        // Evento para cancelar
         buttonsDiv.querySelector('.btn-cancelar').addEventListener('click', () => {
-            // Restaurar conteúdo original
             sobreTexto.innerHTML = originalContent;
             sobreTexto.classList.remove('editing');
             
-            // Adicionar novamente os listeners para futuras edições
             setupBiografiaEdicao();
         });
     });
 };
 
-// Adicione esta linha na seção de inicialização, junto com os outros setups:
 setupBiografiaEdicao();
 
     // ============ INICIALIZAÇÃO ============
