@@ -429,57 +429,60 @@ body {
 }
 
 /* ============ ESTILOS DO BOTÃO EDITAR BIOGRAFIA ============ */
-.biography-header {
+/* Estilos para edição de biografia */
+.sobre-texto.editing {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+.sobre-texto.editing h4,
+.sobre-texto.editing p,
+.sobre-texto.editing li {
+    margin-bottom: 10px;
+    padding: 5px;
+    background-color: white;
+    border: 1px solid #eee;
+}
+
+.sobre-texto.editing [contenteditable="true"]:focus {
+    outline: 2px solid #4a90e2;
+    background-color: #f0f7ff;
+}
+
+.edit-buttons {
     display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 2rem;
-    flex-wrap: wrap;
-    gap: 1rem;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 15px;
 }
 
-.biography-title-wrapper {
-    flex: 1;
-    min-width: 200px;
+.edit-buttons button {
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
 }
 
-.edit-button {
-    background-color: var(--primary-color);
+.btn-salvar {
+    background-color: #4CAF50;
     color: white;
     border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: var(--border-radius);
-    font-size: 1rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: var(--transicao-normal);
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    box-shadow: var(--sombra-leve);
-    margin-top: 0.5rem;
 }
 
-.edit-button:hover {
-    background-color: var(--vermelho);
-    transform: translateY(-2px);
-    box-shadow: var(--sombra-media);
+.btn-cancelar {
+    background-color: #f44336;
+    color: white;
+    border: none;
 }
 
-.edit-button i {
-    font-size: 1rem;
+.btn-salvar:hover {
+    background-color: #45a049;
 }
 
-/* Responsividade */
-@media (max-width: 768px) {
-    .biography-header {
-        flex-direction: column;
-    }
-    
-    .edit-button {
-        width: 100%;
-        justify-content: center;
-    }
+.btn-cancelar:hover {
+    background-color: #d32f2f;
 }
 /* ============= CONTEÚDO PRINCIPAL ============ */
 .main-panel {

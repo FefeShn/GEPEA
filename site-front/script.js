@@ -969,6 +969,70 @@ if (document.querySelector('.forgot-password')) setupEsqueceuSenhaModal();
         return true; 
     }
 
+// Função para edição de biografia
+const setupBiografiaEdicao = () => {
+    const editButton = document.querySelector('.edit-text');
+    const sobreTexto = document.querySelector('.sobre-texto');
+    
+    if (!editButton || !sobreTexto) return;
+
+    let originalContent = '';
+
+    editButton.addEventListener('click', () => {
+        // Entrar no modo de edição
+        originalContent = sobreTexto.innerHTML;
+        
+        // Adicionar classe de edição
+        sobreTexto.classList.add('editing');
+        
+        // Tornar todo o conteúdo editável
+        const elementosEditaveis = sobreTexto.querySelectorAll('h4, p, li');
+        elementosEditaveis.forEach(el => {
+            el.setAttribute('contenteditable', 'true');
+        });
+        
+        // Criar botões de ação
+        const buttonsDiv = document.createElement('div');
+        buttonsDiv.className = 'edit-buttons';
+        buttonsDiv.innerHTML = `
+            <button class="btn-salvar">Salvar Alterações</button>
+            <button class="btn-cancelar">Cancelar</button>
+        `;
+        
+        sobreTexto.appendChild(buttonsDiv);
+        
+        // Evento para salvar
+        buttonsDiv.querySelector('.btn-salvar').addEventListener('click', () => {
+            // Sair do modo de edição
+            sobreTexto.classList.remove('editing');
+            elementosEditaveis.forEach(el => {
+                el.removeAttribute('contenteditable');
+            });
+            
+            // Remover botões
+            buttonsDiv.remove();
+            
+            // Simular salvamento (apenas front-end)
+            alert('Alterações salvas com sucesso! (Simulação)');
+            
+            // Aqui normalmente faria uma requisição AJAX para salvar no servidor
+        });
+        
+        // Evento para cancelar
+        buttonsDiv.querySelector('.btn-cancelar').addEventListener('click', () => {
+            // Restaurar conteúdo original
+            sobreTexto.innerHTML = originalContent;
+            sobreTexto.classList.remove('editing');
+            
+            // Adicionar novamente os listeners para futuras edições
+            setupBiografiaEdicao();
+        });
+    });
+};
+
+// Adicione esta linha na seção de inicialização, junto com os outros setups:
+setupBiografiaEdicao();
+
     // ============ INICIALIZAÇÃO ============
     if (document.getElementById('calendar')) {
         if (document.querySelector('.btn-adicionar')) {
