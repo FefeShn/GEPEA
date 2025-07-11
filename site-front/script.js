@@ -131,7 +131,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const checkboxes = document.querySelectorAll('.member-checkbox:checked');
             alert(`Simulação: ${checkboxes.length} membro(s) marcado(s) para exclusão!`);
             
-            // Apenas simulação, não remove realmente
             checkboxes.forEach(checkbox => {
                 checkbox.checked = false;
             });
@@ -342,7 +341,6 @@ document.addEventListener('DOMContentLoaded', function() {
             modalExcluirOverlay.classList.remove('active');
             document.body.style.overflow = '';
             
-            // Limpa as seleções ao fechar o modal
             document.querySelectorAll('.publi-checkbox:checked').forEach(checkbox => {
                 checkbox.checked = false;
             });
@@ -374,7 +372,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const checkboxes = document.querySelectorAll('.publi-checkbox:checked');
             alert(`Simulação: ${checkboxes.length} publicação(ões) marcada(s) para exclusão!`);
             
-            // Apenas simulação, não remove realmente
             checkboxes.forEach(checkbox => {
                 checkbox.checked = false;
             });
@@ -637,18 +634,22 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         ],
         membros: [
-            { id: 1, nome: "Fernanda Sehn", cargo: "Admin" },
-            { id: 2, nome: "Outro Membro", cargo: "Pesquisador" }
+            { id: 1, nome: "Dr. Luciano Corsino", cargo: "Coordenador" },
+            { id: 2, nome: "Dr. Daniel Santana", cargo: "Vice-Coordenador" },
+            { id: 3, nome: "Fernanda Sehn", cargo: "Bolsista" },
+            { id: 4, nome: "Danieri Ribeiro", cargo: "Membro" },
+            { id: 5, nome: "Brenda Marins", cargo: "Bolsista" },
+            { id: 6, nome: "Deisi Franco", cargo: "Bolsista" },
+            { id: 7, nome: "Me. Leandro Mendes", cargo: "Membro" },
+            { id: 8, nome: "Ma. Myllena Camargo", cargo: "Membro" }
         ]
     };
 
-    // Função específica para verificar se é admin ou membro
     function isAdmin() {
         return window.location.pathname.includes('-admin.html');
     }
 
-    // Carregar discussões (versão para membros sem botão de excluir)
-    function carregarDiscussoesMembro() {
+    function carregarDiscussoes() {
         const container = document.getElementById('discussoes-container');
         if (!container) return;
         
@@ -666,58 +667,174 @@ document.addEventListener('DOMContentLoaded', function() {
                         </div>
                     </div>
                     <div class="discussao-acoes">
-                        <a href="discussao-membros-ex.html?id=${discussao.id}" class="btn-acessar">
+                        <a href="${isAdmin() ? 'discussao-ex.html' : 'discussao-membros-ex.html'}?id=${discussao.id}" class="btn-acessar">
                             <i class="fas fa-comments"></i> Acessar
                         </a>
-                    </div>
-                </div>
-            `;
-            container.innerHTML += discussaoHTML;
-        });
-    }
-
-    // Carregar discussões (versão para admin com botão de excluir)
-    function carregarDiscussoesAdmin() {
-        const container = document.getElementById('discussoes-container');
-        if (!container) return;
-        
-        container.innerHTML = '';
-        
-        forumData.discussoes.forEach(discussao => {
-            const discussaoHTML = `
-                <div class="discussao-card" data-id="${discussao.id}">
-                    <div class="discussao-info">
-                        <h4>${discussao.titulo}</h4>
-                        <div class="discussao-meta">
-                            <span><i class="fas fa-user"></i> ${discussao.criador}</span>
-                            <span><i class="fas fa-calendar-alt"></i> ${discussao.data}</span>
-                            <span><i class="fas fa-comment"></i> ${discussao.mensagens} mensagens</span>
-                        </div>
-                    </div>
-                    <div class="discussao-acoes">
-                        <a href="discussao-ex.html?id=${discussao.id}" class="btn-acessar">
-                            <i class="fas fa-comments"></i> Acessar
-                        </a>
+                        ${isAdmin() ? `
                         <button class="btn-excluir-discussao" data-id="${discussao.id}">
                             <i class="fas fa-trash"></i> Excluir
-                        </button>
+                        </button>` : ''}
                     </div>
                 </div>
             `;
             container.innerHTML += discussaoHTML;
         });
 
-        // Configurar eventos dos botões de exclusão (apenas para admin)
-        document.querySelectorAll('.btn-excluir-discussao').forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                e.stopPropagation();
-                const discussaoId = this.getAttribute('data-id');
-                abrirModalExclusaoDiscussao(discussaoId);
+        // Configurar eventos dos botões
+        if (isAdmin()) {
+            document.querySelector('.btn-nova-discussao')?.addEventListener('click', function(e) {
+                e.preventDefault();
+                abrirModalNovaDiscussao();
             });
+
+            // Botões de exclusão
+            document.querySelectorAll('.btn-excluir-discussao').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const discussaoId = this.getAttribute('data-id');
+                    abrirModalExclusaoDiscussao(discussaoId);
+                });
+            });
+        }
+    }
+
+    // Modal Nova Discussão para Admin
+    function abrirModalNovaDiscussao() {
+        const modal = document.getElementById('modalNovaDiscussao');
+        if (!modal) return;
+
+        const listaMembros = document.getElementById('listaMembros');
+        if (listaMembros) {
+            listaMembros.innerHTML = '';
+            
+            forumData.membros.forEach(membro => {
+                const membroItem = document.createElement('div');
+                membroItem.className = 'membro-item';
+                
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.id = `membro-${membro.id}`;
+                checkbox.name = 'membros';
+                checkbox.value = membro.id;
+                
+                const label = document.createElement('label');
+                label.htmlFor = `membro-${membro.id}`;
+                label.textContent = `${membro.nome} (${membro.cargo})`;
+                
+                membroItem.appendChild(checkbox);
+                membroItem.appendChild(label);
+                listaMembros.appendChild(membroItem);
+            });
+            
+            const selecionarTodos = document.getElementById('selecionarTodos');
+            if (selecionarTodos) {
+                selecionarTodos.addEventListener('change', function() {
+                    const checkboxes = document.querySelectorAll('#listaMembros input[type="checkbox"]');
+                    checkboxes.forEach(checkbox => {
+                        checkbox.checked = this.checked;
+                    });
+                });
+            }
+        }
+        
+        // Mostrar modal
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function fecharModalNovaDiscussao() {
+        const modal = document.getElementById('modalNovaDiscussao');
+        if (modal) {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    }
+
+    // Modal de Exclusão de Discussão
+    let discussaoIdParaExcluir = null;
+
+    function abrirModalExclusaoDiscussao(id) {
+        discussaoIdParaExcluir = id;
+        const modal = document.getElementById('modalExcluirDiscussao');
+        if (modal) {
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+    }
+
+    function fecharModalExclusaoDiscussao() {
+        const modal = document.getElementById('modalExcluirDiscussao');
+        if (modal) {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    }
+
+    // Configurar eventos dos modais
+    function setupForumModals() {
+        document.querySelector('#modalNovaDiscussao .modal-close')?.addEventListener('click', fecharModalNovaDiscussao);
+        document.querySelector('#modalNovaDiscussao .cancel-button')?.addEventListener('click', fecharModalNovaDiscussao);
+        document.getElementById('cancelarExclusaoDiscussao')?.addEventListener('click', fecharModalExclusaoDiscussao);
+        document.getElementById('modalNovaDiscussao')?.addEventListener('click', (e) => {
+            if (e.target === document.getElementById('modalNovaDiscussao')) {
+                fecharModalNovaDiscussao();
+            }
+        });
+        
+        document.getElementById('modalExcluirDiscussao')?.addEventListener('click', (e) => {
+            if (e.target === document.getElementById('modalExcluirDiscussao')) {
+                fecharModalExclusaoDiscussao();
+            }
+        });
+        
+        // Formulário nova discussão
+        document.getElementById('formNovaDiscussao')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const titulo = document.getElementById('tituloDiscussao').value;
+            const mensagem = document.getElementById('mensagemDiscussao').value;
+            const membrosSelecionados = Array.from(
+                document.querySelectorAll('#listaMembros input[type="checkbox"]:checked')
+            ).map(el => el.value);
+            
+            if (!titulo) {
+                alert('Por favor, insira um título para a discussão');
+                return;
+            }
+            
+            // Adicionar nova discussão
+            const novaDiscussao = {
+                id: forumData.discussoes.length + 1,
+                titulo: titulo,
+                criador: "Fernanda Sehn",
+                data: new Date().toLocaleDateString('pt-BR'),
+                mensagens: 0,
+                membrosComAcesso: membrosSelecionados.length > 0 ? membrosSelecionados : ["all"]
+            };
+            
+            forumData.discussoes.push(novaDiscussao);
+            
+            alert('Discussão criada com sucesso!');
+            fecharModalNovaDiscussao();
+            this.reset();
+            carregarDiscussoes();
+        });
+        
+        // Confirmar exclusão
+        document.getElementById('confirmarExclusaoDiscussao')?.addEventListener('click', () => {
+            if (discussaoIdParaExcluir) {
+                const index = forumData.discussoes.findIndex(d => d.id == discussaoIdParaExcluir);
+                if (index !== -1) {
+                    forumData.discussoes.splice(index, 1);
+                }
+                alert('Discussão excluída com sucesso!');
+                carregarDiscussoes();
+            }
+            fecharModalExclusaoDiscussao();
         });
     }
 
-    // Modal Nova Discussão para Membros
+    // Modal Nova Discussão -Membros
     function setupModalNovaDiscussaoMembro() {
         const btnNovaDiscussao = document.querySelector('.btn-nova-discussao');
         const modal = document.getElementById('modalNovaDiscussaoMembro');
@@ -777,7 +894,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 closeModal();
                 form.reset();
                 
-                // Recarrega as discussões de acordo com o tipo de usuário
                 if (isAdmin()) {
                     carregarDiscussoesAdmin();
                 } else {
@@ -787,146 +903,151 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Modal Nova Discussão para Admin
-    function setupModalNovaDiscussaoAdmin() {
-        const btnNovaDiscussao = document.querySelector('.btn-nova-discussao');
-        const modal = document.getElementById('modalNovaDiscussao');
+    function carregarDiscussoesMembro() {
+        const container = document.getElementById('discussoes-container');
+        if (!container) return;
         
-        if (!btnNovaDiscussao || !modal) return;
+        container.innerHTML = '';
+        
+        forumData.discussoes.forEach(discussao => {
+            const discussaoHTML = `
+                <div class="discussao-card" data-id="${discussao.id}">
+                    <div class="discussao-info">
+                        <h4>${discussao.titulo}</h4>
+                        <div class="discussao-meta">
+                            <span><i class="fas fa-user"></i> ${discussao.criador}</span>
+                            <span><i class="fas fa-calendar-alt"></i> ${discussao.data}</span>
+                            <span><i class="fas fa-comment"></i> ${discussao.mensagens} mensagens</span>
+                        </div>
+                    </div>
+                    <div class="discussao-acoes">
+                        <a href="discussao-membros-ex.html?id=${discussao.id}" class="btn-acessar">
+                            <i class="fas fa-comments"></i> Acessar
+                        </a>
+                    </div>
+                </div>
+            `;
+            container.innerHTML += discussaoHTML;
+        });
+    }
 
-        const closeModal = () => {
-            modal.classList.remove('active');
-            document.body.style.overflow = '';
-        };
+    function carregarDiscussoesAdmin() {
+        const container = document.getElementById('discussoes-container');
+        if (!container) return;
         
-        const openModal = () => {
-            const listaMembros = document.getElementById('listaMembros');
-            if (!listaMembros) return;
-            
-            listaMembros.innerHTML = '';
-            
-            const membros = [
-                { id: 1, nome: "Dr. Luciano Corsino", cargo: "Coordenador" },
-                { id: 2, nome: "Dr. Daniel Santana", cargo: "Vice-Coordenador" },
-                { id: 3, nome: "Fernanda Sehn", cargo: "Bolsista" },
-                { id: 4, nome: "Danieri Ribeiro", cargo: "Membro" },
-                { id: 5, nome: "Brenda Marins", cargo: "Bolsista" },
-                { id: 6, nome: "Deisi Franco", cargo: "Bolsista" },
-                { id: 7, nome: "Me. Leandro Mendes", cargo: "Membro" },
-                { id: 8, nome: "Ma. Myllena Camargo", cargo: "Membro" }
-            ];
-            
-            membros.forEach(membro => {
-                const membroItem = document.createElement('div');
-                membroItem.className = 'membro-item';
-                
-                const checkbox = document.createElement('input');
-                checkbox.type = 'checkbox';
-                checkbox.id = `membro-${membro.id}`;
-                checkbox.name = 'membros';
-                checkbox.value = membro.id;
-                
-                const label = document.createElement('label');
-                label.htmlFor = `membro-${membro.id}`;
-                label.textContent = `${membro.nome} (${membro.cargo})`;
-                
-                membroItem.appendChild(checkbox);
-                membroItem.appendChild(label);
-                listaMembros.appendChild(membroItem);
+        container.innerHTML = '';
+        
+        forumData.discussoes.forEach(discussao => {
+            const discussaoHTML = `
+                <div class="discussao-card" data-id="${discussao.id}">
+                    <div class="discussao-info">
+                        <h4>${discussao.titulo}</h4>
+                        <div class="discussao-meta">
+                            <span><i class="fas fa-user"></i> ${discussao.criador}</span>
+                            <span><i class="fas fa-calendar-alt"></i> ${discussao.data}</span>
+                            <span><i class="fas fa-comment"></i> ${discussao.mensagens} mensagens</span>
+                        </div>
+                    </div>
+                    <div class="discussao-acoes">
+                        <a href="discussao-ex.html?id=${discussao.id}" class="btn-acessar">
+                            <i class="fas fa-comments"></i> Acessar
+                        </a>
+                        <button class="btn-excluir-discussao" data-id="${discussao.id}">
+                            <i class="fas fa-trash"></i> Excluir
+                        </button>
+                    </div>
+                </div>
+            `;
+            container.innerHTML += discussaoHTML;
+        });
+
+        // Configurar eventos dos botões de exclusão (admin)
+        document.querySelectorAll('.btn-excluir-discussao').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const discussaoId = this.getAttribute('data-id');
+                abrirModalExclusaoDiscussao(discussaoId);
             });
-            
-            const selecionarTodos = document.getElementById('selecionarTodos');
-            if (selecionarTodos) {
-                selecionarTodos.addEventListener('change', function() {
-                    const checkboxes = document.querySelectorAll('#listaMembros input[type="checkbox"]');
-                    checkboxes.forEach(checkbox => {
-                        checkbox.checked = this.checked;
-                    });
-                });
-            }
-            
-            modal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        };
-        
-        btnNovaDiscussao.addEventListener('click', function(e) {
-            e.preventDefault();
-            openModal();
-        });
-        
-        document.querySelector('#modalNovaDiscussao .modal-close')?.addEventListener('click', closeModal);
-        document.querySelector('#modalNovaDiscussao .cancel-button')?.addEventListener('click', closeModal);
-        
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) closeModal();
-        });
-        
-        document.getElementById('formNovaDiscussao')?.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const titulo = document.getElementById('tituloDiscussao').value;
-            const mensagem = document.getElementById('mensagemDiscussao').value;
-            const membrosSelecionados = Array.from(
-                document.querySelectorAll('#listaMembros input[type="checkbox"]:checked')
-            ).map(el => el.value);
-            
-            if (!titulo) {
-                alert('Por favor, insira um título para a discussão');
-                return;
-            }
-            
-            console.log('Nova discussão:', { titulo, mensagem, membrosSelecionados });
-            alert('Discussão criada com sucesso!');
-            closeModal();
-            this.reset();
-            carregarDiscussoesAdmin();
         });
     }
 
-    // Modal de Exclusão de Discussão (apenas para admin)
-    function setupModalExcluirDiscussao() {
-        const modal = document.getElementById('modalExcluirDiscussao');
-        if (!modal) return;
+    // Inicialização do fórum
+    if (document.querySelector('.forum-container') || window.location.pathname.includes('forum')) {
+        carregarDiscussoes();
+        setupForumModals();
         
-        let discussaoIdParaExcluir = null;
-        
-        const closeModal = () => {
-            modal.classList.remove('active');
-            document.body.style.overflow = '';
-        };
-        
-        const abrirModalExclusaoDiscussao = (id) => {
-            discussaoIdParaExcluir = id;
-            modal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        };
-        
-        document.getElementById('cancelarExclusaoDiscussao')?.addEventListener('click', closeModal);
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) closeModal();
-        });
-        
-        document.getElementById('confirmarExclusaoDiscussao')?.addEventListener('click', () => {
-            if (discussaoIdParaExcluir) {
-                // Simulação de exclusão
-                const index = forumData.discussoes.findIndex(d => d.id == discussaoIdParaExcluir);
-                if (index !== -1) {
-                    forumData.discussoes.splice(index, 1);
-                }
-                alert('Discussão excluída com sucesso!');
-                carregarDiscussoesAdmin();
-            }
-            closeModal();
-        });
-        
-        window.abrirModalExclusaoDiscussao = abrirModalExclusaoDiscussao;
+        // Configurar botão de nova discussão se for admin
+        if (isAdmin()) {
+            document.querySelector('.btn-nova-discussao')?.addEventListener('click', function(e) {
+                e.preventDefault();
+                abrirModalNovaDiscussao();
+            });
+        }
     }
 
-    // Configuração do Chat
     function setupChat() {
         const btnEnviar = document.querySelector('.btn-enviar');
         const chatInput = document.querySelector('.chat-input textarea');
         const chatMessages = document.querySelector('.chat-messages');
+        const replyContainer = document.querySelector('.reply-container');
+        const cancelReplyBtn = document.querySelector('.cancel-reply');
+
+        function setupMessageActions() {
+            document.querySelectorAll('.admin-dropdown').forEach(dropdown => {
+                const btn = dropdown.querySelector('.admin-btn');
+                const content = dropdown.querySelector('.admin-dropdown-content');
+                
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    document.querySelectorAll('.admin-dropdown-content').forEach(d => {
+                        if (d !== content) d.style.display = 'none';
+                    });
+                    content.style.display = content.style.display === 'block' ? 'none' : 'block';
+                });
+
+                const replyBtn = dropdown.querySelector('.reply-message-btn');
+                if (replyBtn) {
+                    replyBtn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const message = this.closest('.message');
+                        const sender = message.querySelector('.message-sender').textContent;
+                        const text = message.querySelector('.message-text').textContent;
+                        
+                        replyContainer.style.display = 'block';
+                        replyContainer.querySelector('.reply-sender').textContent = sender + ':';
+                        replyContainer.querySelector('.reply-text').textContent = text;
+                        
+                        content.style.display = 'none';
+                    });
+                }
+
+                const deleteBtn = dropdown.querySelector('.delete-message-btn');
+                if (deleteBtn) {
+                    deleteBtn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const message = this.closest('.message');
+                        if (confirm('Simulação: Apagar esta mensagem?')) {
+                            message.style.opacity = '0.5';
+                            message.style.backgroundColor = '#ffecec';
+                            alert('Simulação: Mensagem marcada para exclusão!');
+                        }
+                        content.style.display = 'none';
+                    });
+                }
+            });
+
+            document.addEventListener('click', function() {
+                document.querySelectorAll('.admin-dropdown-content').forEach(content => {
+                    content.style.display = 'none';
+                });
+            });
+        }
+
+        if (cancelReplyBtn) {
+            cancelReplyBtn.addEventListener('click', function() {
+                replyContainer.style.display = 'none';
+            });
+        }
 
         if (btnEnviar && chatInput) {
             btnEnviar.addEventListener('click', function() {
@@ -934,11 +1055,34 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (messageText) {
                     const newMessage = document.createElement('div');
                     newMessage.className = 'message message-self';
+                    
+                    let replyText = '';
+                    if (replyContainer.style.display === 'block') {
+                        const replySender = replyContainer.querySelector('.reply-sender').textContent;
+                        const replyContent = replyContainer.querySelector('.reply-text').textContent;
+                        replyText = `<div class="message-reply">
+                            <span class="reply-label">Respondendo a ${replySender}</span>
+                            <span class="reply-content">${replyContent}</span>
+                        </div>`;
+                        
+                        replyContainer.style.display = 'none';
+                    }
+                    
                     newMessage.innerHTML = `
+                        <div class="message-admin-actions">
+                            <div class="admin-dropdown">
+                                <button class="admin-btn">...</button>
+                                <div class="admin-dropdown-content">
+                                    <button class="delete-message-btn">Apagar mensagem</button>
+                                    <button class="reply-message-btn">Responder</button>
+                                </div>
+                            </div>
+                        </div>
                         <div class="message-header">
                             <img src="imagens/computer.jpg" alt="Você" class="message-avatar">
                             <div class="message-sender bolsista">Fernanda Sehn</div>
                         </div>
+                        ${replyText}
                         <div class="message-text">${messageText}</div>
                         <div class="message-time">${new Date().toLocaleString('pt-BR')}</div>
                     `;
@@ -946,6 +1090,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     chatMessages.appendChild(newMessage);
                     chatInput.value = '';
                     newMessage.scrollIntoView({ behavior: 'smooth' });
+                    
+                    setupMessageActions();
                 }
             });
             
@@ -967,6 +1113,8 @@ document.addEventListener('DOMContentLoaded', function() {
         if (chatMessages) {
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
+        
+        setupMessageActions();
     }
 
     // Função para edição de biografia
@@ -1057,6 +1205,23 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     };
 
+    // Configuração dos botões de admin
+    function setupAdminButtons() {
+        document.querySelectorAll('.delete-message-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const message = this.closest('.message');
+                if (message) {
+                    if (confirm('Simulação: Apagar esta mensagem?')) {
+                        message.style.opacity = '0.5';
+                        message.style.backgroundColor = '#ffecec';
+                        alert('Simulação: Mensagem marcada para exclusão!');
+                    }
+                }
+            });
+        });
+    }
+
     // ============ INICIALIZAÇÃO ============
     if (document.getElementById('calendar')) {
         if (document.querySelector('.btn-adicionar')) {
@@ -1075,16 +1240,15 @@ document.addEventListener('DOMContentLoaded', function() {
     if (document.querySelector('#carouselExample')) setupCarousel();
     if (document.querySelector('.forgot-password')) setupEsqueceuSenhaModal();
     if (document.querySelector('.edit-text')) setupBiografiaEdicao();
+    setupAdminButtons();
 
     // Inicialização específica para o fórum
     if (document.querySelector('.forum-membro-container') || window.location.pathname.includes('forum.html')) {
         if (isAdmin()) {
-            // Configurações para admin
             carregarDiscussoesAdmin();
             setupModalNovaDiscussaoAdmin();
             setupModalExcluirDiscussao();
         } else {
-            // Configurações para membros
             carregarDiscussoesMembro();
             setupModalNovaDiscussaoMembro();
         }
