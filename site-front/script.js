@@ -652,8 +652,8 @@ document.addEventListener('DOMContentLoaded', function() {
         { id: 2, nome: "Outro Membro", cargo: "Pesquisador" }
     ]
     };
-    
-    if (window.location.pathname.includes('forum-admin.html')) {
+
+    if (document.querySelector('.forum-admin-container') || window.location.pathname.includes('forum-admin.html')) {
         setupForum();
     }
 
@@ -760,80 +760,125 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function setupModalNovaDiscussao() {
-        const btnNovaDiscussao = document.querySelector('.btn-nova-discussao');
-        const modal = document.getElementById('modalNovaDiscussao');
+    console.log('Configurando modal de nova discussão...');
+    const btnNovaDiscussao = document.querySelector('.btn-nova-discussao');
+    const modal = document.getElementById('modalNovaDiscussao');
+    
+    if (!btnNovaDiscussao || !modal) {
+        console.error('Elementos do modal não encontrados!');
+        return;
+    }
+    
+    const closeModal = () => {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+    };
+    
+    const openModal = () => {
+        const listaMembros = document.getElementById('listaMembros');
+        if (!listaMembros) {
+            console.error('Elemento listaMembros não encontrado!');
+            return;
+        }
         
-        if (!btnNovaDiscussao || !modal) return;
+        // Limpa a lista antes de popular
+        listaMembros.innerHTML = '';
         
-        const closeModal = () => {
-            modal.classList.remove('active');
-            document.body.style.overflow = '';
-        };
+        // Dados dos membros (pode ser substituído por uma chamada API)
+        const membros = [
+            { id: 1, nome: "Dr. Luciano Corsino", cargo: "Coordenador" },
+            { id: 2, nome: "Dr. Daniel Santana", cargo: "Vice-Coordenador" },
+            { id: 3, nome: "Fernanda Sehn", cargo: "Bolsista" },
+            { id: 4, nome: "Danieri Ribeiro", cargo: "Membro" },
+            { id: 5, nome: "Brenda Marins", cargo: "Bolsista" },
+            { id: 6, nome: "Deisi Franco", cargo: "Bolsista" },
+            { id: 7, nome: "Me. Leandro Mendes", cargo: "Membro" },
+            { id: 8, nome: "Ma. Myllena Camargo", cargo: "Membro" }
+        ];
         
-        const openModal = () => {
-            const listaMembros = document.getElementById('listaMembros');
-            listaMembros.innerHTML = '';
+        // Adiciona cada membro à lista
+        membros.forEach(membro => {
+            const membroItem = document.createElement('div');
+            membroItem.className = 'membro-item';
             
-            forumData.membros.forEach(membro => {
-                const membroHTML = `
-                    <div class="membro-item">
-                        <input type="checkbox" id="membro-${membro.id}" name="membros" value="${membro.id}">
-                        <label for="membro-${membro.id}">${membro.nome} (${membro.cargo})</label>
-                    </div>
-                `;
-                listaMembros.innerHTML += membroHTML;
-            });
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.id = `membro-${membro.id}`;
+            checkbox.name = 'membros';
+            checkbox.value = membro.id;
             
-            document.getElementById('selecionarTodos').addEventListener('change', function() {
+            const label = document.createElement('label');
+            label.htmlFor = `membro-${membro.id}`;
+            label.textContent = `${membro.nome} (${membro.cargo})`;
+            
+            membroItem.appendChild(checkbox);
+            membroItem.appendChild(label);
+            listaMembros.appendChild(membroItem);
+        });
+        
+        // Configura o "Selecionar todos"
+        const selecionarTodos = document.getElementById('selecionarTodos');
+        if (selecionarTodos) {
+            selecionarTodos.addEventListener('change', function() {
                 const checkboxes = document.querySelectorAll('#listaMembros input[type="checkbox"]');
                 checkboxes.forEach(checkbox => {
                     checkbox.checked = this.checked;
                 });
             });
-            
-            modal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        };
+        }
         
-        btnNovaDiscussao.addEventListener('click', openModal);
+        // Força a exibição dos elementos
+        listaMembros.style.display = 'block';
+        listaMembros.style.visibility = 'visible';
+        listaMembros.style.opacity = '1';
         
-        document.querySelector('#modalNovaDiscussao .modal-close').addEventListener('click', closeModal);
-        document.querySelector('#modalNovaDiscussao .cancel-button').addEventListener('click', closeModal);
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) closeModal();
-        });
-        
-        document.getElementById('formNovaDiscussao')?.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const titulo = document.getElementById('tituloDiscussao').value;
-            const mensagem = document.getElementById('mensagemDiscussao').value;
-            const membrosSelecionados = Array.from(document.querySelectorAll('#listaMembros input:checked')).map(el => el.value);
-            
-            const novaDiscussao = {
-                id: forumData.discussoes.length + 1,
-                titulo: titulo,
-                criador: "Fernanda Sehn",
-                data: new Date().toLocaleDateString('pt-BR'),
-                mensagens: mensagem ? 1 : 0,
-                membrosComAcesso: membrosSelecionados.length > 0 ? membrosSelecionados : ["all"],
-                mensagens: mensagem ? [{
-                    id: 3,
-                    sender: "Fernanda Sehn",
-                    text: mensagem,
-                    time: new Date().toLocaleString('pt-BR'),
-                    isCurrentUser: true
-                }] : []
-            };
-            
-            forumData.discussoes.push(novaDiscussao);
-            carregarDiscussoes();
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    };
+    
+    // Adiciona evento de clique ao botão
+    btnNovaDiscussao.addEventListener('click', function(e) {
+        e.preventDefault();
+        openModal();
+    });
+    
+    // Fecha o modal ao clicar no X ou no botão Cancelar
+    document.querySelector('#modalNovaDiscussao .modal-close')?.addEventListener('click', closeModal);
+    document.querySelector('#modalNovaDiscussao .cancel-button')?.addEventListener('click', closeModal);
+    
+    // Fecha o modal ao clicar fora do conteúdo
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
             closeModal();
-            this.reset();
-            
-            alert('Discussão criada com sucesso!');
+        }
+    });
+    
+    // Submissão do formulário
+    document.getElementById('formNovaDiscussao')?.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const titulo = document.getElementById('tituloDiscussao').value;
+        const mensagem = document.getElementById('mensagemDiscussao').value;
+        const membrosSelecionados = Array.from(
+            document.querySelectorAll('#listaMembros input[type="checkbox"]:checked')
+        ).map(el => el.value);
+        
+        if (!titulo) {
+            alert('Por favor, insira um título para a discussão');
+            return;
+        }
+        
+        console.log('Nova discussão:', {
+            titulo,
+            mensagem,
+            membrosSelecionados
         });
-    }
+        
+        alert('Discussão criada com sucesso!');
+        closeModal();
+        this.reset();
+    });
+}
 
     function setupModalExcluirDiscussao() {
         const modal = document.getElementById('modalExcluirDiscussao');
