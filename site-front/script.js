@@ -1264,6 +1264,58 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // Modal de Exclusão de Arquivos (para admin)
+// Modal de Exclusão de Arquivos (versão simplificada)
+const setupExclusaoArquivoModal = () => {
+    const deleteButton = document.getElementById('openDeleteModal');
+    const modalExcluirOverlay = document.getElementById('modalExcluirMembro');
+    
+    if (!deleteButton || !modalExcluirOverlay) return;
+
+    deleteButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        
+        const checkboxes = document.querySelectorAll('.file-checkbox:checked');
+        if (checkboxes.length === 0) {
+            alert('Por favor, selecione pelo menos um arquivo para excluir.');
+            return;
+        }
+        
+        // Mostrar modal de confirmação
+        document.body.classList.add('modal-open');
+        modalExcluirOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    });
+
+    // Cancelar exclusão
+    document.getElementById('cancelarExclusao')?.addEventListener('click', () => {
+        document.body.classList.remove('modal-open');
+        modalExcluirOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+    });
+
+    // Confirmar exclusão
+    document.getElementById('confirmarExclusao')?.addEventListener('click', () => {
+        const checkboxes = document.querySelectorAll('.file-checkbox:checked');
+        
+        alert(`${checkboxes.length} arquivo(s) excluído(s) com sucesso!`);
+        
+        // Fechar modal
+        document.body.classList.remove('modal-open');
+        modalExcluirOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+    });
+
+    // Fechar modal ao clicar fora
+    modalExcluirOverlay.addEventListener('click', (e) => {
+        if (e.target === modalExcluirOverlay) {
+            document.body.classList.remove('modal-open');
+            modalExcluirOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    });
+};
+
     // ============ INICIALIZAÇÃO ============
     if (document.getElementById('calendar')) {
         if (document.querySelector('.btn-adicionar')) {
@@ -1282,6 +1334,8 @@ document.addEventListener('DOMContentLoaded', function() {
     if (document.querySelector('#carouselExample')) setupCarousel();
     if (document.querySelector('.forgot-password')) setupEsqueceuSenhaModal();
     if (document.querySelector('.edit-text')) setupBiografiaEdicao();
+    if (document.getElementById('openDeleteModal')) setupExclusaoArquivoModal();
+
     setupAdminButtons();
 
     // Inicialização específica para o fórum

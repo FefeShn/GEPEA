@@ -2459,7 +2459,7 @@ body {
 }
 
 /* Modal de Confirmação */
-.confirm-modal .modal-header {
+.confirm-modal {
   background: var(--vermelho);
 }
 
@@ -3690,6 +3690,42 @@ body.modal-open main:not(.modal-overlay) {
   }
 }
 
+/* ESTILO BÁSICO PARA OS CHECKBOXES */
+.file-checkbox {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    display: block !important;
+}
+
+.document-card {
+    position: relative;
+    padding-left: 50px;
+}
+
+
+.library-container.deleting .document-card:hover {
+    background-color: rgba(255, 0, 0, 0.1);
+}
+/* Estilo básico para os checkboxes */
+.file-checkbox {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+.document-card {
+    position: relative;
+    padding-left: 50px;
+}
 
 /* ============ ESTILOS DA PÁGINA DE SUPORTE ============ */
 /* Estilos para o modal de confirmação */
@@ -3733,7 +3769,7 @@ body.modal-open main:not(.modal-overlay) {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.3); /* Overlay escuro semi-transparente */
+    background-color: rgba(0, 0, 0, 0.3); 
     z-index: 0;
 }
 
@@ -3752,7 +3788,7 @@ body.modal-open main:not(.modal-overlay) {
   padding: 2rem;
   border-radius: var(--border-radius);
   box-shadow: var(--sombra-leve);
-      backdrop-filter: blur(5px); /* Efeito de desfoque no fundo */
+      backdrop-filter: blur(5px);
 
 }
 
