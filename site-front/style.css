@@ -4885,3 +4885,73 @@ body.membros-page {
 .reply-text {
     color: #555;
 }
+
+/* Adicione ao seu arquivo CSS */
+.message-actions {
+    margin-left: auto;
+    display: flex;
+    gap: 8px;
+}
+
+.message-actions button {
+    background: none;
+    border: none;
+    color: #666;
+    cursor: pointer;
+    font-size: 14px;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.message:hover .message-actions button {
+    opacity: 1;
+}
+
+.message-actions button:hover {
+    color: #333;
+}
+
+.reply-container {
+    background-color: #f5f5f5;
+    padding: 8px 12px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    border-left: 3px solid #4CAF50;
+}
+
+.reply-label {
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+.reply-text {
+    color: #555;
+}
+
+.cancel-reply {
+    background: none;
+    border: none;
+    color: #666;
+    cursor: pointer;
+    float: right;
+}
+
+.message-reply {
+    background-color: #f0f0f0;
+    border-left: 3px solid #4CAF50;
+    padding: 8px;
+    margin-bottom: 8px;
+    border-radius: 0 4px 4px 0;
+}
+
+.message-reply .reply-label {
+    display: block;
+    font-size: 0.8em;
+    color: #666;
+}
+
+.message-reply .reply-content {
+    display: block;
+    font-size: 0.9em;
+    color: #333;
+}

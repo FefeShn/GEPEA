@@ -985,14 +985,52 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    // ============ CHAT ============
     function setupChat() {
         const btnEnviar = document.querySelector('.btn-enviar');
         const chatInput = document.querySelector('.chat-input textarea');
         const chatMessages = document.querySelector('.chat-messages');
         const replyContainer = document.querySelector('.reply-container');
         const cancelReplyBtn = document.querySelector('.cancel-reply');
+        let replyingTo = null;
 
+        // Função para configurar os botões de ação nas mensagens
         function setupMessageActions() {
+            // Botão de responder
+            document.querySelectorAll('.reply-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const message = this.closest('.message');
+                    const sender = message.querySelector('.message-sender').textContent;
+                    const text = message.querySelector('.message-text').textContent;
+                    
+                    replyingTo = {
+                        sender: sender,
+                        text: text,
+                        messageElement: message
+                    };
+                    
+                    replyContainer.style.display = 'block';
+                    replyContainer.querySelector('.reply-text').textContent = `${sender}: ${text}`;
+                });
+            });
+
+            // Botão de excluir (só aparece nas próprias mensagens)
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const message = this.closest('.message');
+                    
+                    if (confirm('Tem certeza que deseja excluir esta mensagem?')) {
+                        // Simulação: na implementação real, aqui seria uma chamada API
+                        message.style.opacity = '0.5';
+                        message.style.pointerEvents = 'none';
+                        alert('Mensagem excluída com sucesso!');
+                    }
+                });
+            });
+
+            // Configuração dos botões de admin (se existirem)
             document.querySelectorAll('.admin-dropdown').forEach(dropdown => {
                 const btn = dropdown.querySelector('.admin-btn');
                 const content = dropdown.querySelector('.admin-dropdown-content');
@@ -1013,9 +1051,14 @@ document.addEventListener('DOMContentLoaded', function() {
                         const sender = message.querySelector('.message-sender').textContent;
                         const text = message.querySelector('.message-text').textContent;
                         
+                        replyingTo = {
+                            sender: sender,
+                            text: text,
+                            messageElement: message
+                        };
+                        
                         replyContainer.style.display = 'block';
-                        replyContainer.querySelector('.reply-sender').textContent = sender + ':';
-                        replyContainer.querySelector('.reply-text').textContent = text;
+                        replyContainer.querySelector('.reply-text').textContent = `${sender}: ${text}`;
                         
                         content.style.display = 'none';
                     });
@@ -1043,12 +1086,15 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
+        // Cancelar resposta
         if (cancelReplyBtn) {
             cancelReplyBtn.addEventListener('click', function() {
                 replyContainer.style.display = 'none';
+                replyingTo = null;
             });
         }
 
+        // Enviar mensagem
         if (btnEnviar && chatInput) {
             btnEnviar.addEventListener('click', function() {
                 const messageText = chatInput.value.trim();
@@ -1056,33 +1102,27 @@ document.addEventListener('DOMContentLoaded', function() {
                     const newMessage = document.createElement('div');
                     newMessage.className = 'message message-self';
                     
-                    let replyText = '';
-                    if (replyContainer.style.display === 'block') {
-                        const replySender = replyContainer.querySelector('.reply-sender').textContent;
-                        const replyContent = replyContainer.querySelector('.reply-text').textContent;
-                        replyText = `<div class="message-reply">
-                            <span class="reply-label">Respondendo a ${replySender}</span>
-                            <span class="reply-content">${replyContent}</span>
+                    let replyHtml = '';
+                    if (replyingTo) {
+                        replyHtml = `<div class="message-reply">
+                            <span class="reply-label">Respondendo a ${replyingTo.sender}</span>
+                            <span class="reply-content">${replyingTo.text}</span>
                         </div>`;
                         
                         replyContainer.style.display = 'none';
+                        replyingTo = null;
                     }
                     
                     newMessage.innerHTML = `
-                        <div class="message-admin-actions">
-                            <div class="admin-dropdown">
-                                <button class="admin-btn">...</button>
-                                <div class="admin-dropdown-content">
-                                    <button class="delete-message-btn">Apagar mensagem</button>
-                                    <button class="reply-message-btn">Responder</button>
-                                </div>
+                        <div class="message-header">
+                            <img src="imagens/snoopyy.png" alt="Você" class="message-avatar">
+                            <div class="message-sender bolsista">Você</div>
+                            <div class="message-actions">
+                                <button class="reply-btn" title="Responder"><i class="fas fa-reply"></i></button>
+                                <button class="delete-btn" title="Excluir"><i class="fas fa-trash"></i></button>
                             </div>
                         </div>
-                        <div class="message-header">
-                            <img src="imagens/computer.jpg" alt="Você" class="message-avatar">
-                            <div class="message-sender bolsista">Fernanda Sehn</div>
-                        </div>
-                        ${replyText}
+                        ${replyHtml}
                         <div class="message-text">${messageText}</div>
                         <div class="message-time">${new Date().toLocaleString('pt-BR')}</div>
                     `;
@@ -1091,6 +1131,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     chatInput.value = '';
                     newMessage.scrollIntoView({ behavior: 'smooth' });
                     
+                    // Configurar os eventos para os novos botões
                     setupMessageActions();
                 }
             });
@@ -1114,6 +1155,7 @@ document.addEventListener('DOMContentLoaded', function() {
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
         
+        // Configurar os botões de ação nas mensagens existentes
         setupMessageActions();
     }
 
