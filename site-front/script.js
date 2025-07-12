@@ -667,7 +667,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         </div>
                     </div>
                     <div class="discussao-acoes">
-                        <a href="${isAdmin() ? 'discussao-ex.html' : 'discussao-membros-ex.html'}?id=${discussao.id}" class="btn-acessar">
+                        <a href="${isAdmin() ? 'discussao-ex-admin.html' : 'discussao-membros-ex.html'}?id=${discussao.id}" class="btn-acessar">
                             <i class="fas fa-comments"></i> Acessar
                         </a>
                         ${isAdmin() ? `
@@ -949,7 +949,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         </div>
                     </div>
                     <div class="discussao-acoes">
-                        <a href="discussao-ex.html?id=${discussao.id}" class="btn-acessar">
+                        <a href="discussao-ex-admin.html?id=${discussao.id}" class="btn-acessar">
                             <i class="fas fa-comments"></i> Acessar
                         </a>
                         <button class="btn-excluir-discussao" data-id="${discussao.id}">
@@ -993,6 +993,18 @@ document.addEventListener('DOMContentLoaded', function() {
         const replyContainer = document.querySelector('.reply-container');
         const cancelReplyBtn = document.querySelector('.cancel-reply');
         let replyingTo = null;
+
+        // Verifica se é admin (Fernanda) ou membro (Daniel)
+        const isAdmin = window.location.pathname.includes('-admin.html');
+        const currentUser = isAdmin ? {
+            name: "Fernanda Sehn",
+            role: "bolsista",
+            avatar: "imagens/computer.jpg"
+        } : {
+            name: "Dr. Daniel Santana",
+            role: "vice-coordenador",
+            avatar: "imagens/estrela.jpg"
+        };
 
         // Função para configurar os botões de ação nas mensagens
         function setupMessageActions() {
@@ -1115,8 +1127,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     newMessage.innerHTML = `
                         <div class="message-header">
-                            <img src="imagens/estrela.jpg" alt="Você" class="message-avatar">
-                            <div class="message-sender vice-coordenador">Você</div>
+                            <img src="${currentUser.avatar}" alt="${currentUser.name}" class="message-avatar">
+                            <div class="message-sender ${currentUser.role}">Você</div>
                             <div class="message-actions">
                                 <button class="reply-btn" title="Responder"><i class="fas fa-reply"></i></button>
                                 <button class="delete-btn" title="Excluir"><i class="fas fa-trash"></i></button>
