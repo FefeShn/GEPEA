@@ -1115,8 +1115,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     newMessage.innerHTML = `
                         <div class="message-header">
-                            <img src="imagens/snoopyy.png" alt="Você" class="message-avatar">
-                            <div class="message-sender bolsista">Você</div>
+                            <img src="imagens/estrela.jpg" alt="Você" class="message-avatar">
+                            <div class="message-sender vice-coordenador">Você</div>
                             <div class="message-actions">
                                 <button class="reply-btn" title="Responder"><i class="fas fa-reply"></i></button>
                                 <button class="delete-btn" title="Excluir"><i class="fas fa-trash"></i></button>
@@ -1158,6 +1158,73 @@ document.addEventListener('DOMContentLoaded', function() {
         // Configurar os botões de ação nas mensagens existentes
         setupMessageActions();
     }
+
+    // ============ FUNÇÕES DA PÁGINA DE BIOGRAFIA ============
+const setupBiografiaPage = () => {
+    // Botão de editar biografia
+    const editButton = document.querySelector('.edit-button');
+    const biographyText = document.querySelector('.biography-text');
+    
+    // Botão de trocar foto
+    const changePhotoButton = document.querySelector('.change-photo-button');
+    const profileImage = document.querySelector('.profile-image');
+    
+    // Função para editar biografia
+    if (editButton && biographyText) {
+        editButton.addEventListener('click', () => {
+            // Verifica se já está em modo de edição
+            const isEditing = biographyText.hasAttribute('contenteditable');
+            
+            if (isEditing) {
+                // Sai do modo de edição
+                biographyText.removeAttribute('contenteditable');
+                editButton.innerHTML = '<i class="ti-pencil"></i> Editar biografia';
+                alert('Biografia atualizada com sucesso! (Simulação)');
+            } else {
+                // Entra no modo de edição
+                biographyText.setAttribute('contenteditable', 'true');
+                biographyText.focus();
+                editButton.innerHTML = '<i class="ti-check"></i> Salvar';
+                
+                // Adiciona estilo visual para modo de edição
+                biographyText.style.padding = '10px';
+                biographyText.style.border = '1px dashed #ccc';
+                biographyText.style.borderRadius = '4px';
+                biographyText.style.minHeight = '100px';
+            }
+        });
+    }
+    
+    // Função para trocar foto
+    if (changePhotoButton && profileImage) {
+        changePhotoButton.addEventListener('click', () => {
+            // Cria um input file dinamicamente
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.accept = 'image/*';
+            
+            fileInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    // Simula o upload da imagem (na prática seria uma chamada AJAX)
+                    const reader = new FileReader();
+                    
+                    reader.onload = (event) => {
+                        // Atualiza a imagem de perfil
+                        profileImage.src = event.target.result;
+                        alert('Foto de perfil atualizada com sucesso! (Simulação)');
+                    };
+                    
+                    reader.readAsDataURL(file);
+                }
+            });
+            
+            // Dispara o clique no input file
+            fileInput.click();
+        });
+    }
+};
+
 
     // Função para edição de biografia
     const setupBiografiaEdicao = () => {
@@ -1335,6 +1402,7 @@ const setupExclusaoArquivoModal = () => {
     if (document.querySelector('.forgot-password')) setupEsqueceuSenhaModal();
     if (document.querySelector('.edit-text')) setupBiografiaEdicao();
     if (document.getElementById('openDeleteModal')) setupExclusaoArquivoModal();
+    if (document.querySelector('.biography-container')) setupBiografiaPage();
 
     setupAdminButtons();
 
