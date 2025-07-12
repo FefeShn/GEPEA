@@ -994,7 +994,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const cancelReplyBtn = document.querySelector('.cancel-reply');
         let replyingTo = null;
 
-        // Verifica se é admin (Fernanda) ou membro (Daniel)
         const isAdmin = window.location.pathname.includes('-admin.html');
         const currentUser = isAdmin ? {
             name: "Fernanda Sehn",
@@ -1006,9 +1005,7 @@ document.addEventListener('DOMContentLoaded', function() {
             avatar: "imagens/estrela.jpg"
         };
 
-        // Função para configurar os botões de ação nas mensagens
         function setupMessageActions() {
-            // Botão de responder
             document.querySelectorAll('.reply-btn').forEach(btn => {
                 btn.addEventListener('click', function(e) {
                     e.stopPropagation();
@@ -1027,14 +1024,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             });
 
-            // Botão de excluir (só aparece nas próprias mensagens)
             document.querySelectorAll('.delete-btn').forEach(btn => {
                 btn.addEventListener('click', function(e) {
                     e.stopPropagation();
                     const message = this.closest('.message');
                     
                     if (confirm('Tem certeza que deseja excluir esta mensagem?')) {
-                        // Simulação: na implementação real, aqui seria uma chamada API
                         message.style.opacity = '0.5';
                         message.style.pointerEvents = 'none';
                         alert('Mensagem excluída com sucesso!');
@@ -1042,7 +1037,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             });
 
-            // Configuração dos botões de admin (se existirem)
+            // Configuração dos botões de admin 
             document.querySelectorAll('.admin-dropdown').forEach(dropdown => {
                 const btn = dropdown.querySelector('.admin-btn');
                 const content = dropdown.querySelector('.admin-dropdown-content');
@@ -1098,7 +1093,6 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
-        // Cancelar resposta
         if (cancelReplyBtn) {
             cancelReplyBtn.addEventListener('click', function() {
                 replyContainer.style.display = 'none';
@@ -1142,8 +1136,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     chatMessages.appendChild(newMessage);
                     chatInput.value = '';
                     newMessage.scrollIntoView({ behavior: 'smooth' });
-                    
-                    // Configurar os eventos para os novos botões
                     setupMessageActions();
                 }
             });
@@ -1167,38 +1159,30 @@ document.addEventListener('DOMContentLoaded', function() {
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
         
-        // Configurar os botões de ação nas mensagens existentes
         setupMessageActions();
     }
 
     // ============ FUNÇÕES DA PÁGINA DE BIOGRAFIA ============
 const setupBiografiaPage = () => {
-    // Botão de editar biografia
     const editButton = document.querySelector('.edit-button');
     const biographyText = document.querySelector('.biography-text');
     
-    // Botão de trocar foto
     const changePhotoButton = document.querySelector('.change-photo-button');
     const profileImage = document.querySelector('.profile-image');
     
-    // Função para editar biografia
     if (editButton && biographyText) {
         editButton.addEventListener('click', () => {
-            // Verifica se já está em modo de edição
             const isEditing = biographyText.hasAttribute('contenteditable');
             
             if (isEditing) {
-                // Sai do modo de edição
                 biographyText.removeAttribute('contenteditable');
                 editButton.innerHTML = '<i class="ti-pencil"></i> Editar biografia';
                 alert('Biografia atualizada com sucesso! (Simulação)');
             } else {
-                // Entra no modo de edição
                 biographyText.setAttribute('contenteditable', 'true');
                 biographyText.focus();
                 editButton.innerHTML = '<i class="ti-check"></i> Salvar';
                 
-                // Adiciona estilo visual para modo de edição
                 biographyText.style.padding = '10px';
                 biographyText.style.border = '1px dashed #ccc';
                 biographyText.style.borderRadius = '4px';
@@ -1210,7 +1194,6 @@ const setupBiografiaPage = () => {
     // Função para trocar foto
     if (changePhotoButton && profileImage) {
         changePhotoButton.addEventListener('click', () => {
-            // Cria um input file dinamicamente
             const fileInput = document.createElement('input');
             fileInput.type = 'file';
             fileInput.accept = 'image/*';
@@ -1218,7 +1201,6 @@ const setupBiografiaPage = () => {
             fileInput.addEventListener('change', (e) => {
                 const file = e.target.files[0];
                 if (file) {
-                    // Simula o upload da imagem (na prática seria uma chamada AJAX)
                     const reader = new FileReader();
                     
                     reader.onload = (event) => {
@@ -1231,7 +1213,6 @@ const setupBiografiaPage = () => {
                 }
             });
             
-            // Dispara o clique no input file
             fileInput.click();
         });
     }
@@ -1344,7 +1325,6 @@ const setupBiografiaPage = () => {
     }
 
     // Modal de Exclusão de Arquivos (para admin)
-// Modal de Exclusão de Arquivos (versão simplificada)
 const setupExclusaoArquivoModal = () => {
     const deleteButton = document.getElementById('openDeleteModal');
     const modalExcluirOverlay = document.getElementById('modalExcluirMembro');
@@ -1366,26 +1346,22 @@ const setupExclusaoArquivoModal = () => {
         document.body.style.overflow = 'hidden';
     });
 
-    // Cancelar exclusão
     document.getElementById('cancelarExclusao')?.addEventListener('click', () => {
         document.body.classList.remove('modal-open');
         modalExcluirOverlay.classList.remove('active');
         document.body.style.overflow = '';
     });
 
-    // Confirmar exclusão
     document.getElementById('confirmarExclusao')?.addEventListener('click', () => {
         const checkboxes = document.querySelectorAll('.file-checkbox:checked');
         
         alert(`${checkboxes.length} arquivo(s) excluído(s) com sucesso!`);
         
-        // Fechar modal
         document.body.classList.remove('modal-open');
         modalExcluirOverlay.classList.remove('active');
         document.body.style.overflow = '';
     });
 
-    // Fechar modal ao clicar fora
     modalExcluirOverlay.addEventListener('click', (e) => {
         if (e.target === modalExcluirOverlay) {
             document.body.classList.remove('modal-open');
