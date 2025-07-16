@@ -1371,6 +1371,115 @@ const setupExclusaoArquivoModal = () => {
     });
 };
 
+    // ============ FUNÇÕES DA PÁGINA DE AÇÕES ============
+    // Modal de Nova Ação
+    const setupNovaAcaoModal = () => {
+        const btnAdicionar = document.querySelector('.btn-adicionar');
+        const modalAcao = document.getElementById('modalNovaAcao');
+        
+        if (!btnAdicionar || !modalAcao) return;
+
+        const closeModal = () => {
+            modalAcao.classList.remove('active');
+            document.body.style.overflow = '';
+        };
+
+        const openModal = () => {
+            const dataAtual = new Date();
+            const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+            document.getElementById('dataAtualAcao').textContent = dataAtual.toLocaleDateString('pt-BR', options);
+            
+            modalAcao.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        };
+
+        btnAdicionar.addEventListener('click', openModal);
+
+        document.querySelectorAll('.modal-acao-close, .modal-acao-cancel').forEach(btn => {
+            btn.addEventListener('click', closeModal);
+        });
+
+        modalAcao.addEventListener('click', (e) => {
+            if (e.target === modalAcao) closeModal();
+        });
+
+        document.getElementById('formAcao')?.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const titulo = document.getElementById('tituloAcao').value;
+            const descricao = document.getElementById('descricaoAcao').value;
+            const imagem = document.getElementById('imagemAcao').files[0];
+            
+            console.log('Nova ação:', { titulo, descricao, imagem });
+            alert('Ação criada com sucesso!');
+            
+            e.target.reset();
+            closeModal();
+        });
+
+        document.getElementById('imagemAcao')?.addEventListener('change', function() {
+            const label = this.nextElementSibling;
+            if (this.files.length > 0) {
+                label.textContent = this.files[0].name;
+            } else {
+                label.innerHTML = '<i class="ti-image mr-2"></i>Selecione uma imagem';
+            }
+        });
+    };
+
+    // Modal de Exclusão de Ações
+    const setupExclusaoAcaoModal = () => {
+        const deleteButton = document.querySelector('.btn-excluir');
+        const modalExcluirOverlay = document.getElementById('modalExcluirAcao');
+        
+        if (!deleteButton || !modalExcluirOverlay) {
+            console.error('Elementos do modal de exclusão de ações não encontrados!');
+            return;
+        }
+
+        const closeModal = () => {
+            document.body.classList.remove('modal-open');
+            modalExcluirOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+            
+            document.querySelectorAll('.publi-checkbox:checked').forEach(checkbox => {
+                checkbox.checked = false;
+            });
+        };
+
+        const openModal = () => {
+            const checkboxes = document.querySelectorAll('.publi-checkbox:checked');
+            if (checkboxes.length === 0) {
+                alert('Por favor, selecione pelo menos uma ação para excluir.');
+                return;
+            }
+            document.body.classList.add('modal-open');
+            modalExcluirOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        };
+
+        deleteButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            openModal();
+        });
+
+        document.getElementById('cancelarExclusaoAcao')?.addEventListener('click', closeModal);
+
+        modalExcluirOverlay.addEventListener('click', (e) => {
+            if (e.target === modalExcluirOverlay) closeModal();
+        });
+
+        document.getElementById('confirmarExclusaoAcao')?.addEventListener('click', () => {
+            const checkboxes = document.querySelectorAll('.publi-checkbox:checked');
+            alert(`Simulação: ${checkboxes.length} ação(ões) marcada(s) para exclusão!`);
+            
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = false;
+            });
+            
+            closeModal();
+        });
+    };
+
     // ============ INICIALIZAÇÃO ============
     if (document.getElementById('calendar')) {
         if (document.querySelector('.btn-adicionar')) {
@@ -1392,17 +1501,20 @@ const setupExclusaoArquivoModal = () => {
     if (document.getElementById('openDeleteModal')) setupExclusaoArquivoModal();
     if (document.querySelector('.biography-container')) setupBiografiaPage();
 
+    // Inicialização específica para a página de ações
+    if (window.location.pathname.includes('acoes-admin.html')) {
+        setupNovaAcaoModal();
+        setupExclusaoAcaoModal();
+    }
+
     setupAdminButtons();
 
     // Inicialização específica para o fórum
     if (document.querySelector('.forum-membro-container') || window.location.pathname.includes('forum.html')) {
         if (isAdmin()) {
             carregarDiscussoesAdmin();
-            setupModalNovaDiscussaoAdmin();
-            setupModalExcluirDiscussao();
         } else {
             carregarDiscussoesMembro();
-            setupModalNovaDiscussaoMembro();
         }
     }
 

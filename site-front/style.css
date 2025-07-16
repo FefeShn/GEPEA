@@ -5191,3 +5191,23 @@ body.membros-page {
   font-size: small;
   text-align: center;
 }
+
+.publicar-acao{
+  background-color: var(--verde);
+  color: white;
+}
+
+.publicar-acao:hover {
+  background-color: var(--amarelo);
+  border: var(--amarelo);
+}
+.modal-acao-cancel{
+  background-color: var(--cinza-claro);
+  ;
+}
+
+.modal-acao-cancel:hover {
+  background-color: var(--vermelho);
+  border: var(--vermelho);
+
+}

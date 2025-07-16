@@ -160,6 +160,58 @@
             <input type="checkbox" class="publi-checkbox">
             </div>
           </div>
+            <!-- Modal Nova Ação -->
+  <div id="modalNovaAcao" class="modal-overlay">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3>Nova Ação</h3>
+        <button class="modal-acao-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="formAcao">
+          <div class="form-group">
+            <label for="tituloAcao">Título da Ação</label>
+            <input type="text" id="tituloAcao" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label for="descricaoAcao">Descrição</label>
+            <textarea id="descricaoAcao" class="form-control" rows="4" required></textarea>
+          </div>
+          <div class="form-group">
+            <label for="imagemAcao" class="file-upload-btn">
+              <i class="ti-image mr-2"></i>Selecione uma imagem
+              <input type="file" id="imagemAcao" accept="image/*">
+            </label>
+          </div>
+          <div class="form-group">
+            <label>Data de Publicação</label>
+            <div id="dataAtualAcao" class="form-control-static"></div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary modal-acao-cancel">Cancelar</button>
+            <button type="submit" class="btn btn-primary publicar-acao">Publicar Ação</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Excluir Ação -->
+  <div id="modalExcluirAcao" class="modal-overlay">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3>Confirmar Exclusão</h3>
+        <button class="close-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>Tem certeza que deseja excluir a(s) ação(ões) selecionada(s)?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="cancelarExclusaoAcao" class="btn btn-secondary cancelar">Cancelar</button>
+        <button type="button" id="confirmarExclusaoAcao" class="btn btn-danger excluir-acao">Excluir</button>
+      </div>
+    </div>
+  </div>
         
         <!-- FOOTER -->
         <footer class="footer">
