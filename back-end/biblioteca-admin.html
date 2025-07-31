@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GEPEA</title>
+  <link rel="shortcut icon" href="imagens/gepea.png" />
+  <link rel="stylesheet" href="style.css">
+  <!-- Ícones (usando Tabler Icons via CDN) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons@latest/iconfont/tabler-icons.min.css">
+</head>
+<body>
+  <div class="container-scroller">
+    <!-- NAV BAR -->
+     <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+      <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
+        <img src="imagens/gepea.png" alt="logo-gepea" class="logo-nav">
+        <p class="titulo-logo">GEPEA</p>
+      </div>
+      <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
+        
+        <ul class="navbar-nav mr-lg-2">
+          <li class="nav-item nav-search d-none d-lg-block">
+            <div class="input-group busca-box">
+            <div class="input-group-prepend" id="navbar-search-icon">
+              
+            </div>
+            <input type="text" class="form-control busca" id="navbar-search-input" placeholder="Busca" aria-label="search" aria-describedby="search">
+            </div>
+          </li>
+        </ul>
+
+        <ul class="navbar-nav navbar-nav-right">
+          
+          <li class="nav-item nav-profile dropdown">
+            <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
+              <div class="profile-img">
+                <a href="biografia-admin.html">
+                  <img src="imagens/computer.jpg" alt="profile" class="profile-img">
+                </a>
+              </div>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
+              <a class="dropdown-item">
+                <i class="ti-settings text-primary"></i>
+                Configurações
+              </a>
+              <a class="dropdown-item" id="logout-btn">
+                <i class="ti-power-off text-primary"></i>
+                Sair
+              </a>
+            </div>
+          </li>
+        </ul>
+        <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
+          <span class="icon-menu"></span>
+        </button>
+      </div>
+    </nav>
+     <!--MENU LATERAL-->
+    <button id="botao-menu" aria-label="Abrir menu">☰</button>
+    <nav class="menu-lateral" id="menuLateral">
+      <ul>
+        <li><a href="index-admin.html"><i class="ti-agenda mr-2"></i>Publicações</a></li>
+        <li><a href="acoes-admin.html"><i class="ti-agenda mr-2"></i>Ações</a></li>
+        <li><a href="sobre-admin.html"><i class="ti-agenda mr-2"></i>Sobre o GEPEA</a></li>
+        <li><a href="membros-admin.html"><i class="ti-agenda mr-2"></i>Membros</a></li>
+        <li><a href="biblioteca-admin.html" class="active"><i class="ti-agenda mr-2"></i>Biblioteca</a></li>
+        <li><a href="agenda-admin.html"><i class="ti-agenda mr-2"></i>Agenda</a></li>
+        <li><a href="forum-admin.html"><i class="ti-agenda mr-2"></i>Fórum</a></li>
+        <li><a href="suporte.html"><i class="ti-agenda mr-2"></i>Suporte</a></li>
+      </ul>
+    </nav>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="library-container">
+      <div class="library-header">
+        <h1 class="page-title">Biblioteca</h1>
+        <div class="library-actions">
+            <button id="openUploadModal" class="add-file-button">
+                Upload de Arquivo
+            </button>
+            <button id="openDeleteModal" class="delete-file-button">
+                Excluir Arquivo
+            </button>
+        </div>
+        <p class="page-subtitle">Materiais disponíveis para download</p>
+      
+      <div class="library-grid">
+        <!-- Item 1 -->
+        <div class="document-card">
+          
+          <div class="document-info document-content" >
+            <h3>Livro de Exemplo</h3>
+            <p class="document-description">Versão 2025 - Atualizado</p>
+            <p class="document-date">Postado em: 05/07/2025</p>
+          </div>
+          <a href="#" class="download-button" download>
+            <i class="ti ti-download"></i> Baixar
+          </a>
+<input type="checkbox" class="file-checkbox" data-file-id="1">
+</div>
+
+        <!-- Item 2 -->
+        <div class="document-card">
+          
+          <div class="document-info document-content">
+            <h3>Artigo de exemplo</h3>
+            <p class="document-description">Artigo sobre pipipipopopo</p>
+            <p class="document-date">Postado em: 03/07/2025</p>
+          </div>
+          <a href="#" class="download-button" download>
+            <i class="ti ti-download"></i> Baixar
+          </a>
+          <input type="checkbox" class="file-checkbox" data-file-id="2">
+        </div>
+
+        <!-- 3 -->
+        <div class="document-card">
+          
+          <div class="document-info document-content">
+            <h3>Exemplo</h3>
+            <p class="document-description">pipipipopopo</p>
+            <p class="document-date">Postado em: 03/07/2025</p>
+          </div>
+          <a href="#" class="download-button" download>
+            <i class="ti ti-download"></i> Baixar
+          </a>
+          <input type="checkbox" class="file-checkbox" data-file-id="3">
+        </div>
+
+        <!-- 4 -->
+        <div class="document-card">
+          
+          <div class="document-info document-content">
+            <h3>Outro Exemplo</h3>
+            <p class="document-description">pipipipopopopoppipipopopopipipipipopo</p>
+            <p class="document-date">Postado em: 07/07/2025</p>
+          </div>
+          <a href="#" class="download-button" download>
+            <i class="ti ti-download"></i> Baixar
+          </a>
+            <input type="checkbox" class="file-checkbox" data-file-id="4">        
+        </div>
+
+      </div>
+    </main>
+    <!-- Modal de Upload -->
+<div class="modal-overlay" id="modalUpload">
+  <div class="modal-container">
+    <div class="modal-header">
+      <h3>Upload de Arquivo</h3>
+      <button class="close-modal">&times;</button>
+    </div>
+    <div class="modal-body">
+      <form id="uploadForm">
+        <div class="form-group">
+          <label for="fileTitle">Título do Arquivo</label>
+          <input type="text" id="fileTitle" placeholder="Ex: Fighting Words - Patricia Hill Collins" required>
+        </div>
+        <div class="form-group">
+          <label for="fileDescription">Descrição</label>
+          <textarea id="fileDescription" rows="3" placeholder="Descreva o conteúdo do arquivo..."></textarea>
+        </div>
+        <div class="form-group">
+          <label for="fileUpload">Selecione o arquivo</label>
+          <input type="file" id="fileUpload" accept=".pdf,.doc,.docx" required>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="cancel-button">Cancelar</button>
+          <button type="submit" class="submit-button">Enviar Arquivo</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Confirmação de Exclusão -->
+    <div class="modal-overlay" id="modalExcluirMembro" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modalExcluirTitle">
+    <div class="modal-container confirm-modal">
+        <div class="modal-header">
+            <h3 id="modalExcluirTitle">Confirmar Exclusão</h3>
+            <button class="modal-close" aria-label="Fechar modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p>Tem certeza que deseja excluir o(s) arquivo(s) selecionado(s)? Esta ação não pode ser desfeita.</p>
+        </div>
+        <div class="modal-actions">
+            <button class="btn btn-secondary" id="cancelarExclusao">Não, cancelar</button>
+            <button class="btn btn-danger" id="confirmarExclusao">Sim, excluir</button>
+        </div>
+    </div>
+</div>
+
+
+
+    <!-- FOOTER-->
+     <footer class="footer">
+          <div class="d-sm-flex justify-content-center justify-content-sm-between">
+            <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">GEPEA © 2025.</span>
+          </div>
+        </footer>
+      </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
