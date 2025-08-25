@@ -646,7 +646,7 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     function isAdmin() {
-        return window.location.pathname.includes('-admin.html');
+        return window.location.pathname.includes('-admin.php');
     }
 
     function carregarDiscussoes() {
@@ -667,7 +667,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         </div>
                     </div>
                     <div class="discussao-acoes">
-                        <a href="${isAdmin() ? 'discussao-ex-admin.html' : 'discussao-membros-ex.html'}?id=${discussao.id}" class="btn-acessar">
+                        <a href="${isAdmin() ? 'discussao-ex-admin.php' : 'discussao-membros-ex.php'}?id=${discussao.id}" class="btn-acessar">
                             <i class="fas fa-comments"></i> Acessar
                         </a>
                         ${isAdmin() ? `
@@ -921,7 +921,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         </div>
                     </div>
                     <div class="discussao-acoes">
-                        <a href="discussao-membros-ex.html?id=${discussao.id}" class="btn-acessar">
+                        <a href="discussao-membros-ex.php?id=${discussao.id}" class="btn-acessar">
                             <i class="fas fa-comments"></i> Acessar
                         </a>
                     </div>
@@ -949,7 +949,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         </div>
                     </div>
                     <div class="discussao-acoes">
-                        <a href="discussao-ex-admin.html?id=${discussao.id}" class="btn-acessar">
+                        <a href="discussao-ex-admin.php?id=${discussao.id}" class="btn-acessar">
                             <i class="fas fa-comments"></i> Acessar
                         </a>
                         <button class="btn-excluir-discussao" data-id="${discussao.id}">
@@ -994,15 +994,15 @@ document.addEventListener('DOMContentLoaded', function() {
         const cancelReplyBtn = document.querySelector('.cancel-reply');
         let replyingTo = null;
 
-        const isAdmin = window.location.pathname.includes('-admin.html');
+        const isAdmin = window.location.pathname.includes('-admin.php');
         const currentUser = isAdmin ? {
             name: "Fernanda Sehn",
             role: "bolsista",
-            avatar: "imagens/computer.jpg"
+            avatar: "../imagens/computer.jpg"
         } : {
             name: "Dr. Daniel Santana",
             role: "vice-coordenador",
-            avatar: "imagens/estrela.jpg"
+            avatar: "../imagens/estrela.jpg"
         };
 
         function setupMessageActions() {
@@ -1502,7 +1502,7 @@ const setupExclusaoArquivoModal = () => {
     if (document.querySelector('.biography-container')) setupBiografiaPage();
 
     // Inicialização específica para a página de ações
-    if (window.location.pathname.includes('acoes-admin.html')) {
+    if (window.location.pathname.includes('acoes-admin.php')) {
         setupNovaAcaoModal();
         setupExclusaoAcaoModal();
     }
@@ -1510,7 +1510,7 @@ const setupExclusaoArquivoModal = () => {
     setupAdminButtons();
 
     // Inicialização específica para o fórum
-    if (document.querySelector('.forum-membro-container') || window.location.pathname.includes('forum.html')) {
+    if (document.querySelector('.forum-membro-container') || window.location.pathname.includes('forum.php')) {
         if (isAdmin()) {
             carregarDiscussoesAdmin();
         } else {

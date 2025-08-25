@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GEPEA</title>
+  <link rel="shortcut icon" href="../imagens/gepea.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <div class="container-scroller">
+    <!-- NAV BAR -->
+    <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+      <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
+        <img src="../imagens/gepea.png" alt="logo-gepea" class="logo-nav">
+        <p class="titulo-logo">GEPEA</p>
+      </div>
+      <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
+        <ul class="navbar-nav mr-lg-2">
+          <li class="nav-item nav-search d-none d-lg-block">
+            <div class="input-group busca-box">
+              <input type="text" class="form-control busca" placeholder="Buscar">
+            </div>
+          </li>
+        </ul>
+        <ul class="navbar-nav navbar-nav-right">
+          <li class="nav-item nav-profile dropdown">
+            <a href="biografia-admin.php">
+                  <img src="../imagens/computer.jpg" alt="profile" class="profile-img">
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- MENU LATERAL -->
+    <button id="botao-menu" aria-label="Abrir menu">☰</button>
+    <nav class="menu-lateral" id="menuLateral">
+      <ul>
+        <li><a href="index-admin.php" ><i class="ti-home mr-2"></i>Publicações</a></li>
+        <li><a href="acoes-admin.php"><i class="ti-home mr-2"></i>Ações</a></li>
+          <li><a href="sobre-admin.php"><i class="ti-book mr-2"></i>Sobre o GEPEA</a></li>
+          <li><a href="membros-admin.php"><i class="ti-agenda mr-2"></i>Membros</a></li>
+          <li><a href="biblioteca-admin.php"><i class="ti-agenda mr-2"></i>Biblioteca</a></li>
+          <li><a href="agenda-admin.php"><i class="ti-agenda mr-2"></i>Agenda</a></li>
+          <li><a href="forum-admin.php" class="active"><i class="ti-agenda mr-2"></i>Fórum</a></li>
+          <li><a href="../anonimo/suporte.php"><i class="ti-user mr-2"></i>Suporte</a></li>
+      </ul>
+    </nav>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <div class="main-panel">
+      <div class="content-wrapper">
+        <div class="titulo-forum">
+          <h3><i class="fas fa-comments"></i> Fórum de Discussões</h3>
+          <button class="btn btn-nova-discussao">
+            <i class="fas fa-plus"></i> Nova Discussão
+          </button>
+        </div>
+
+        <div class="discussoes-container" id="discussoes-container">
+          <div class="discussao-card">
+            <div class="discussao-info">
+              <h4>Chat Geral</h4>
+              <div class="discussao-meta">
+                <span><i class="fas fa-user"></i> Fernanda Sehn</span>
+                <span><i class="fas fa-calendar-alt"></i> 10/07/2025</span>
+                <span><i class="fas fa-comment"></i> 4 mensagens</span>
+              </div>
+            </div>
+
+            <div class="discussao-acoes">
+              <button class="btn-excluir-discussao" data-id="1">
+                <i class="fas fa-trash"></i> Excluir
+              </button>
+              <a href="discussao-ex-admin.php" class="btn-acessar">
+                <i class="fas fa-comments"></i> Acessar
+              </a>
+            
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Nova Discussão -->
+    <div class="modal-overlay" id="modalNovaDiscussao">
+      <div class="modal-container">
+        <div class="modal-header">
+          <h3><i class="fas fa-plus-circle"></i> Criar Nova Discussão</h3>
+          <button class="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+          <form id="formNovaDiscussao">
+            <div class="form-group">
+              <label for="tituloDiscussao"><i class="fas fa-heading"></i> Título*</label>
+              <input type="text" id="tituloDiscussao" placeholder="Dê um título claro para sua discussão" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="mensagemDiscussao"><i class="fas fa-comment-dots"></i> Mensagem (opcional)</label>
+              <textarea id="mensagemDiscussao" placeholder="Descreva sua discussão com detalhes..."></textarea>
+            </div>
+            
+            <div class="modal-actions">
+              <button type="button" class="cancel-button">Cancelar</button>
+              <button type="submit" class="submit-button"><i class="fas"></i> Criar Discussão</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Excluir Discussão -->
+    <div class="modal-overlay" id="modalExcluirDiscussao">
+      <div class="modal-container confirm-modal">
+        <div class="modal-header">
+          <h3><i class="fas fa-exclamation-triangle"></i> Confirmar Exclusão</h3>
+        </div>
+        <div class="modal-body">
+          <p>Tem certeza que deseja excluir esta discussão? Todas as mensagens serão perdidas permanentemente.</p>
+        </div>
+        <div class="modal-actions">
+          <button class="cancel-button" id="cancelarExclusaoDiscussao">Cancelar</button>
+          <button class="submit-button delete-button" id="confirmarExclusaoDiscussao"><i class="fas fa-trash"></i> Excluir</button>
+        </div>
+      </div>
+    </div>
+
+    <?php
+      require("../include/footer.php");
+    ?>
+  </div>
+  
+  <script src="../script.js"></script>
+</body>
+</html>

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>GEPEA</title>
+  <!-- endinject -->
+  <link rel="shortcut icon" href="imagens/gepea.png" />
+  <link rel="stylesheet" href="../style.css">
+</head>
+
+<body>
+  
+  <div class="container-scroller">
+    <!-- NAV BAR -->
+    <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+      <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
+        <img src="../imagens/gepea.png" alt="logo-gepea" class="logo-nav">
+        <p class="titulo-logo">GEPEA</p>
+      </div>
+      <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
+        
+        <ul class="navbar-nav mr-lg-2">
+          <li class="nav-item nav-search d-none d-lg-block">
+            <div class="input-group busca-box">
+            <div class="input-group-prepend" id="navbar-search-icon">
+              
+            </div>
+            <input type="text" class="form-control busca" id="navbar-search-input" placeholder="Busca" aria-label="search" aria-describedby="search">
+            </div>
+          </li>
+        </ul>
+
+        <ul class="navbar-nav navbar-nav-right">
+          
+          <li class="nav-item nav-profile dropdown">
+            <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
+              <div class="profile-img">
+                <a href="login.php">
+                  <img src="../imagens/user-foto.png" alt="profile" class="profile-img">
+                </a>
+              </div>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
+              <a class="dropdown-item">
+                <i class="ti-settings text-primary"></i>
+                Configurações
+              </a>
+              <a class="dropdown-item" id="logout-btn">
+                <i class="ti-power-off text-primary"></i>
+                Sair
+              </a>
+            </div>
+          </li>
+        </ul>
+        <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
+          <span class="icon-menu"></span>
+        </button>
+      </div>
+    </nav>
+    <!-- FIM DA NAV BAR -->
+
+      <!-- partial -->
+      <!-- MENU LATERAL -->
+      <button id="botao-menu" aria-label="Abrir menu">☰</button>
+      <nav class="menu-lateral" id="menuLateral">
+        <ul>
+          <li><a href="index.php" ><i class="ti-home mr-2"></i>Publicações</a></li>
+          <li><a href="acoes.php" class="active"><i class="ti-home mr-2"></i>Ações</a></li>
+          <li><a href="sobre.php"><i class="ti-book mr-2"></i>Sobre o GEPEA</a></li>
+          <li><a href="membros.php"><i class="ti-agenda mr-2"></i>Membros</a></li>
+          <li><a href="suporte.php"><i class="ti-user mr-2"></i>Suporte</a></li>
+        </ul>
+      </nav>
+
+      <!-- CONTEÚDO PRINCIPAL -->
+      <div class="main-panel">
+        <div class="content-wrapper">
+          <div class="row">
+            <div class="col-md-12 grid-margin">
+              <div class="row">
+                <div class="col-12 col-xl-8 mb-4 mb-xl-0">
+                  <div class="titulo-publicacoes"> 
+                    <h3 class="font-weight-bold">Ações</h3>
+                    <h6 class="font-weight-normal mb-0">Últimas ações do grupo</h6>
+                  </div>
+                </div>
+                
+              </div>
+            </div>
+          </div>
+
+          <div class="row" id="publicacoes-container">
+            <!-- Card 1 -->
+            <div class="col-md-4 mb-4 sombra-transparente">
+              <div class="card h-100">
+                <img src="../imagens/artigo2.jpeg" class="card-img-top" alt="foto do post">
+                <div class="card-body d-flex flex-column">
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <small class="text-muted">26/06/2025</small>
+                  </div>
+                  <h5 class="card-title">Artigo Publicado: Implementação da Lei nº 10.639/03 na Educação Básica: contribuições do campo da educação física escolar</h5>
+                  <p class="card-text">Artigo publicado na Revista Caderno Pedagógico</p>
+                  <div class="mt-auto d-flex justify-content-between align-items-center">
+                    <a href="../acoes/acao1.php" class="btn btn-success">Ver detalhes</a>
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="col-md-4 mb-4 sombra-transparente">
+              <div class="card h-100">
+                <img src="../imagens/artigo1.jpeg" class="card-img-top" alt="foto do post">
+                <div class="card-body d-flex flex-column">
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <small class="text-muted">22/04/2025</small>
+                  </div>
+                  <h5 class="card-title">Artigo Publicado: Não basta não ser racista, é preciso ser antirracista: uma revisão sistemática sobre educação física escolar</h5>
+                  <p class="card-text">Artigo publicado na revista Boletim de Conjuntura (BOCA)</p>
+                  <div class="mt-auto d-flex justify-content-between align-items-center">
+                    <a href="../acoes/acao2.php" class="btn btn-success">Ver detalhes</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="col-md-4 mb-4 sombra-transparente">
+              <div class="card h-100">
+                <img src="../imagens/bento.jpeg" class="card-img-top" alt="foto do post">
+                <div class="card-body d-flex flex-column">
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <small class="text-muted">05/12/2024</small>
+                  </div>
+                  <h5 class="card-title">GEPEA presente no Salão de Bento Gonçalves</h5>
+                  <p class="card-text">Bolsistas apresentaram seus projetos no evento.</p>
+                  <div class="mt-auto d-flex justify-content-between align-items-center">
+                    <a href="../acoes/acao3.php" class="btn btn-success">Ver detalhes</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        
+        <!-- FOOTER -->
+        <?php
+          require('..\include\footer.php');
+        ?>
+      </div>
+      <!-- main-panel ends -->
+    </div>   
+  </div>
+  <script src="../script.js"></script>
+</body>
+
+</html>

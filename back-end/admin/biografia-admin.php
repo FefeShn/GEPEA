@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>GEPEA</title>
+  <!-- endinject -->
+  <link rel="shortcut icon" href="../imagens/gepea.png" />
+  <link rel="stylesheet" href="../style.css">
+</head>
+
+<body>
+  
+  <div class="container-scroller">
+    <!-- NAV BAR -->
+    <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+      <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
+        <img src="../imagens/gepea.png" alt="logo-gepea" class="logo-nav">
+        <p class="titulo-logo">GEPEA</p>
+      </div>
+      <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
+        
+        
+
+        <ul class="navbar-nav navbar-nav-right">
+          
+          <li class="nav-item nav-profile dropdown">
+            <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
+              <div class="profile-img">
+                <a href="../anonimo/login.php">
+                  <img src="../imagens/computer.jpg" alt="profile" class="profile-img">
+                </a>
+              </div>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
+              <a class="dropdown-item">
+                <i class="ti-settings text-primary"></i>
+                Configurações
+              </a>
+              <a class="dropdown-item" id="logout-btn">
+                <i class="ti-power-off text-primary"></i>
+                Sair
+              </a>
+            </div>
+          </li>
+        </ul>
+        <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
+          <span class="icon-menu"></span>
+        </button>
+      </div>
+    </nav>
+    <!-- FIM DA NAV BAR -->
+
+      <!-- partial -->
+      <!-- MENU LATERAL -->
+      <button id="botao-menu" aria-label="Abrir menu">☰</button>
+      <nav class="menu-lateral" id="menuLateral">
+        <ul>
+          <li><a href="index-admin.php"><i class="ti-home mr-2"></i>Publicações</a></li>
+          <li><a href="acoes-admin.php"><i class="ti-home mr-2"></i>Ações</a></li>
+          <li><a href="sobre-admin.php"><i class="ti-book mr-2"></i>Sobre o GEPEA</a></li>
+          <li><a href="membros-admin.php"><i class="ti-agenda mr-2"></i>Membros</a></li>
+          <li><a href="biblioteca-admin.php"><i class="ti-agenda mr-2"></i>Biblioteca</a></li>
+          <li><a href="agenda-admin.php"><i class="ti-agenda mr-2"></i>Agenda</a></li>
+          <li><a href="forum-admin.php"><i class="ti-agenda mr-2"></i>Fórum</a></li>
+          <li><a href="../anonimo/suporte.php"><i class="ti-user mr-2"></i>Suporte</a></li>
+        </ul>
+      </nav>
+
+      <!-- CONTEÚDO PRINCIPAL -->
+      <main class="biography-container">
+      <div class="biography-header">
+        <div class="biography-title-wrapper">
+          <h1 class="biography-title">Biografia</h1>
+          <a href="membros-admin.php" class="back-button">← Voltar aos membros</a>
+        </div>
+        <button class="edit-button">
+          <i class="ti-pencil"></i> Editar biografia
+        </button>
+      </div>
+      
+      <div class="biography-content">
+        <div class="biography-photo">
+          <img src="../imagens/computer.jpg" alt="Foto do Professor Luciano Corsino" class="profile-image">
+            <button class="change-photo-button">
+                <i class="ti-camera"></i> Alterar foto de perfil
+            </button>
+        </div>
+        
+        <div class="biography-info">
+          <h2 class="member-name">Fernanda Sehn</h2>
+          <p class="member-role bolsista">Bolsista</p>
+          
+          <div class="member-contacts">
+            <a href="http://lattes.cnpq.br/5360280589109309" target="_blank" class="lattes-link">
+              <img src="../imagens/lattes-icon.png" alt="Currículo Lattes" class="contact-icon">
+              Currículo Lattes
+            </a>
+            <a href="mailto:fernandasehn6@gmail.com" class="email-link">
+              <img src="../imagens/email-icon.png" alt="Email" class="contact-icon">
+              fernandasehn6@gmail.com
+            </a>
+          </div>
+          
+          <div class="biography-text">
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam posuere neque dolor, ultricies eleifend nisl ultricies ac. In hac habitasse platea dictumst. Nam lobortis orci egestas enim molestie auctor. Sed vitae justo et arcu lacinia accumsan aliquet nec mauris. Aenean ante ex, pellentesque nec metus bibendum, pulvinar ultricies massa. Donec dictum ac massa vitae laoreet. Suspendisse placerat dui turpis, eu fermentum augue sodales eu. Sed convallis nisl velit, non auctor lorem ultrices vel. Duis luctus dui nunc. Vestibulum mi orci, gravida ac ante at, ullamcorper faucibus enim. Phasellus sit amet mollis massa. Quisque augue lorem, ornare in dapibus quis, iaculis id dui. Donec vel mattis sapien, ac gravida diam. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Cras lacus metus, condimentum id tellus non, sagittis vehicula mi. Sed tristique sem non tincidunt laoreet.</p>
+            
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam posuere neque dolor, ultricies eleifend nisl ultricies ac. In hac habitasse platea dictumst. Nam lobortis orci egestas enim molestie auctor. Sed vitae justo et arcu lacinia accumsan aliquet nec mauris. Aenean ante ex, pellentesque nec metus bibendum, pulvinar ultricies massa. Donec dictum ac massa vitae laoreet. Suspendisse placerat dui turpis, eu fermentum augue sodales eu. Sed convallis nisl velit, non auctor lorem ultrices vel. Duis luctus dui nunc. Vestibulum mi orci, gravida ac ante at, ullamcorper faucibus enim. Phasellus sit amet mollis massa. Quisque augue lorem, ornare in dapibus quis, iaculis id dui. Donec vel mattis sapien, ac gravida diam. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Cras lacus metus, condimentum id tellus non, sagittis vehicula mi. Sed tristique sem non tincidunt laoreet.</p>
+            
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam posuere neque dolor, ultricies eleifend nisl ultricies ac. In hac habitasse platea dictumst. Nam lobortis orci egestas enim molestie auctor. Sed vitae justo et arcu lacinia accumsan aliquet nec mauris. Aenean ante ex, pellentesque nec metus bibendum, pulvinar ultricies massa. Donec dictum ac massa vitae laoreet. Suspendisse placerat dui turpis, eu fermentum augue sodales eu. Sed convallis nisl velit, non auctor lorem ultrices vel. Duis luctus dui nunc. Vestibulum mi orci, gravida ac ante at, ullamcorper faucibus enim. Phasellus sit amet mollis massa. Quisque augue lorem, ornare in dapibus quis, iaculis id dui. Donec vel mattis sapien, ac gravida diam. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Cras lacus metus, condimentum id tellus non, sagittis vehicula mi. Sed tristique sem non tincidunt laoreet.</p>
+          </div>
+        </div>
+      </div>
+    </main>
+        
+        <!-- FOOTER -->
+        <?php
+          require("../include/footer.php");
+        ?>
+      </div>
+      <!-- main-panel ends -->
+    </div>   
+  </div>
+  <script src="../script.js"></script>
+</body>
+
+</html>
