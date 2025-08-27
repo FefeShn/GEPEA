@@ -621,6 +621,57 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 };
 
+// Modal Nova Discussão - Membros 
+function setupModalNovaDiscussaoMembro() {
+    const btnNovaDiscussao = document.querySelector('.btn-nova-discussao');
+    const modal = document.getElementById('modalNovaDiscussaoMembro');
+    
+    if (!btnNovaDiscussao || !modal) {
+        console.error('Elementos do modal de membros não encontrados!');
+        return;
+    }
+    
+    const closeModal = () => {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+    };
+    
+    const openModal = () => {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    };
+    
+    btnNovaDiscussao.addEventListener('click', function(e) {
+        e.preventDefault();
+        openModal();
+    });
+    
+    modal.querySelector('.modal-close')?.addEventListener('click', closeModal);
+    modal.querySelector('.cancel-button')?.addEventListener('click', closeModal);
+    
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    
+    const form = document.getElementById('formNovaDiscussaoMembro');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const titulo = document.getElementById('tituloDiscussaoMembro').value;
+            const mensagem = document.getElementById('mensagemDiscussaoMembro').value;
+            
+            if (!titulo) {
+                alert('Por favor, insira um título para a discussão');
+                return;
+            }
+            
+            alert(`Discussão "${titulo}" criada com sucesso! (Simulação)`);
+            closeModal();
+            form.reset();
+        });
+    }
+}
     // ============ FÓRUM ============
     const forumData = {
         discussoes: [
@@ -1488,6 +1539,10 @@ const setupExclusaoArquivoModal = () => {
             setupAgendaMembro();
         }
     }
+
+    if (document.getElementById('modalNovaDiscussaoMembro')) {
+    setupModalNovaDiscussaoMembro();
+}
 
     if (document.querySelector('.btn-adicionar')) setupPublicacaoModal();
     if (document.querySelector('.add-member-button')) setupCadastroModal();
