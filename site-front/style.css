@@ -5552,3 +5552,28 @@ body.membros-page {
 }
 
 
+/* Garante que a imagem fique no centro vertical da navbar */
+.navbar-nav-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+/* Estiliza a imagem do usuário */
+.user-photo {
+  width: 55px;
+  height: 55px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-right: 15px;
+  margin-top: 3px;
+}
+
+/* Remove possíveis estilos herdados do Bootstrap */
+.nav-profile .dropdown-toggle {
+  display: flex;
+  align-items: center;
+  padding: 0;
+  border: none;
+  background: none;
+}
