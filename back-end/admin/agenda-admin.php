@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>GEPEA</title>
-  <link rel="shortcut icon" href="..imagens/gepea.png" />
+  <link rel="shortcut icon" href="../imagens/gepea.png" />
   <link rel="stylesheet" href="../style.css">
   <!-- FullCalendar CSS -->
   <link href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css' rel='stylesheet' />

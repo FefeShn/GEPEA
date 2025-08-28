@@ -1,6 +1,65 @@
+function setupPostCarousel() {
+    const carousel = document.getElementById('postCarousel');
+    if (!carousel) return;
+
+    const inner = carousel.querySelector('.carousel-inner');
+    const items = carousel.querySelectorAll('.carousel-item');
+    const indicators = carousel.querySelectorAll('.indicator');
+    
+    if (items.length <= 1) return;
+
+    let currentIndex = 0;
+    let isTransitioning = false;
+
+    function showSlide(index) {
+        if (isTransitioning || index < 0 || index >= items.length) return;
+        
+        isTransitioning = true;
+        inner.style.transform = `translateX(-${index * 100}%)`;
+        
+        indicators.forEach((indicator, i) => {
+            indicator.classList.toggle('active', i === index);
+        });
+        
+        items.forEach((item, i) => {
+            item.classList.toggle('active', i === index);
+        });
+        
+        currentIndex = index;
+        
+        setTimeout(() => {
+            isTransitioning = false;
+        }, 500);
+    }
+
+    function moveSlide(direction) {
+        let newIndex = currentIndex + direction;
+        
+        if (newIndex < 0) {
+            newIndex = items.length - 1;
+        } else if (newIndex >= items.length) {
+            newIndex = 0;
+        }
+        
+        showSlide(newIndex);
+    }
+
+    function goToSlide(index) {
+        if (index >= 0 && index < items.length) {
+            showSlide(index);
+        }
+    }
+
+    carousel.querySelector('.prev').addEventListener('click', () => moveSlide(-1));
+    carousel.querySelector('.next').addEventListener('click', () => moveSlide(1));
+
+    indicators.forEach((indicator, index) => {
+        indicator.addEventListener('click', () => goToSlide(index));
+    });
+
+    showSlide(0);
+}
 document.addEventListener('DOMContentLoaded', function() {
-    // ============ FUNÇÕES GERAIS ============
-    // MENU
     const botaoMenu = document.getElementById('botao-menu');
     const menuLateral = document.getElementById('menuLateral');
 
@@ -11,7 +70,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Toggle Password (para páginas de login)
     const togglePassword = document.querySelector('.toggle-password');
     const passwordInput = document.getElementById('password');
     
@@ -25,7 +83,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Login Form
     const loginForm = document.getElementById('loginForm');
     if (loginForm) {
         loginForm.addEventListener('submit', function(e) {
@@ -39,7 +96,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Member Cards (para página de membros)
     document.querySelectorAll('.member-card').forEach(card => {
         card.addEventListener('click', function() {
             this.style.transform = 'scale(0.98)';
@@ -47,9 +103,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // ============ FUNÇÕES DE MODAIS ============
-
-    // Modal de Cadastro (para admin)
     const setupCadastroModal = () => {
         const addMemberButton = document.querySelector('.add-member-button');
         const modalOverlay = document.getElementById('modalCadastro');
@@ -86,7 +139,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     };
 
-    // Modal de Exclusão -(para admin)
     const setupExclusaoModal = () => {
         const deleteButton = document.querySelector('.delete-member-button');
         const modalExcluirOverlay = document.getElementById('modalExcluirMembro');
@@ -139,7 +191,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     };
 
-    // Modal de Suporte (pra todos)
     const setupSupportModal = () => {
         const supportForm = document.getElementById('supportForm');
         const modalConfirmacao = document.getElementById('modalConfirmacao');
@@ -174,7 +225,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     };
 
-    // Modal de Upload (para admin)
     const setupUploadModal = () => {
         const openModalButton = document.querySelector('.add-file-button');
         const modalUpload = document.getElementById('modalUpload');
@@ -212,7 +262,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     };
 
-    // Modal de Publicação (para admin)
     const setupPublicacaoModal = () => {
         const btnAdicionar = document.querySelector('.btn-adicionar');
         const modalPublicacao = document.getElementById('modalPublicacao');
@@ -266,67 +315,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     };
 
-    // Carrossel
-    const setupCarousel = () => {
-        const carousel = document.querySelector('#carouselExample');
-        if (!carousel) return;
+    
 
-        const items = carousel.querySelectorAll('.carousel-item');
-        if (items.length === 0) return;
-
-        let currentIndex = 0;
-        let isTransitioning = false;
-        
-        function showItem(index) {
-            if (isTransitioning || index === currentIndex) return;
-            
-            isTransitioning = true;
-            
-            items[currentIndex].classList.remove('active');
-            items[index].classList.add('active');
-            
-            updateIndicators(index);
-            
-            currentIndex = index;
-            
-            setTimeout(() => {
-                isTransitioning = false;
-            }, 800);
-        }
-        
-        function updateIndicators(index) {
-            const indicators = document.querySelectorAll('.carousel-indicator');
-            indicators.forEach((indicator, i) => {
-                indicator.classList.toggle('active', i === index);
-            });
-        }
-        
-        carousel.querySelector('.carousel-control-next')?.addEventListener('click', () => {
-            const nextIndex = (currentIndex + 1) % items.length;
-            showItem(nextIndex);
-        });
-        
-        carousel.querySelector('.carousel-control-prev')?.addEventListener('click', () => {
-            const prevIndex = (currentIndex - 1 + items.length) % items.length;
-            showItem(prevIndex);
-        });
-        
-        const indicatorsContainer = document.createElement('div');
-        indicatorsContainer.className = 'carousel-indicators';
-        
-        items.forEach((_, index) => {
-            const indicator = document.createElement('button');
-            indicator.className = `carousel-indicator ${index === 0 ? 'active' : ''}`;
-            indicator.addEventListener('click', () => showItem(index));
-            indicatorsContainer.appendChild(indicator);
-        });
-        
-        carousel.appendChild(indicatorsContainer);
-        
-        showItem(0);
-    };
-
-    // Modal de Exclusão de Publicações
     const setupExclusaoPublicacaoModal = () => {
         const deleteButton = document.querySelector('.btn-excluir');
         const modalExcluirOverlay = document.getElementById('modalExcluirPublicacao');
@@ -380,7 +370,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     };
 
-    // ============ FUNÇÕES DA AGENDA ============
     const setupAgendaMembro = () => {
     try {
         const eventos = [
@@ -419,7 +408,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        // Elementos do modal de evento
         const modalEvento = document.getElementById('modalEvento');
         const modalTitulo = document.getElementById('modalEventoTitulo');
         const eventoTitulo = document.getElementById('evento-titulo');
@@ -491,11 +479,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     } catch (error) {
         console.error('Erro ao inicializar calendário:', error);
-        $('#calendar').html('<div class="alert alert-danger">Erro ao carregar o calendário. Recarregue a página.</div>');
+        $('#calendar').php('<div class="alert alert-danger">Erro ao carregar o calendário. Recarregue a página.</div>');
     }
 };
 
-    // Funções específicas para a agenda de admin
     const setupAgendaAdmin = () => {
     try {
         const eventosFixos = [
@@ -521,7 +508,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 right: 'month,agendaWeek,agendaDay'
             },
             defaultView: 'month',
-            defaultDate: moment().format('YYYY-MM-DD'), 
+            defaultDate : moment().format('YYYY-MM-DD'), 
             locale: 'pt-br',
             editable: true, 
             selectable: true,
@@ -617,11 +604,61 @@ document.addEventListener('DOMContentLoaded', function() {
 
     } catch (error) {
         console.error('Erro ao inicializar calendário admin:', error);
-        $('#calendar').html('<div class="alert alert-danger">Erro ao carregar o calendário. Recarregue a página.</div>');
+        $('#calendar').php('<div class="alert alert-danger">Erro ao carregar o calendário. Recarregue a página.</div>');
     }
 };
 
-    // ============ FÓRUM ============
+function setupModalNovaDiscussaoMembro() {
+    const btnNovaDiscussao = document.querySelector('.btn-nova-discussao');
+    const modal = document.getElementById('modalNovaDiscussaoMembro');
+    
+    if (!btnNovaDiscussao || !modal) {
+        console.error('Elementos do modal de membros não encontrados!');
+        return;
+    }
+    
+    const closeModal = () => {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+    };
+    
+    const openModal = () => {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    };
+    
+    btnNovaDiscussao.addEventListener('click', function(e) {
+        e.preventDefault();
+        openModal();
+    });
+    
+    modal.querySelector('.modal-close')?.addEventListener('click', closeModal);
+    modal.querySelector('.cancel-button')?.addEventListener('click', closeModal);
+    
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    
+    const form = document.getElementById('formNovaDiscussaoMembro');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const titulo = document.getElementById('tituloDiscussaoMembro').value;
+            const mensagem = document.getElementById('mensagemDiscussaoMembro').value;
+            
+            if (!titulo) {
+                alert('Por favor, insira um título para a discussão');
+                return;
+            }
+            
+            alert(`Discussão "${titulo}" criada com sucesso! (Simulação)`);
+            closeModal();
+            form.reset();
+        });
+    }
+}
+
     const forumData = {
         discussoes: [
             {
@@ -680,14 +717,12 @@ document.addEventListener('DOMContentLoaded', function() {
             container.innerHTML += discussaoHTML;
         });
 
-        // Configurar eventos dos botões
         if (isAdmin()) {
             document.querySelector('.btn-nova-discussao')?.addEventListener('click', function(e) {
                 e.preventDefault();
                 abrirModalNovaDiscussao();
             });
 
-            // Botões de exclusão
             document.querySelectorAll('.btn-excluir-discussao').forEach(btn => {
                 btn.addEventListener('click', function(e) {
                     e.stopPropagation();
@@ -698,7 +733,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Modal Nova Discussão para Admin
     function abrirModalNovaDiscussao() {
         const modal = document.getElementById('modalNovaDiscussao');
         if (!modal) return;
@@ -737,7 +771,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
         
-        // Mostrar modal
         modal.classList.add('active');
         document.body.style.overflow = 'hidden';
     }
@@ -750,7 +783,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Modal de Exclusão de Discussão
     let discussaoIdParaExcluir = null;
 
     function abrirModalExclusaoDiscussao(id) {
@@ -770,7 +802,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Configurar eventos dos modais
     function setupForumModals() {
         document.querySelector('#modalNovaDiscussao .modal-close')?.addEventListener('click', fecharModalNovaDiscussao);
         document.querySelector('#modalNovaDiscussao .cancel-button')?.addEventListener('click', fecharModalNovaDiscussao);
@@ -787,7 +818,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         
-        // Formulário nova discussão
         document.getElementById('formNovaDiscussao')?.addEventListener('submit', function(e) {
             e.preventDefault();
             
@@ -802,7 +832,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             
-            // Adicionar nova discussão
             const novaDiscussao = {
                 id: forumData.discussoes.length + 1,
                 titulo: titulo,
@@ -820,7 +849,6 @@ document.addEventListener('DOMContentLoaded', function() {
             carregarDiscussoes();
         });
         
-        // Confirmar exclusão
         document.getElementById('confirmarExclusaoDiscussao')?.addEventListener('click', () => {
             if (discussaoIdParaExcluir) {
                 const index = forumData.discussoes.findIndex(d => d.id == discussaoIdParaExcluir);
@@ -834,7 +862,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Modal Nova Discussão -Membros
     function setupModalNovaDiscussaoMembro() {
         const btnNovaDiscussao = document.querySelector('.btn-nova-discussao');
         const modal = document.getElementById('modalNovaDiscussaoMembro');
@@ -961,7 +988,6 @@ document.addEventListener('DOMContentLoaded', function() {
             container.innerHTML += discussaoHTML;
         });
 
-        // Configurar eventos dos botões de exclusão (admin)
         document.querySelectorAll('.btn-excluir-discussao').forEach(btn => {
             btn.addEventListener('click', function(e) {
                 e.stopPropagation();
@@ -971,12 +997,10 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Inicialização do fórum
     if (document.querySelector('.forum-container') || window.location.pathname.includes('forum')) {
         carregarDiscussoes();
         setupForumModals();
         
-        // Configurar botão de nova discussão se for admin
         if (isAdmin()) {
             document.querySelector('.btn-nova-discussao')?.addEventListener('click', function(e) {
                 e.preventDefault();
@@ -985,7 +1009,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // ============ CHAT ============
     function setupChat() {
         const btnEnviar = document.querySelector('.btn-enviar');
         const chatInput = document.querySelector('.chat-input textarea');
@@ -998,11 +1021,11 @@ document.addEventListener('DOMContentLoaded', function() {
         const currentUser = isAdmin ? {
             name: "Fernanda Sehn",
             role: "bolsista",
-            avatar: "../imagens/computer.jpg"
+            avatar: "imagens/computer.jpg"
         } : {
             name: "Dr. Daniel Santana",
             role: "vice-coordenador",
-            avatar: "../imagens/estrela.jpg"
+            avatar: "imagens/estrela.jpg"
         };
 
         function setupMessageActions() {
@@ -1037,7 +1060,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             });
 
-            // Configuração dos botões de admin 
             document.querySelectorAll('.admin-dropdown').forEach(dropdown => {
                 const btn = dropdown.querySelector('.admin-btn');
                 const content = dropdown.querySelector('.admin-dropdown-content');
@@ -1100,7 +1122,6 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
-        // Enviar mensagem
         if (btnEnviar && chatInput) {
             btnEnviar.addEventListener('click', function() {
                 const messageText = chatInput.value.trim();
@@ -1162,7 +1183,6 @@ document.addEventListener('DOMContentLoaded', function() {
         setupMessageActions();
     }
 
-    // ============ FUNÇÕES DA PÁGINA DE BIOGRAFIA ============
 const setupBiografiaPage = () => {
     const editButton = document.querySelector('.edit-button');
     const biographyText = document.querySelector('.biography-text');
@@ -1191,7 +1211,6 @@ const setupBiografiaPage = () => {
         });
     }
     
-    // Função para trocar foto
     if (changePhotoButton && profileImage) {
         changePhotoButton.addEventListener('click', () => {
             const fileInput = document.createElement('input');
@@ -1204,7 +1223,6 @@ const setupBiografiaPage = () => {
                     const reader = new FileReader();
                     
                     reader.onload = (event) => {
-                        // Atualiza a imagem de perfil
                         profileImage.src = event.target.result;
                         alert('Foto de perfil atualizada com sucesso! (Simulação)');
                     };
@@ -1218,8 +1236,6 @@ const setupBiografiaPage = () => {
     }
 };
 
-
-    // Função para edição de biografia
     const setupBiografiaEdicao = () => {
         const editButton = document.querySelector('.edit-text');
         const sobreTexto = document.querySelector('.sobre-texto');
@@ -1265,7 +1281,6 @@ const setupBiografiaPage = () => {
         });
     };
 
-    // Modal Esqueceu Senha
     const setupEsqueceuSenhaModal = () => {
         const forgotPasswordLink = document.querySelector('.forgot-password');
         const modalEsqueceuSenha = document.getElementById('modalEsqueceuSenha');
@@ -1307,7 +1322,6 @@ const setupBiografiaPage = () => {
         });
     };
 
-    // Configuração dos botões de admin
     function setupAdminButtons() {
         document.querySelectorAll('.delete-message-btn').forEach(btn => {
             btn.addEventListener('click', function(e) {
@@ -1324,7 +1338,6 @@ const setupBiografiaPage = () => {
         });
     }
 
-    // Modal de Exclusão de Arquivos (para admin)
 const setupExclusaoArquivoModal = () => {
     const deleteButton = document.getElementById('openDeleteModal');
     const modalExcluirOverlay = document.getElementById('modalExcluirMembro');
@@ -1340,10 +1353,9 @@ const setupExclusaoArquivoModal = () => {
             return;
         }
         
-        // Mostrar modal de confirmação
         document.body.classList.add('modal-open');
         modalExcluirOverlay.classList.add('active');
-        document.body.style.overflow = 'hidden';
+        document.body.style.overflow = ('hidden');
     });
 
     document.getElementById('cancelarExclusao')?.addEventListener('click', () => {
@@ -1371,8 +1383,6 @@ const setupExclusaoArquivoModal = () => {
     });
 };
 
-    // ============ FUNÇÕES DA PÁGINA DE AÇÕES ============
-    // Modal de Nova Ação
     const setupNovaAcaoModal = () => {
         const btnAdicionar = document.querySelector('.btn-adicionar');
         const modalAcao = document.getElementById('modalNovaAcao');
@@ -1426,7 +1436,6 @@ const setupExclusaoArquivoModal = () => {
         });
     };
 
-    // Modal de Exclusão de Ações
     const setupExclusaoAcaoModal = () => {
         const deleteButton = document.querySelector('.btn-excluir');
         const modalExcluirOverlay = document.getElementById('modalExcluirAcao');
@@ -1480,7 +1489,8 @@ const setupExclusaoArquivoModal = () => {
         });
     };
 
-    // ============ INICIALIZAÇÃO ============
+    setupPostCarousel();
+
     if (document.getElementById('calendar')) {
         if (document.querySelector('.btn-adicionar')) {
             setupAgendaAdmin();
@@ -1489,19 +1499,21 @@ const setupExclusaoArquivoModal = () => {
         }
     }
 
+    if (document.getElementById('modalNovaDiscussaoMembro')) {
+    setupModalNovaDiscussaoMembro();
+}
+
     if (document.querySelector('.btn-adicionar')) setupPublicacaoModal();
     if (document.querySelector('.add-member-button')) setupCadastroModal();
     if (document.querySelector('.delete-member-button')) setupExclusaoModal();
     if (document.querySelector('.btn-excluir')) setupExclusaoPublicacaoModal();
     if (document.getElementById('supportForm')) setupSupportModal();
     if (document.querySelector('.add-file-button')) setupUploadModal();
-    if (document.querySelector('#carouselExample')) setupCarousel();
     if (document.querySelector('.forgot-password')) setupEsqueceuSenhaModal();
     if (document.querySelector('.edit-text')) setupBiografiaEdicao();
     if (document.getElementById('openDeleteModal')) setupExclusaoArquivoModal();
     if (document.querySelector('.biography-container')) setupBiografiaPage();
 
-    // Inicialização específica para a página de ações
     if (window.location.pathname.includes('acoes-admin.php')) {
         setupNovaAcaoModal();
         setupExclusaoAcaoModal();
@@ -1509,7 +1521,9 @@ const setupExclusaoArquivoModal = () => {
 
     setupAdminButtons();
 
-    // Inicialização específica para o fórum
+document.addEventListener("DOMContentLoaded", setupPostCarousel);
+
+
     if (document.querySelector('.forum-membro-container') || window.location.pathname.includes('forum.php')) {
         if (isAdmin()) {
             carregarDiscussoesAdmin();

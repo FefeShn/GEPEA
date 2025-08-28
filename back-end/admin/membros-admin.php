@@ -207,6 +207,11 @@
     <label for="emailMembro">Email</label>
     <input type="email" id="emailMembro" placeholder="exemplo@universidade.edu.br" required>
   </div>
+
+  <div class="form-group">
+    <label for="lattesMembro">Curriculo Lattes</label>
+    <input type="text" id="lattesMembro" placeholder="exemplo: http://lattes.cnpq.br/5951306735617460">
+  </div>
   
   <div class="form-group">
     <label for="cargoMembro">Cargo no Grupo</label>

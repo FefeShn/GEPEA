@@ -27,7 +27,7 @@
         <ul class="navbar-nav navbar-nav-right">
           <li class="nav-item nav-profile dropdown">
             <a href="biografia-admin.php">
-                  <img src="../imagens/computer.jpg" alt="profile" class="profile-img">
+                  <img src="../imagens/computer.jpg" alt="profile" class="user-photo">
             </a>
           </li>
         </ul>

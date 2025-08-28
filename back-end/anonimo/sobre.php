@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>GEPEA</title>
   <!-- endinject -->
-  <link rel="shortcut icon" href="imagens/gepea.png" />
+  <link rel="shortcut icon" href="../imagens/gepea.png" />
   <link rel="stylesheet" href="../style.css">
 </head>
 
@@ -30,7 +30,7 @@
             <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
               <div class="../profile-img">
                 <a href="login.php">
-                  <img src="../imagens/user-foto.png" alt="profile" class="profile-img">
+                  <img src="../imagens/user-foto.png" alt="profile" class="user-photo"/>
                 </a>
               </div>
             </a>
