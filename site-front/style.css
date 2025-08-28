@@ -4459,6 +4459,7 @@ body.membros-page {
     overflow-y: auto;
     transform: translateY(-20px);
     transition: transform 0.3s ease;
+    margin-top: 70px;
 }
 
 .modal-overlay.active .modal-container {
@@ -5550,11 +5551,4 @@ body.membros-page {
   margin-bottom: 15px;
 }
 
-.footer {
-  text-align: center;
-}
-
-.footer .d-sm-flex {
-  justify-content: center !important;
-}
 
