@@ -1,71 +1,17 @@
+<?php
+$paginaAtiva = 'membros'; 
+$fotoPerfil  = "../imagens/user-foto.png"; 
+$linkPerfil  = "../anonimo/login.php"; 
+require '../include/navbar.php';
+require '../include/menu-anonimo.php';
+?>
 <!DOCTYPE html>
 <html lang="pt-BR">
-
-<head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>GEPEA</title>
-  <!-- endinject -->
-  <link rel="shortcut icon" href="../imagens/gepea.png" />
-  <link rel="stylesheet" href="../style.css">
-</head>
-
+<?php include"../include/head.php"?>
 <body>
   
   <div class="container-scroller">
-    <!-- NAV BAR -->
-    <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
-      <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
-        <img src="../imagens/gepea.png" alt="logo-gepea" class="logo-nav">
-        <p class="titulo-logo">GEPEA</p>
-      </div>
-      <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
-        
-
-        <ul class="navbar-nav navbar-nav-right">
-          
-          <li class="nav-item nav-profile dropdown">
-            <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
-              <div class="profile-img">
-                <a href="../anonimo/login.php">
-                  <img src="../imagens/user-foto.png" alt="profile" class="profile-img">
-                </a>
-              </div>
-            </a>
-            <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
-              <a class="dropdown-item">
-                <i class="ti-settings text-primary"></i>
-                Configurações
-              </a>
-              <a class="dropdown-item" id="logout-btn">
-                <i class="ti-power-off text-primary"></i>
-                Sair
-              </a>
-            </div>
-          </li>
-        </ul>
-        <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
-          <span class="icon-menu"></span>
-        </button>
-      </div>
-    </nav>
-    <!-- FIM DA NAV BAR -->
-
-      <!-- partial -->
-      <!-- MENU LATERAL -->
-      <button id="botao-menu" aria-label="Abrir menu">☰</button>
-      <nav class="menu-lateral" id="menuLateral">
-        <ul>
-          <li><a href="../anonimo/index.php" ><i class="ti-home mr-2"></i>Publicações</a></li>
-          <li><a href="../anonimo/acoes.php"><i class="ti-home mr-2"></i>Ações</a></li>
-          <li><a href="../anonimo/sobre.php"><i class="ti-book mr-2"></i>Sobre o GEPEA</a></li>
-          <li><a href="../anonimo/membros.php"><i class="ti-agenda mr-2"></i>Membros</a></li>
-          <li><a href="../anonimo/suporte.php"><i class="ti-user mr-2"></i>Suporte</a></li>
-        </ul>
-      </nav>
-
-      <!-- CONTEÚDO PRINCIPAL -->
+    <!-- CONTEÚDO PRINCIPAL -->
       <main class="biography-container">
       <div class="biography-header">
         <h1 class="biography-title">Biografia</h1>
@@ -105,7 +51,7 @@
         
         <!-- FOOTER -->
         <?php
-          require('../include/footer.php');
+          include'../include/footer.php';
         ?>
       </div>
       <!-- main-panel ends -->

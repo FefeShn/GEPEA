@@ -7,7 +7,9 @@ $linkPerfil = $linkPerfil ?? "login.php";
 <!-- NAV BAR -->
 <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
   <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
+    <a href="../anonimo/index.php">
     <img src="../imagens/gepea.png" alt="logo-gepea" class="logo-nav">
+    </a>
     <p class="titulo-logo">GEPEA</p>
   </div>
   <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">

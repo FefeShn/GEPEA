@@ -1,5 +1,5 @@
 <?php
-$paginaAtiva = 'index'; 
+$paginaAtiva = 'index-membro'; 
 $fotoPerfil  = "../imagens/estrela.jpg"; 
 $linkPerfil  = "../membro/biografia-membro.php"; 
 require '../include/navbar.php';

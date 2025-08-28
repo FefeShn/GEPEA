@@ -1,54 +1,19 @@
+<?php
+$paginaAtiva = 'forum-admin'; 
+$fotoPerfil  = "../imagens/computer.jpg"; 
+$linkPerfil  = "../admin/biografia-admin.php"; 
+require '../include/navbar.php';
+require '../include/menu-admin.php';
+?>
+
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>GEPEA</title>
-  <link rel="shortcut icon" href="../imagens/gepea.png">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  <link rel="stylesheet" href="../style.css">
-</head>
+
+<?php include"../include/head.php"?>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <body>
   <div class="container-scroller">
-    <!-- NAV BAR -->
-    <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
-      <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
-        <img src="../imagens/gepea.png" alt="logo-gepea" class="logo-nav">
-        <p class="titulo-logo">GEPEA</p>
-      </div>
-      <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
-        <ul class="navbar-nav mr-lg-2">
-          <li class="nav-item nav-search d-none d-lg-block">
-            <div class="input-group busca-box">
-              <input type="text" class="form-control busca" placeholder="Buscar">
-            </div>
-          </li>
-        </ul>
-        <ul class="navbar-nav navbar-nav-right">
-          <li class="nav-item nav-profile dropdown">
-            <a href="biografia-admin.php">
-                  <img src="../imagens/computer.jpg" alt="profile" class="profile-img">
-            </a>
-          </li>
-        </ul>
-      </div>
-    </nav>
-
-   <!-- MENU LATERAL -->
-    <button id="botao-menu" aria-label="Abrir menu">☰</button>
-    <nav class="menu-lateral" id="menuLateral">
-      <ul>
-        <li><a href="index-admin.php" ><i class="ti-home mr-2"></i>Publicações</a></li>
-        <li><a href="acoes-admin.php"><i class="ti-home mr-2"></i>Ações</a></li>
-          <li><a href="sobre-admin.php"><i class="ti-book mr-2"></i>Sobre o GEPEA</a></li>
-          <li><a href="membros-admin.php"><i class="ti-agenda mr-2"></i>Membros</a></li>
-          <li><a href="biblioteca-admin.php"><i class="ti-agenda mr-2"></i>Biblioteca</a></li>
-          <li><a href="agenda-admin.php"><i class="ti-agenda mr-2"></i>Agenda</a></li>
-          <li><a href="forum-admin.php" class="active"><i class="ti-agenda mr-2"></i>Fórum</a></li>
-          <li><a href="../anonimo/suporte.php"><i class="ti-user mr-2"></i>Suporte</a></li>
-      </ul>
-    </nav>
-
+    
     <!-- CONTEÚDO PRINCIPAL -->
     <div class="main-panel">
       <div class="content-wrapper">
@@ -165,7 +130,7 @@
       </div>
 
     <?php
-      require("../include/footer.php");
+      include"../include/footer.php";
     ?>
   </div>
   

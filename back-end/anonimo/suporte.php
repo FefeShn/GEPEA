@@ -1,63 +1,21 @@
+<?php
+$paginaAtiva = 'suporte'; 
+$fotoPerfil  = "../imagens/user-foto.png"; 
+$linkPerfil  = "login.php"; 
+require '../include/navbar.php';
+require '../include/menu-anonimo.php';
+?>
+
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GEPEA</title>
-  <link rel="shortcut icon" href="../imagens/gepea.png" />
-  <link rel="stylesheet" href="../style.css">
-</head>
+
+<?php include"../include/head.php"?>
 <body>
   <div class="body-login">
   <div class="container-scroller">
-    <!-- NAV BAR-->
-    
-    <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
-      <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
-        <a class="index-button" href="index.php">
-        <img src="../imagens/gepea.png" alt="logo-gepea" class="logo-nav">
-        </a>
-        <p class="titulo-logo">GEPEA</p>
-        
-      </div>
-      <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
-          <span class="icon-menu"></span>
-        
-
-        <ul class="navbar-nav navbar-nav-right">
-          
-          <li class="nav-item nav-profile dropdown">
-            <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
-              <div class="profile-img">
-                
-              </div>
-            </a>
-            
-          </li>
-        </ul>
-        <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
-          <span class="icon-menu"></span>
-        </button>
-      </div>
-    </nav>
-    <!-- FIM DA NAV BAR -->
-
-      <!-- partial -->
-      <!-- MENU LATERAL -->
-      <button id="botao-menu" aria-label="Abrir menu">☰</button>
-      <nav class="menu-lateral" id="menuLateral">
-        <ul>
-          <li><a href="index.php" ><i class="ti-home mr-2"></i>Publicações</a></li>
-          <li><a href="acoes.php"><i class="ti-home mr-2"></i>Ações</a></li>
-          <li><a href="sobre.php"><i class="ti-book mr-2"></i>Sobre o GEPEA</a></li>
-          <li><a href="membros.php"><i class="ti-agenda mr-2"></i>Membros</a></li>
-          <li><a href="suporte.php" class="active"><i class="ti-user mr-2"></i>Suporte</a></li>
-        </ul>
-      </nav>
 
     <!-- CONTEÚDO PRINCIPAL -->
     <main class="support-container">
-      
       
       <div class="support-form-container">
         <form id="supportForm">
@@ -114,7 +72,7 @@
 
 <!-- FOOTER -->
         <?php
-          require('..\include\footer.php');
+          include'..\include\footer.php';
         ?>
   
   <script src="../script.js"></script>

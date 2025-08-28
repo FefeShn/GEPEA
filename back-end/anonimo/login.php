@@ -1,3 +1,4 @@
+<?php require '../include/navbar.php';?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -9,43 +10,6 @@
 </head>
 <body>
   <div class="body-login">
-    <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
-      <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
-        <a class="index-button" href="index.php">
-        <img src="../imagens/gepea.png" alt="logo-gepea" class="logo-nav">
-      </a>
-        <p class="titulo-logo">GEPEA</p>
-      
-      </div>
-      <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
-        
-        
-
-        <ul class="navbar-nav navbar-nav-right">
-          
-          <li class="nav-item nav-profile dropdown">
-            <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
-              <div class="profile-img">
-                <a href="login.php">
-                  <img src="../imagens/user-foto.png" alt="profile" class="profile-img">
-                </a>
-              </div>
-            </a>
-            <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
-              <a class="dropdown-item">
-                <i class="ti-settings text-primary"></i>
-                Configurações
-              </a>
-              <a class="dropdown-item" id="logout-btn">
-                <i class="ti-power-off text-primary"></i>
-                Sair
-              </a>
-            </div>
-          </li>
-        </ul>
-      </div>
-    </nav>
-
 
     <div class="login-container">
         <div class="login-card">

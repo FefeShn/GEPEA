@@ -1,13 +1,17 @@
+<!-- MENU LATERAL ADMIN -->
+<?php
+$paginaAtiva = $paginaAtiva ?? 'index-admin';
+?>
 <button id="botao-menu" aria-label="Abrir menu">☰</button>
-      <nav class="menu-lateral" id="menuLateral">
-        <ul>
-          <li><a href="index-admin.php" class="active"><i class="ti-home mr-2"></i>Publicações</a></li>
-          <li><a href="acoes-admin.php"><i class="ti-home mr-2"></i>Ações</a></li>
-          <li><a href="sobre-admin.php"><i class="ti-book mr-2"></i>Sobre o GEPEA</a></li>
-          <li><a href="membros-admin.php"><i class="ti-agenda mr-2"></i>Membros</a></li>
-          <li><a href="biblioteca-admin.php"><i class="ti-agenda mr-2"></i>Biblioteca</a></li>
-          <li><a href="agenda-admin.php"><i class="ti-agenda mr-2"></i>Agenda</a></li>
-          <li><a href="forum-admin.php"><i class="ti-agenda mr-2"></i>Fórum</a></li>
-          <li><a href="../anonimo/suporte.php"><i class="ti-user mr-2"></i>Suporte</a></li>
-        </ul>
-      </nav>
+<nav class="menu-lateral" id="menuLateral">
+  <ul>
+    <li><a href="../admin/index-admin.php" class="<?= ($paginaAtiva === 'index-admin') ? 'active' : '' ?>"><i class="ti-home mr-2"></i>Publicações</a></li>
+    <li><a href="../admin/acoes-admin.php" class="<?= ($paginaAtiva === 'acoes-admin') ? 'active' : '' ?>"><i class="ti-home mr-2"></i>Ações</a></li>
+    <li><a href="../admin/sobre-admin.php" class="<?= ($paginaAtiva === 'sobre-admin') ? 'active' : '' ?>"><i class="ti-book mr-2"></i>Sobre o GEPEA</a></li>
+    <li><a href="../admin/membros-admin.php" class="<?= ($paginaAtiva === 'membros-admin') ? 'active' : '' ?>"><i class="ti-agenda mr-2"></i>Membros</a></li>
+    <li><a href="../admin/biblioteca-admin.php" class="<?= ($paginaAtiva === 'biblioteca-admin') ? 'active' : '' ?>"><i class="ti-agenda mr-2"></i>Biblioteca</a></li>
+    <li><a href="../admin/agenda-admin.php" class="<?= ($paginaAtiva === 'agenda-admin') ? 'active' : '' ?>"><i class="ti-agenda mr-2"></i>Agenda</a></li>
+    <li><a href="../admin/forum-admin.php" class="<?= ($paginaAtiva === 'forum-admin') ? 'active' : '' ?>"><i class="ti-agenda mr-2"></i>Fórum</a></li>
+    <li><a href="../anonimo/suporte.php" class="<?= ($paginaAtiva === 'suporte') ? 'active' : '' ?>"><i class="ti-user mr-2"></i>Suporte</a></li>
+  </ul>
+</nav>
