@@ -6,17 +6,11 @@ require '../include/navbar.php';
 require '../include/menu-anonimo.php';
 ?>
 
-
-
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <?php include"../include/head.php"?>
-
 <body>
-  
   <div class="container-scroller">
-
       <!-- CONTEÚDO PRINCIPAL -->
       <div class="main-panel">
         <div class="content-wrapper">
@@ -33,7 +27,6 @@ require '../include/menu-anonimo.php';
               </div>
             </div>
           </div>
-
           <div class="row" id="publicacoes-container">
             <!-- Card 1 -->
             <div class="col-md-4 mb-4 sombra-transparente">
