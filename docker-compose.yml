@@ -1,0 +1,28 @@
+services:
+  web:
+    build: .
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www/html
+    restart: always
+    # Dependências de banco de dados podem ser adicionadas aqui
+    # environment:
+    #   - MYSQL_HOST=db
+    #   - MYSQL_USER=root
+    #   - MYSQL_PASSWORD=example
+    #   - MYSQL_DATABASE=gepea
+    # links:
+    #   - db
+  # db:
+  #   image: mysql:8.0
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: example
+  #     MYSQL_DATABASE: gepea
+  #   ports:
+  #     - "3306:3306"
+  #   volumes:
+  #     - db_data:/var/lib/mysql
+  #   restart: always
+# volumes:
+#   db_data:

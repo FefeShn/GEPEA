@@ -72,7 +72,7 @@ require '../include/menu-anonimo.php';
 
 <!-- FOOTER -->
         <?php
-          include'..\include\footer.php';
+          include'../include/footer.php';
         ?>
   
   <script src="../script.js"></script>
