@@ -1,5 +1,5 @@
 <?php
-$paginaAtiva = 'acoes'; 
+$paginaAtiva = 'eventos'; 
 $fotoPerfil  = "../imagens/user-foto.png"; 
 $linkPerfil  = "../anonimo/login.php"; 
 require '../include/navbar.php';

@@ -1,5 +1,5 @@
 <?php
-$paginaAtiva = 'acoes-admin'; 
+$paginaAtiva = 'eventos-admin'; 
 $fotoPerfil  = "../imagens/computer.jpg"; 
 $linkPerfil  = "../admin/biografia-admin.php"; 
 require '../include/navbar.php';
@@ -22,11 +22,11 @@ require '../include/menu-admin.php';
               <div class="row">
                 <div class="col-12 col-xl-8 mb-4 mb-xl-0">
                   <div class="titulo-publicacoes"> 
-                    <h3 class="font-weight-bold">Ações</h3>
-                    <h6 class="font-weight-normal mb-0">Últimas ações do grupo</h6>
+                    <h3 class="font-weight-bold">Eventos</h3>
+                    <h6 class="font-weight-normal mb-0">Últimos eventos do grupo</h6>
                     <div class="acoes-publicacoes">
                         <button class="btn btn-adicionar">
-                            <i class="ti-plus"></i> Publicar nova ação
+                            <i class="ti-plus"></i> Publicar novo Evento
                         </button>
                         <button class="btn btn-excluir">
                             <i class="ti-trash"></i> Excluir
@@ -51,7 +51,7 @@ require '../include/menu-admin.php';
                   <h5 class="card-title">Artigo Publicado: Implementação da Lei nº 10.639/03 na Educação Básica: contribuições do campo da educação física escolar</h5>
                   <p class="card-text">Artigo publicado na Revista Caderno Pedagógico</p>
                   <div class="mt-auto d-flex justify-content-between align-items-center">
-                    <a href="../acoes/acao1.php" class="btn btn-success">Ver detalhes</a>
+                    <a href="../eventos/evento1.php" class="btn btn-success">Ver detalhes</a>
                     
                   </div>
                 </div>
@@ -70,7 +70,7 @@ require '../include/menu-admin.php';
                   <h5 class="card-title">Artigo Publicado: Não basta não ser racista, é preciso ser antirracista: uma revisão sistemática sobre educação física escolar</h5>
                   <p class="card-text">Artigo publicado na revista Boletim de Conjuntura (BOCA)</p>
                   <div class="mt-auto d-flex justify-content-between align-items-center">
-                    <a href="../acoes/acao2.php" class="btn btn-success">Ver detalhes</a>
+                    <a href="../eventos/evento2.php" class="btn btn-success">Ver detalhes</a>
                   </div>
                 </div>
               </div>
@@ -88,7 +88,7 @@ require '../include/menu-admin.php';
                   <h5 class="card-title">GEPEA presente no Salão de Bento Gonçalves</h5>
                   <p class="card-text">Bolsistas apresentaram seus projetos no evento.</p>
                   <div class="mt-auto d-flex justify-content-between align-items-center">
-                    <a href="../acoes/acao3.php" class="btn btn-success">Ver detalhes</a>
+                    <a href="../eventos/evento3.php" class="btn btn-success">Ver detalhes</a>
                   </div>
                 </div>
               </div>

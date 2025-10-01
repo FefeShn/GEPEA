@@ -62,7 +62,7 @@ require '../include/menu-membro.php';
                 <button class="reply-btn" title="Responder"><i class="fas fa-reply"></i></button>
             </div>
               </div>
-              <div class="message-text">Oiii..</div>
+              <div class="message-text">Oiii</div>
               <div class="message-time">10/07/2025 19:04</div>
             </div>
             
@@ -74,7 +74,7 @@ require '../include/menu-membro.php';
                 <button class="reply-btn" title="Responder"><i class="fas fa-reply"></i></button>
             </div>
               </div>
-              <div class="message-text">Oiii!!</div>
+              <div class="message-text">Oiii</div>
               <div class="message-time">10/07/2025 19:05</div>
             </div>
           

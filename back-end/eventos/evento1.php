@@ -1,5 +1,5 @@
 <?php
-$paginaAtiva = 'acoes'; 
+$paginaAtiva = 'eventos'; 
 $fotoPerfil  = "../imagens/user-foto.png"; 
 $linkPerfil  = "../anonimo/login.php"; 
 require '../include/navbar.php';
@@ -23,8 +23,8 @@ require '../include/menu-anonimo.php';
             <div class="row">
               <div class="col-12 col-xl-8 mb-4 mb-xl-0">
                 <div class="titulo-publicacoes"> 
-                  <h3 class="font-weight-bold">Artigo Publicado: Não basta não ser racista, é preciso ser antirracista: uma revisão sistemática sobre educação física escolar</h3>
-                  <h6 class="font-weight-normal mb-0">Publicado em 22/04/2025</h6>
+                  <h3 class="font-weight-bold">Artigo Publicado: Implementação da Lei nº 10.639/03 na Educação Básica: contribuições do campo da educação física escolar</h3>
+                  <h6 class="font-weight-normal mb-0">Publicado em 26/06/2025</h6>
                 </div>
               </div>
             </div>
@@ -42,7 +42,7 @@ require '../include/menu-anonimo.php';
 
             <div class="carousel-inner">
               <div class="carousel-item active">
-                <img src="../imagens/artigo1.jpeg" class="d-block w-100" alt="Capa do artigo publicado">
+                <img src="../imagens/artigo2.jpeg" class="d-block w-100" alt="Capa do artigo publicado">
                 <div class="carousel-caption d-none d-md-block">
                   <p>Artigo Publicado</p>
                 </div>
@@ -71,12 +71,14 @@ require '../include/menu-anonimo.php';
           </div>
         </div>
         
+       
       </div>
       <!-- main-panel ends -->
-    </div> 
+
+    </div>   
     <?php
       include"../include/footer.php";
-    ?>  
+    ?>
   </div>
   <script src="../script.js"></script>
 </body>

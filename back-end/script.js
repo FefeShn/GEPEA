@@ -1514,7 +1514,7 @@ const setupExclusaoArquivoModal = () => {
     if (document.getElementById('openDeleteModal')) setupExclusaoArquivoModal();
     if (document.querySelector('.biography-container')) setupBiografiaPage();
 
-    if (window.location.pathname.includes('acoes-admin.php')) {
+    if (window.location.pathname.includes('eventos-admin.php')) {
         setupNovaAcaoModal();
         setupExclusaoAcaoModal();
     }

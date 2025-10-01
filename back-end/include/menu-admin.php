@@ -6,7 +6,7 @@ $paginaAtiva = $paginaAtiva ?? 'index-admin';
 <nav class="menu-lateral" id="menuLateral">
   <ul>
     <li><a href="../admin/index-admin.php" class="<?= ($paginaAtiva === 'index-admin') ? 'active' : '' ?>"><i class="ti-home mr-2"></i>Publicações</a></li>
-    <li><a href="../admin/acoes-admin.php" class="<?= ($paginaAtiva === 'acoes-admin') ? 'active' : '' ?>"><i class="ti-home mr-2"></i>Ações</a></li>
+    <li><a href="../admin/eventos-admin.php" class="<?= ($paginaAtiva === 'eventos-admin') ? 'active' : '' ?>"><i class="ti-home mr-2"></i>Eventos</a></li>
     <li><a href="../admin/sobre-admin.php" class="<?= ($paginaAtiva === 'sobre-admin') ? 'active' : '' ?>"><i class="ti-book mr-2"></i>Sobre o GEPEA</a></li>
     <li><a href="../admin/membros-admin.php" class="<?= ($paginaAtiva === 'membros-admin') ? 'active' : '' ?>"><i class="ti-agenda mr-2"></i>Membros</a></li>
     <li><a href="../admin/biblioteca-admin.php" class="<?= ($paginaAtiva === 'biblioteca-admin') ? 'active' : '' ?>"><i class="ti-agenda mr-2"></i>Biblioteca</a></li>

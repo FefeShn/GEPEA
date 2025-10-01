@@ -80,7 +80,7 @@ require '../include/menu-admin.php';
                     <img src="../imagens/dino.jpg" alt="Dr. Luciano Corsino" class="message-avatar">
                     <div class="message-sender coordenador">Dr. Luciano Corsino</div>
                 </div>
-                <div class="message-text">Oiii..</div>
+                <div class="message-text">Oiii</div>
                 <div class="message-time">10/07/2025 19:04</div>
             </div>
 
@@ -98,7 +98,7 @@ require '../include/menu-admin.php';
                     <img src="../imagens/estrela.jpg" alt="Dr. Daniel Santana" class="message-avatar">
                     <div class="message-sender vice-coordenador">Dr. Daniel Santana</div>
                 </div>
-                <div class="message-text">Oiii!!</div>
+                <div class="message-text">Oiii</div>
                 <div class="message-time">10/07/2025 19:05</div>
             </div>
     </div> 
