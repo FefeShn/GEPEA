@@ -1,4 +1,8 @@
 <?php
+session_start();
+require '../config/auth.php';
+requireAdmin();
+
 $paginaAtiva = 'index-admin'; 
 $fotoPerfil  = "../imagens/computer.jpg"; 
 $linkPerfil  = "../admin/biografia-admin.php"; 

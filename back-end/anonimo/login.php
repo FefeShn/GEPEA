@@ -1,4 +1,45 @@
-<?php require '../include/navbar.php';?>
+<?php
+session_start();
+require '../config/conexao.php';
+require '../config/auth.php';
+
+$erro = '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $email = $_POST['email'] ?? '';
+    $senha = $_POST['password'] ?? '';
+
+    $pdo = getConexao();
+    $stmt = $pdo->prepare("SELECT id_usuario, nome_user, email_user, senha_user, eh_adm, foto_user FROM usuarios WHERE email_user = ?");
+    $stmt->execute([$email]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($user) {
+        if ($senha === $user['senha_user']) {
+            $_SESSION['id_usuario'] = $user['id_usuario'];
+            $_SESSION['nome_user'] = $user['nome_user'];
+            $_SESSION['email_user'] = $user['email_user'];
+            $_SESSION['eh_adm'] = (bool)$user['eh_adm'];
+            $_SESSION['foto_user'] = $user['foto_user'];
+            $_SESSION['logged_in'] = true;
+
+            if ($_SESSION['eh_adm']) {
+                header('Location: ../admin/index-admin.php');
+                exit();
+            } else {
+                header('Location: ../membro/index-membro.php');
+                exit();
+            }
+        } else {
+            $erro = 'Usuário ou senha inválidos!';
+        }
+    } else {
+        $erro = 'Usuário não cadastrado!';
+    }
+}
+
+require '../include/navbar.php';
+?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -21,10 +62,14 @@
             <h2 class="welcome-title">Bem vindo(a) ao GEPEA!</h2>
             <p class="welcome-subtitle">Faça login para acessar sua conta</p>
 
-            <form id="loginForm" class="login-form">
+            <?php if ($erro): ?>
+                <div class="login-error"><?php echo htmlspecialchars($erro); ?></div>
+            <?php endif; ?>
+
+            <form id="loginForm" class="login-form" method="POST" action="">
                 <div class="form-group">
-                    <label for="username">Nome de Usuário</label>
-                    <input type="text" id="username" name="username" placeholder="Digite seu nome de usuário" required>
+                    <label for="email">E-mail</label>
+                    <input type="text" id="email" name="email" placeholder="Digite seu e-mail" required>
                 </div>
                 
                 <div class="form-group">
@@ -49,14 +94,12 @@
                 </div>
                 
                 <div class="form-actions">
-                  <a href="../admin/index-admin.php" class="login-button-adm">Acessar ADMIN</a>
-                    <a href="../membro/index-membro.php" class="login-button">Acessar</a>
-                    
-
+                    <button type="submit" class="login-button">Acessar</button>
                 </div>
             </form>
         </div>
     </div>
+    
     <!-- Modal Esqueceu a Senha -->
       <div id="modalEsqueceuSenha" class="modal-overlay">
           <div class="modal-content">

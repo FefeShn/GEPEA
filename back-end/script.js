@@ -86,13 +86,16 @@ document.addEventListener('DOMContentLoaded', function() {
     const loginForm = document.getElementById('loginForm');
     if (loginForm) {
         loginForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const username = document.getElementById('username').value.trim();
+            const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
             
-            if (!username) alert('Por favor, insira seu nome de usuário');
-            else if (!password) alert('Por favor, insira sua senha');
-            else alert('Login válido! (Simulação)');
+            if (!email) {
+                alert('Por favor, insira seu e-mail');
+                e.preventDefault();
+            } else if (!password) {
+                alert('Por favor, insira sua senha');
+                e.preventDefault();
+            }
         });
     }
 
