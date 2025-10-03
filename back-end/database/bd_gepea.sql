@@ -165,6 +165,7 @@ CREATE TABLE `usuarios` (
   `senha_user` varchar(255) NOT NULL,
   `foto_user` varchar(500) DEFAULT NULL,
   `bio_user` text DEFAULT NULL,
+  `cargo_user` varchar(100) DEFAULT NULL,
   `eh_adm` tinyint(1) DEFAULT 0,
   `lattes_user` varchar(500) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -173,8 +174,11 @@ CREATE TABLE `usuarios` (
 -- Despejando dados para a tabela `usuarios`
 --
 
-INSERT INTO `usuarios` (`id_usuario`, `nome_user`, `email_user`, `senha_user`, `foto_user`, `bio_user`, `eh_adm`, `lattes_user`) VALUES
-(1, 'Fernanda Sehn', 'fernandasehn6@gmail.com', '123', 'computer.jpg', 'admin do site temporariamente', 1, 'http://lattes.cnpq.br/5360280589109309');
+INSERT INTO `usuarios`
+(`id_usuario`, `nome_user`, `email_user`, `senha_user`, `foto_user`, `bio_user`, `cargo_user`, `eh_adm`, `lattes_user`)
+VALUES
+(1, 'Fernanda Sehn', 'fernandasehn6@gmail.com', '123', 'computer.jpg', 'admin do site temporariamente', 'Bolsista', 1, 'http://lattes.cnpq.br/5360280589109309');
+
 
 --
 -- Índices para tabelas despejadas

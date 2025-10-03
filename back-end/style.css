@@ -735,13 +735,13 @@ body {
 }
 
 .btn-primary {
-  background-color: #007bff;
-  border-color: #007bff;
+  background-color: var(--verde);
+  border-color: var(--verde);
 }
 
 .btn-primary:hover {
-  background-color: #0069d9;
-  border-color: #0062cc;
+  background-color: var(--amarelo);
+  border-color: var(--amarelo);
 }
 
 .btn-secondary {
