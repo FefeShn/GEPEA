@@ -1024,11 +1024,11 @@ function setupModalNovaDiscussaoMembro() {
         const currentUser = isAdmin ? {
             name: "Fernanda Sehn",
             role: "bolsista",
-            avatar: "imagens/computer.jpg"
+            avatar: "../imagens/computer.jpg"
         } : {
             name: "Dr. Daniel Santana",
             role: "vice-coordenador",
-            avatar: "imagens/estrela.jpg"
+            avatar: "../imagens/estrela.jpg"
         };
 
         function setupMessageActions() {
@@ -1524,18 +1524,56 @@ const setupExclusaoArquivoModal = () => {
 
     setupAdminButtons();
 
+});
+
 document.addEventListener("DOMContentLoaded", setupPostCarousel);
 
 
-    if (document.querySelector('.forum-membro-container') || window.location.pathname.includes('forum.php')) {
-        if (isAdmin()) {
-            carregarDiscussoesAdmin();
-        } else {
-            carregarDiscussoesMembro();
-        }
+/* Profile dropdown toggle and logout (kept in central script file) */
+(function() {
+    function initProfileDropdown() {
+        // One delegated click handler to manage open/close and clicks
+        document.addEventListener('click', function(e) {
+            // Prefer explicit simple selectors so closest() works reliably
+            const clickedWrapper = e.target.closest('.profile-dropdown-wrapper');
+            const clickedToggle = e.target.closest('.dropdown-toggle');
+            const clickedMenu = e.target.closest('.profile-dropdown-menu');
+
+            // If user clicked a toggle that's inside a profile wrapper -> toggle that menu
+            if (clickedToggle && clickedWrapper && clickedWrapper.contains(clickedToggle)) {
+                const menu = clickedWrapper.querySelector('.profile-dropdown-menu');
+                if (!menu) return;
+                // close other open menus first
+                document.querySelectorAll('.profile-dropdown-menu.show').forEach(m => {
+                    if (m !== menu) m.classList.remove('show');
+                });
+                menu.classList.toggle('show');
+                e.preventDefault();
+                return;
+            }
+
+            // If clicked inside an open menu, allow link clicks to proceed
+            if (clickedMenu) return;
+
+            // Click outside dropdowns -> close any open menus
+            document.querySelectorAll('.profile-dropdown-menu.show').forEach(m => m.classList.remove('show'));
+        });
+
+        // Delegated logout handler (works even if element is rendered later)
+        document.addEventListener('click', function(e) {
+            const btn = e.target.closest('#logout-btn');
+            if (!btn) return;
+            e.preventDefault();
+            if (confirm('Deseja realmente sair da sua conta?')) {
+                // server-side logout that destroys session and redirects
+                window.location.href = '../anonimo/logout.php';
+            }
+        });
     }
 
-    if (document.querySelector('.chat-container')) {
-        setupChat();
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initProfileDropdown);
+    } else {
+        initProfileDropdown();
     }
-});
+})();

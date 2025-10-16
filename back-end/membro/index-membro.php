@@ -1,9 +1,9 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) { session_start(); }
+// Definir variáveis de página antes de qualquer saída
 $paginaAtiva = 'index-membro'; 
 $fotoPerfil  = "../imagens/estrela.jpg"; 
 $linkPerfil  = "../membro/biografia-membro.php"; 
-require '../include/navbar.php';
-require '../include/menu-membro.php';
 ?>
 
 <!DOCTYPE html>
@@ -12,6 +12,10 @@ require '../include/menu-membro.php';
 <?php include"../include/head.php"?>
 
 <body>
+<?php
+require '../include/navbar.php';
+require '../include/menu-membro.php';
+?>
   
   <div class="container-scroller">
       <!-- CONTEÚDO PRINCIPAL -->

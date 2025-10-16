@@ -57,17 +57,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <?php include "../include/head.php"; ?>
 <body>
     <?php include "../include/navbar.php"; ?>
+    <div class="body-login">
     <div class="container-scroller">
         <div class="main-panel">
             <div class="content-wrapper">
-                <div class="members-header">
-                    <h1 class="page-title">Cadastrar Novo Membro</h1>
-                    <div class="members-actions">
-                        <a href="membros-admin.php" class="add-member-button">
-                            <i class="ti-arrow-left"></i>Voltar para membros
-                        </a>
-                    </div>
-                </div>
                 
                 <?php if ($error): ?>
                     <div class="alert alert-danger"><?php echo htmlspecialchars($error); ?></div>
@@ -77,6 +70,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <?php endif; ?>
                 
                 <div class="support-form-container">
+                    <div class="members-header">
+                    <h1 class="page-title">Cadastrar Novo Membro</h1>
+                    <div class="members-actions">
+                        <a href="membros-admin.php" class="add-member-button">
+                            <i class="ti-arrow-left"></i>Voltar para membros
+                        </a>
+                    </div>
+                </div>
                     <form action="add-membro.php" method="POST" enctype="multipart/form-data">
                         <div class="form-group">
                             <label for="nomeMembro">Nome Completo *</label>

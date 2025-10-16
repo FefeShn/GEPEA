@@ -1,4 +1,5 @@
 <?php
+// Iniciar sessão e validar antes de qualquer saída HTML
 session_start();
 require '../config/auth.php';
 requireAdmin();
@@ -6,8 +7,6 @@ requireAdmin();
 $paginaAtiva = 'index-admin'; 
 $fotoPerfil  = "../imagens/computer.jpg"; 
 $linkPerfil  = "../admin/biografia-admin.php"; 
-require '../include/navbar.php';
-require '../include/menu-admin.php';
 ?>
 
 <!DOCTYPE html>
@@ -16,6 +15,10 @@ require '../include/menu-admin.php';
 <?php include"../include/head.php"?>
 
 <body>
+<?php
+require '../include/navbar.php';
+require '../include/menu-admin.php';
+?>
 
   <div class="container-scroller">
       <!-- CONTEÚDO PRINCIPAL -->

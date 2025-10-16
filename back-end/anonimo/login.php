@@ -38,7 +38,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-require '../include/navbar.php';
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -50,6 +49,7 @@ require '../include/navbar.php';
     <link rel="stylesheet" href="../style.css">
 </head>
 <body>
+<?php require '../include/navbar.php'; ?>
   <div class="body-login">
 
     <div class="login-container">

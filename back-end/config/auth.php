@@ -46,7 +46,7 @@
 
     function requireLogin() {
         if (!isLoggedIn()) {
-            header('Location: ../login.php');
+            header('Location: ../anonimo/login.php');
             exit();
         }
     }

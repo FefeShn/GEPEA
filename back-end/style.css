@@ -1,3 +1,175 @@
+.profile-dropdown-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+.profile-dropdown-menu {
+  left: 50% !important;
+  right: auto !important;
+  transform: translateX(-50%) !important;
+  top: calc(100% + 8px) !important;
+  min-width: 200px;
+  margin: 0;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+  border-radius: 12px;
+  padding: 6px 0;
+  border: none;
+  background: #fff;
+  position: absolute;
+  z-index: 2000;
+  display: none;
+}
+.profile-dropdown-menu.show {
+  display: block;
+}
+.profile-dropdown-menu .dropdown-item {
+  text-align: center;
+  padding: 10px 20px;
+  font-size: 1rem;
+  color: #333;
+  border-radius: 6px;
+  transition: background 0.2s;
+  background: none;
+}
+.profile-dropdown-menu .dropdown-item:hover {
+  background: #f2f2f2;
+  color: #007bff;
+}
+.profile-dropdown-menu .user-highlight {
+  background: #ffb1b1;
+  color: #333;
+  font-weight: bold;
+  border-radius: 0;
+  margin: 0;
+  padding: 10px 20px;
+  display: block;
+  font-size: 1rem;
+  box-shadow: none;
+  text-align: center;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.profile-dropdown-menu .user-highlight:hover {
+  background: #ffb1b1;
+  color: #333;
+}
+
+@media (max-width: 600px) {
+  .profile-dropdown-menu {
+    min-width: 140px;
+    font-size: 0.95rem;
+  }
+}
+
+.navbar-menu-wrapper,
+.navbar-nav,
+.navbar-nav .nav-item,
+.navbar-nav .nav-link {
+  display: flex;
+  align-items: center;
+}
+
+.nav-profile .profile-img img,
+.profile-img img {
+  display: block;
+  width: 44px;
+  height: 44px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.navbar-nav.navbar-nav-right {
+  gap: 8px;
+}
+
+.navbar {
+  align-items: center;
+  min-height: 64px;
+}
+
+.navbar-menu-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  overflow: visible;
+  position: relative;
+}
+
+.nav-item.nav-search .busca-box {
+  display: flex;
+  align-items: center;
+  height: 44px;
+}
+.busca {
+  height: 38px;
+  padding: 6px 12px;
+  border-radius: 8px;
+}
+
+.profile-img-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+}
+
+.profile-dropdown-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.profile-dropdown-menu {
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  top: calc(100% + 8px) !important;
+  position: absolute;
+  z-index: 3000;
+  display: none;
+  min-width: 200px;
+}
+.profile-dropdown-menu.show {
+  display: block;
+}
+
+.navbar, .navbar-menu-wrapper, .profile-dropdown-wrapper {
+  overflow: visible;
+}
+
+@media (max-width: 768px) {
+  .busca { display: none; }
+}
+/* ===== DROPDOWN DO PERFIL NA NAVBAR ===== */
+.profile-dropdown-menu {
+  left: 50% !important;
+  right: auto !important;
+  transform: translateX(-50%) !important;
+  min-width: 180px;
+  margin-top: 10px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  border-radius: 10px;
+  padding: 0.5rem 0;
+  border: none;
+  background: #fff;
+}
+.profile-dropdown-menu .dropdown-item {
+  text-align: center;
+  padding: 10px 20px;
+  font-size: 1rem;
+  color: #333;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+
+
+@media (max-width: 600px) {
+  .profile-dropdown-menu {
+    min-width: 140px;
+    font-size: 0.95rem;
+  }
+}
 /* ============== VARIÁVEIS GLOBAIS ============ */
 :root {
   --vermelho: #E31B23;  
@@ -4466,6 +4638,73 @@ body.membros-page {
     transform: translateY(0);
 }
 
+/* ============ NAVBAR / PROFILE OVERRIDES ============ */
+/* High-specificity overrides to ensure stable dropdown behavior and vertical alignment */
+.navbar, .navbar-menu-wrapper, .navbar-nav, .navbar-nav .nav-item, .navbar-nav .nav-link {
+  align-items: center !important;
+  height: 70px !important;
+}
+
+.navbar-nav .nav-item.nav-profile > .nav-link {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  height: 70px !important;
+  padding: 0 !important;
+}
+
+.profile-img, .navbar-nav .nav-item.nav-profile img.profile-img, .user-photo {
+  width: 50px !important;
+  height: 50px !important;
+  margin: 0 15px !important;
+  object-fit: cover !important;
+  border-radius: 50% !important;
+}
+
+.profile-img-container, .profile-dropdown-wrapper {
+  position: relative !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  height: 70px !important;
+}
+
+.profile-dropdown-menu {
+  position: absolute !important;
+  left: 50% !important;
+  right: auto !important;
+  transform: translateX(-50%) !important;
+  top: calc(100% + 6px) !important;
+  min-width: 200px !important;
+  margin: 0 !important;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.12) !important;
+  border-radius: 10px !important;
+  padding: 6px 0 !important;
+  border: none !important;
+  background: #fff !important;
+  z-index: 3000 !important;
+  display: none;
+}
+
+.profile-dropdown-menu.show {
+  display: block !important;
+}
+
+.navbar, .navbar-menu-wrapper, .profile-dropdown-wrapper {
+  overflow: visible !important;
+}
+
+@media (max-width: 991px) {
+  .profile-dropdown-menu {
+    position: fixed !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    top: 70px !important;
+    width: 90vw !important;
+    max-width: 260px !important;
+  }
+}
+
+
 .modal-header {
     padding: 20px;
     border-bottom: 1px solid #eee;
@@ -5582,4 +5821,164 @@ body.membros-page {
   padding: 1.5rem;
   margin-top: 2rem;
   text-align: center;
+}
+
+/* ===== CORREÇÕES PARA O DROPDOWN DA NAVBAR ===== */
+
+/* Container da imagem de perfil para manter estabilidade */
+.profile-img-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  margin: 0 30px 0 10px;
+}
+
+/* Garante que a imagem do perfil mantenha posição fixa */
+.navbar-nav .nav-item.nav-profile > .nav-link {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  height: 70px !important;
+  padding: 0 !important;
+}
+
+/* Remove qualquer transformação que possa afetar o layout */
+.navbar-nav .nav-item.nav-profile {
+  position: static !important;
+  transform: none !important;
+}
+
+/* Dropdown wrapper com posicionamento absoluto correto */
+.profile-dropdown-wrapper {
+  position: relative;
+  display: inline-block;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  margin-right: 80px;
+}
+
+/* Dropdown menu posicionado corretamente */
+.profile-dropdown-menu {
+  position: absolute !important;
+  left: 50% !important;
+  right: auto !important;
+  transform: translateX(-50%) !important;
+  top: 100% !important;
+  min-width: 180px;
+  margin-top: 0 !important;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  border-radius: 10px;
+  padding: 0.5rem 0;
+  border: none;
+  background: #fff;
+  z-index: 1050;
+}
+
+/* Remove qualquer efeito de transformação no dropdown toggle */
+.navbar-nav .nav-item.nav-profile .dropdown-toggle::after {
+  display: none;
+}
+
+/* Garante que o dropdown não afete o layout da navbar */
+.navbar-nav-right {
+  display: flex;
+  align-items: center;
+  height: 70px;
+  margin: 0;
+  padding: 0;
+}
+
+/* Corrige possíveis problemas de alinhamento vertical */
+.navbar-menu-wrapper {
+  height: 70px;
+  display: flex;
+  align-items: center;
+}
+
+/* Remove qualquer margin ou padding que cause desalinhamento */
+.navbar-nav {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  height: 70px;
+}
+
+/* Garante que a barra de busca mantenha sua posição */
+.busca-box {
+  margin: 0;
+  display: flex;
+  align-items: center;
+}
+
+/* Corrige o alinhamento do ícone GEPEA e título */
+.navbar-brand-wrapper {
+  display: flex;
+  align-items: center;
+  height: 70px;
+  margin: 0;
+  padding: 0;
+}
+
+.logo-nav {
+  width: 55px;
+  height: 55px;
+  margin-left: 80px;
+  object-fit: contain;
+}
+
+.titulo-logo {
+  color: var(--branco);
+  font-weight: 700;
+  font-size: 1.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0 0 30px;
+  line-height: 1;
+}
+
+/* Responsividade para mobile */
+@media (max-width: 991px) {
+  .profile-dropdown-menu {
+    position: fixed !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    top: 70px !important;
+    width: 90vw;
+    max-width: 200px;
+  }
+  
+  .navbar-menu-wrapper {
+    padding-right: 15px;
+  }
+}
+
+/* Garante que o dropdown não cause scroll ou reposicionamento */
+.navbar {
+  overflow: visible !important;
+}
+
+.profile-dropdown-menu {
+  pointer-events: auto;
+}
+
+/* Small fixes: center the search input vertically and ensure navbar alignment */
+.navbar .busca-box,
+.navbar .busca {
+  display: flex !important;
+  align-items: center !important;
+  height: 44px !important;
+}
+
+.navbar .busca {
+  margin: 0 12px 0 0 !important;
+}
+
+.navbar-nav .nav-item.nav-search {
+  display: flex !important;
+  align-items: center !important;
+  height: 70px !important;
 }

@@ -1,15 +1,19 @@
 <?php
+// Iniciar sessão antes de qualquer saída para evitar erros de headers
+if (session_status() === PHP_SESSION_NONE) { session_start(); }
 $paginaAtiva = 'index'; 
 $fotoPerfil  = "../imagens/user-foto.png"; 
 $linkPerfil  = "login.php"; 
-require '../include/navbar.php';
-require '../include/menu-anonimo.php';
 ?>
 
 <!DOCTYPE html>
 <html lang="pt-BR">
 <?php include"../include/head.php"?>
 <body>
+<?php
+require '../include/navbar.php';
+require '../include/menu-anonimo.php';
+?>
   <div class="container-scroller">
       <!-- CONTEÚDO PRINCIPAL -->
       <div class="main-panel">
