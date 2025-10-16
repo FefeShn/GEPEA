@@ -22,5 +22,13 @@ services:
       - ./back-end/database:/docker-entrypoint-initdb.d
     restart: always
 
-volumes:
-  db_data:
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+    ports:
+      - "8081:80"
+    depends_on:
+      - db
+    restart: always
