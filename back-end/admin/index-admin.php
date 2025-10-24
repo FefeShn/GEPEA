@@ -3,6 +3,24 @@
 session_start();
 require '../config/auth.php';
 requireAdmin();
+require_once __DIR__ . '/../config/conexao.php';
+
+// Conexão e tabela
+$pdo = getConexao();
+$pdo->exec("CREATE TABLE IF NOT EXISTS publicacoes (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  titulo VARCHAR(255) NOT NULL,
+  resumo TEXT,
+  imagem VARCHAR(512),
+  arquivo VARCHAR(512),
+  data_publicacao DATE NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+)");
+
+// Buscar publicações
+$stmt = $pdo->query("SELECT id, titulo, resumo, imagem, arquivo, data_publicacao FROM publicacoes ORDER BY id DESC");
+$publicacoes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 $paginaAtiva = 'index-admin'; 
 $fotoPerfil  = "../imagens/computer.jpg"; 
@@ -47,60 +65,35 @@ require '../include/menu-admin.php';
           </div>
 
           <div class="row" id="publicacoes-container">
-            <!-- Card 1 -->
-            <div class="col-md-4 mb-4 sombra-transparente">
-              <div class="card h-100">
-                <img src="../imagens/reuniaogepea.jpeg" class="card-img-top" alt="foto do post">
-                <div class="card-body d-flex flex-column">
-                  <div class="d-flex justify-content-between align-items-center mb-2">
-                    <small class="text-muted">13/03/2025</small>
-                  </div>
-                  <h5 class="card-title">Reunião de Leitura</h5>
-                  <p class="card-text">Reunião de leitura para discutir o capítulo do livro "Pensamento Feminista Negro", de Patricia Hill Collins.</p>
-                  <div class="mt-auto d-flex justify-content-between align-items-center">
-                    <a href="../publicacoes/publicacao1.php" class="btn btn-success">Ver detalhes</a>
-
-                  </div>
-                </div>
-              </div>
-              <input type="checkbox" class="publi-checkbox">
-            </div>
-
-            <!-- Card 2 -->
-            <div class="col-md-4 mb-4 sombra-transparente">
-              <div class="card h-100">
-                <img src="../imagens/showgepea.jpeg" class="card-img-top" alt="foto do post">
-                <div class="card-body d-flex flex-column">
-                  <div class="d-flex justify-content-between align-items-center mb-2">
-                    <small class="text-muted">10/03/2025</small>
-                  </div>
-                  <h5 class="card-title">Inauguração de Espaços Afrocentrados</h5>
-                  <p class="card-text">Evento de inauguração que contou com a presença de artistas locais.</p>
-                  <div class="mt-auto d-flex justify-content-between align-items-center">
-                    <a href="../publicacoes/publicacao2.php" class="btn btn-success">Ver detalhes</a>
+            <?php if (empty($publicacoes)): ?>
+              <div class="col-12"><p>Nenhuma publicação cadastrada ainda. Clique em "Nova Publicação" para começar.</p></div>
+            <?php else: ?>
+              <?php foreach ($publicacoes as $pub): 
+                $id = (int)$pub['id'];
+                $titulo = htmlspecialchars($pub['titulo'] ?? '');
+                $resumo = htmlspecialchars($pub['resumo'] ?? '');
+                $img = htmlspecialchars($pub['imagem'] ?? '../imagens/emoji.png');
+                $data = htmlspecialchars(date('d/m/Y', strtotime($pub['data_publicacao'])));
+                $arquivo = $pub['arquivo'] ? htmlspecialchars($pub['arquivo']) : ('./editar-publicacao.php?id=' . $id);
+              ?>
+              <div class="col-md-4 mb-4 sombra-transparente">
+                <div class="card h-100">
+                  <img src="<?= $img ?>" class="card-img-top" alt="foto do post">
+                  <div class="card-body d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                      <small class="text-muted"><?= $data ?></small>
+                    </div>
+                    <h5 class="card-title"><?= $titulo ?></h5>
+                    <p class="card-text"><?= $resumo ?></p>
+                    <div class="mt-auto d-flex justify-content-between align-items-center">
+                      <a href="<?= $arquivo ?>" class="btn btn-success">Ver detalhes</a>
+                    </div>
                   </div>
                 </div>
+                <input type="checkbox" class="publi-checkbox" value="<?= $id ?>">
               </div>
-              <input type="checkbox" class="publi-checkbox">
-            </div>
-
-            <!-- Card 3 -->
-            <div class="col-md-4 mb-4 sombra-transparente">
-              <div class="card h-100">
-                <img src="../imagens/gepeaalvorada.jpeg" class="card-img-top" alt="foto do post">
-                <div class="card-body d-flex flex-column">
-                  <div class="d-flex justify-content-between align-items-center mb-2">
-                    <small class="text-muted">25/03/2025</small>
-                  </div>
-                  <h5 class="card-title">Reunião presencial em Alvorada</h5>
-                  <p class="card-text">Membros do GEPEA e bolsistas do grupo se reuniram em Alvorada para planejar próximos passos.</p>
-                  <div class="mt-auto d-flex justify-content-between align-items-center">
-                    <a href="../publicacoes/publicacao3.php" class="btn btn-success">Ver detalhes</a>
-                  </div>
-                </div>
-              </div>
-              <input type="checkbox" class="publi-checkbox">
-            </div>
+              <?php endforeach; ?>
+            <?php endif; ?>
           </div>
 
           <!-- Modal de Adicionar Publicação -->
@@ -111,20 +104,20 @@ require '../include/menu-admin.php';
                 <button class="modal-publicacao-close">&times;</button>
               </div>
               <div class="modal-publicacao-content">
-                <form id="formPublicacao">
+                <form id="formPublicacao" method="post" enctype="multipart/form-data">
                   <div class="form-group-publicacao">
                     <label for="tituloPublicacao">Título</label>
-                    <input type="text" id="tituloPublicacao" placeholder="Digite o título da publicação" required>
+                    <input type="text" id="tituloPublicacao" name="tituloPublicacao" placeholder="Digite o título da publicação" required>
                   </div>
         
                   <div class="form-group-publicacao">
                     <label for="resumoPublicacao">Resumo</label>
-                    <textarea id="resumoPublicacao" placeholder="Digite um resumo da publicação" required></textarea>
+                    <textarea id="resumoPublicacao" name="resumoPublicacao" placeholder="Digite um resumo da publicação" required></textarea>
                   </div>
         
                   <div class="form-group-publicacao">
                     <label for="imagemPublicacao">Imagem</label>
-                    <input type="file" id="imagemPublicacao" accept="image/*">
+                    <input type="file" id="imagemPublicacao" name="imagemPublicacao" accept="image/*">
                     <label for="imagemPublicacao" class="file-upload-label">
                       <i class="ti-image mr-2"></i>Selecione uma imagem
                     </label>

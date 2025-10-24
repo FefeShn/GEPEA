@@ -295,17 +295,23 @@ document.addEventListener('DOMContentLoaded', function() {
             if (e.target === modalPublicacao) closeModal();
         });
 
-        document.getElementById('formPublicacao')?.addEventListener('submit', (e) => {
+        document.getElementById('formPublicacao')?.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const titulo = document.getElementById('tituloPublicacao').value;
-            const resumo = document.getElementById('resumoPublicacao').value;
-            const imagem = document.getElementById('imagemPublicacao').files[0];
-            
-            console.log('Nova publicação:', { titulo, resumo, imagem });
-            alert('Publicação criada com sucesso!');
-            
-            e.target.reset();
-            closeModal();
+            const form = e.target;
+            const titulo = document.getElementById('tituloPublicacao').value.trim();
+            if (!titulo) { alert('Informe um título.'); return; }
+            const fd = new FormData(form);
+            try {
+                const resp = await fetch('./api/publicacoes_criar.php', { method: 'POST', body: fd, headers: { 'Accept': 'application/json' } });
+                const data = await resp.json();
+                if (!resp.ok || !data.ok) throw new Error(data.error || 'Falha ao criar publicação');
+                form.reset();
+                closeModal();
+                window.location.href = data.redirect;
+            } catch (err) {
+                console.error(err);
+                alert('Erro ao criar publicação.');
+            }
         });
 
         document.getElementById('imagemPublicacao')?.addEventListener('change', function() {
@@ -361,15 +367,20 @@ document.addEventListener('DOMContentLoaded', function() {
             if (e.target === modalExcluirOverlay) closeModal();
         });
 
-        document.getElementById('confirmarExclusaoPubli')?.addEventListener('click', () => {
-            const checkboxes = document.querySelectorAll('.publi-checkbox:checked');
-            alert(`Simulação: ${checkboxes.length} publicação(ões) marcada(s) para exclusão!`);
-            
-            checkboxes.forEach(checkbox => {
-                checkbox.checked = false;
-            });
-            
-            closeModal();
+        document.getElementById('confirmarExclusaoPubli')?.addEventListener('click', async () => {
+            const checkboxes = Array.from(document.querySelectorAll('.publi-checkbox:checked'));
+            const ids = checkboxes.map(cb => parseInt(cb.value, 10)).filter(Boolean);
+            if (ids.length === 0) { closeModal(); return; }
+            try {
+                const resp = await fetch('./api/publicacoes_excluir.php', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ids }) });
+                const data = await resp.json();
+                if (!resp.ok || !data.ok) throw new Error(data.error || 'Falha ao excluir');
+                closeModal();
+                window.location.reload();
+            } catch (err) {
+                console.error(err);
+                alert('Erro ao excluir publicações.');
+            }
         });
     };
 
