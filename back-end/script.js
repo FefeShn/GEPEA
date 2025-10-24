@@ -1194,18 +1194,35 @@ const setupBiografiaPage = () => {
     const profileImage = document.querySelector('.profile-image');
     
     if (editButton && biographyText) {
-        editButton.addEventListener('click', () => {
+        editButton.addEventListener('click', async () => {
             const isEditing = biographyText.hasAttribute('contenteditable');
-            
             if (isEditing) {
-                biographyText.removeAttribute('contenteditable');
-                editButton.innerHTML = '<i class="ti-pencil"></i> Editar biografia';
-                alert('Biografia atualizada com sucesso! (Simulação)');
+                // Salvar de verdade
+                const idInput = document.querySelector('#formEditarContato input[name="id_usuario"], #formEditarFoto input[name="id_usuario"]');
+                const idUsuario = idInput?.value;
+                const plainText = biographyText.innerText.trim();
+                try {
+                    const resp = await fetch('../include/atualizar_biografia.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: `id_usuario=${encodeURIComponent(idUsuario || '')}&bio=${encodeURIComponent(plainText)}`
+                    });
+                    const data = await resp.json();
+                    if (!resp.ok || !data.ok) throw new Error(data.msg || 'Erro ao salvar biografia');
+                    // Modo visual volta ao normal
+                    biographyText.removeAttribute('contenteditable');
+                    editButton.innerHTML = '<i class="ti-pencil"></i> Editar biografia';
+                    biographyText.style.padding = '';
+                    biographyText.style.border = '';
+                    biographyText.style.borderRadius = '';
+                    biographyText.style.minHeight = '';
+                } catch (err) {
+                    alert(err.message || 'Erro ao salvar biografia');
+                }
             } else {
                 biographyText.setAttribute('contenteditable', 'true');
                 biographyText.focus();
                 editButton.innerHTML = '<i class="ti-check"></i> Salvar';
-                
                 biographyText.style.padding = '10px';
                 biographyText.style.border = '1px dashed #ccc';
                 biographyText.style.borderRadius = '4px';
@@ -1214,7 +1231,8 @@ const setupBiografiaPage = () => {
         });
     }
     
-    if (changePhotoButton && profileImage) {
+    // Se a página tiver modal de foto, evitamos a simulação aqui
+    if (changePhotoButton && profileImage && !document.getElementById('modalFoto')) {
         changePhotoButton.addEventListener('click', () => {
             const fileInput = document.createElement('input');
             fileInput.type = 'file';
@@ -1238,6 +1256,99 @@ const setupBiografiaPage = () => {
         });
     }
 };
+
+// Modais e submits reais da página de perfil (foto e contatos)
+function setupPerfilModals() {
+    const modalFoto = document.getElementById('modalFoto');
+    const modalContato = document.getElementById('modalContato');
+    const btnFoto = document.querySelector('.change-photo-button');
+    const btnContatos = document.querySelector('.edit-contacts-button');
+
+    const open = (modal) => { if (modal) { modal.classList.add('active'); document.body.style.overflow = 'hidden'; } };
+    const close = (modal) => { if (modal) { modal.classList.remove('active'); document.body.style.overflow = ''; } };
+
+    // Foto
+    btnFoto?.addEventListener('click', (e) => { e.preventDefault(); open(modalFoto); });
+    modalFoto?.querySelector('.modal-close')?.addEventListener('click', () => close(modalFoto));
+    modalFoto?.querySelector('.close-modal')?.addEventListener('click', () => close(modalFoto));
+    modalFoto?.addEventListener('click', (e) => { if (e.target === modalFoto) close(modalFoto); });
+
+    // Contatos
+    btnContatos?.addEventListener('click', (e) => { e.preventDefault(); open(modalContato); });
+    modalContato?.querySelector('.modal-close')?.addEventListener('click', () => close(modalContato));
+    modalContato?.querySelector('.close-modal')?.addEventListener('click', () => close(modalContato));
+    modalContato?.addEventListener('click', (e) => { if (e.target === modalContato) close(modalContato); });
+
+    // Submit contatos
+    document.getElementById('salvarContato')?.addEventListener('click', async () => {
+        const form = document.getElementById('formEditarContato');
+        if (!form) return;
+        const fd = new FormData(form);
+        try {
+            const resp = await fetch('../include/atualizar_contato.php', { method: 'POST', body: fd });
+            const data = await resp.json();
+            if (!resp.ok || !data.ok) throw new Error(data.msg || 'Erro ao salvar');
+
+            // Atualiza DOM
+            const email = data.email || '';
+            const lattes = data.lattes || '';
+            const contacts = document.querySelector('.member-contacts');
+            const editBtn = document.querySelector('.edit-contacts-button');
+
+            let emailLink = document.querySelector('.email-link');
+            if (emailLink) {
+                emailLink.setAttribute('href', 'mailto:' + email);
+                // texto após o ícone
+                const textNode = Array.from(emailLink.childNodes).find(n => n.nodeType === Node.TEXT_NODE);
+                if (textNode) textNode.nodeValue = ' ' + email; else emailLink.appendChild(document.createTextNode(' ' + email));
+            } else if (email && contacts && editBtn) {
+                const a = document.createElement('a');
+                a.className = 'email-link';
+                a.href = 'mailto:' + email;
+                a.innerHTML = '<img src="../imagens/email-icon.png" alt="Email" class="contact-icon"> ' + email;
+                contacts.insertBefore(a, editBtn);
+            }
+
+            let lattesLink = document.querySelector('.lattes-link');
+            if (lattesLink) {
+                if (lattes) { lattesLink.setAttribute('href', lattes); }
+                else { lattesLink.remove(); }
+            } else if (lattes && contacts && editBtn) {
+                const a = document.createElement('a');
+                a.className = 'lattes-link';
+                a.href = lattes; a.target = '_blank';
+                a.innerHTML = '<img src="../imagens/lattes-icon.png" alt="Currículo Lattes" class="contact-icon"> Currículo Lattes';
+                contacts.insertBefore(a, editBtn);
+            }
+
+            close(modalContato);
+        } catch (err) {
+            alert(err.message || 'Erro ao salvar');
+        }
+    });
+
+    // Submit foto
+    document.getElementById('salvarFoto')?.addEventListener('click', async () => {
+        const form = document.getElementById('formEditarFoto');
+        if (!form) return;
+        const fd = new FormData(form);
+        try {
+            const resp = await fetch('../include/atualizar_foto.php', { method: 'POST', body: fd });
+            const data = await resp.json();
+            if (!resp.ok || !data.ok) throw new Error(data.msg || 'Erro ao salvar');
+            const img = document.querySelector('.profile-image');
+            if (img && data.foto) { img.setAttribute('src', data.foto + '?t=' + Date.now()); }
+            // Atualiza avatar da navbar
+            document.querySelectorAll('.profile-img').forEach(el => {
+                const base = data.foto || el.getAttribute('src');
+                el.setAttribute('src', base + '?t=' + Date.now());
+            });
+            close(modalFoto);
+        } catch (err) {
+            alert(err.message || 'Erro ao salvar');
+        }
+    });
+}
 
     const setupBiografiaEdicao = () => {
         const editButton = document.querySelector('.edit-text');
@@ -1516,6 +1627,7 @@ const setupExclusaoArquivoModal = () => {
     if (document.querySelector('.edit-text')) setupBiografiaEdicao();
     if (document.getElementById('openDeleteModal')) setupExclusaoArquivoModal();
     if (document.querySelector('.biography-container')) setupBiografiaPage();
+    if (document.getElementById('modalFoto') || document.getElementById('modalContato')) setupPerfilModals();
 
     if (window.location.pathname.includes('eventos-admin.php')) {
         setupNovaAcaoModal();

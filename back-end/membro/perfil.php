@@ -1,31 +1,47 @@
 <?php
 if (session_status() === PHP_SESSION_NONE) { session_start(); }
+// Página de perfil dinâmica baseada em biografia-membro.php
+// URL esperada: perfil.php?id=ID_DO_USUARIO
+
+// Variáveis opcionais (mantidas por consistência com outras páginas)
 $paginaAtiva = 'nenhuma';
+$fotoPerfil  = "../imagens/user-foto.png"; // padrão para a navbar quando anônimo
+$linkPerfil  = "../anonimo/login.php";
 
 require_once '../config/conexao.php';
-$pdo = getConexao();
 
-$idUsuario = $_SESSION['id_usuario'] ?? null; // id do usuário logado (admin)
+// Captura e valida o id
+$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 
-// Utilitário para caminho da foto (igual ao perfil.php)
-function caminhoFotoPerfilAdmin(?string $foto): string {
+$usuario = null;
+if ($id) {
+    try {
+        $pdo = getConexao();
+        $stmt = $pdo->prepare('SELECT id_usuario, nome_user, email_user, foto_user, bio_user, cargo_user, lattes_user FROM usuarios WHERE id_usuario = ?');
+        $stmt->execute([$id]);
+        $usuario = $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+    } catch (Throwable $e) {
+        // Mantém $usuario como null em caso de falha, mensagem amigável será exibida
+        $usuario = null;
+    }
+}
+
+// Funções auxiliares simples
+function caminhoFotoPerfil(?string $foto): string {
+    // Foto padrão
     if (!$foto || trim($foto) === '') {
         return '../imagens/user-foto.png';
     }
+    // Se já for URL absoluta ou path root, retorna como está
     if (preg_match('#^(https?:)?//#', $foto) || substr($foto, 0, 1) === '/') {
         return $foto;
     }
+    // Se já vier com ../ assume relativo válido
     if (strpos($foto, '../') === 0) {
         return $foto;
     }
+    // Caso contrário, usa a pasta de imagens padrão
     return '../imagens/' . ltrim($foto, '/');
-}
-
-$usuario = null;
-if ($idUsuario) {
-    $stmt = $pdo->prepare('SELECT id_usuario, nome_user, email_user, foto_user, bio_user, cargo_user, lattes_user FROM usuarios WHERE id_usuario = ?');
-    $stmt->execute([$idUsuario]);
-    $usuario = $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
 }
 ?>
 
@@ -33,11 +49,10 @@ if ($idUsuario) {
 <html lang="pt-BR">
 
 <?php include "../include/head.php"; ?>
-
 <body>
   <?php
     require '../include/navbar.php';
-    require '../include/menu-admin.php';
+    require '../include/menu-membro.php';
   ?>
   <div class="container-scroller">
     <!-- CONTEÚDO PRINCIPAL -->
@@ -45,14 +60,14 @@ if ($idUsuario) {
       <?php if (!$usuario): ?>
         <div class="biography-header">
           <div class="biography-title-wrapper">
-            <h1 class="biography-title">Biografia</h1>
-            <a href="membros-admin.php" class="back-button">← Voltar aos membros</a>
+            <h1 class="biography-title">Perfil</h1>
+            <a href="membros-membro.php" class="back-button">← Voltar aos membros</a>
           </div>
         </div>
         <div class="biography-content">
           <div class="biography-info" style="flex:1;">
-            <h2 class="member-name">Usuário não encontrado</h2>
-            <p class="member-role">Não foi possível carregar os dados do administrador.</p>
+            <h2 class="member-name">Perfil não encontrado</h2>
+            <p class="member-role">O perfil informado não existe ou foi removido.</p>
           </div>
         </div>
       <?php else: ?>
@@ -63,9 +78,8 @@ if ($idUsuario) {
           $lattes = trim((string)($usuario['lattes_user'] ?? ''));
           $bioRaw = trim((string)($usuario['bio_user'] ?? ''));
           $bio    = $bioRaw !== '' ? nl2br(htmlspecialchars($bioRaw)) : 'Adicionar biografia';
-          $foto   = caminhoFotoPerfilAdmin($usuario['foto_user'] ?? null);
-
-          // Classe de cargo para cores (igual ao perfil.php)
+          $foto   = caminhoFotoPerfil($usuario['foto_user'] ?? null);
+          // Define classe de cargo para aplicar cores e estilos relacionados
           $cargoLower = mb_strtolower($usuario['cargo_user'] ?? '', 'UTF-8');
           $roleClass = 'outros';
           if (strpos($cargoLower, 'vice') !== false && strpos($cargoLower, 'coorden') !== false) {
@@ -83,49 +97,54 @@ if ($idUsuario) {
           <div class="biography-header">
             <div class="biography-title-wrapper">
               <h1 class="biography-title">Biografia</h1>
-              <a href="membros-admin.php" class="back-button">← Voltar aos membros</a>
+              <a href="membros-membro.php" class="back-button">← Voltar aos membros</a>
             </div>
           </div>
 
           <div class="biography-content <?= $roleClass ?>">
-            <div class="biography-photo">
-              <img src="<?= htmlspecialchars($foto) ?>" alt="Foto de <?= $nome ?>" class="profile-image">
-              <button class="change-photo-button" type="button">
-                <i class="ti-camera"></i> Alterar foto de perfil
-              </button>
-            </div>
+          <div class="biography-photo">
+            <img src="<?= htmlspecialchars($foto) ?>" alt="Foto de <?= $nome ?>" class="profile-image">
+            <button class="change-photo-button">
+              <i class="ti-camera"></i> Alterar foto de perfil
+            </button>
+          </div>
 
-            <div class="biography-info">
-              <h2 class="member-name"><?= $nome ?></h2>
-              <?php if ($cargo !== ''): ?>
-                <p class="member-role <?= $roleClass ?>"><?= $cargo ?></p>
+          <div class="biography-info">
+            <h2 class="member-name">
+              <?= $nome ?>
+            </h2>
+            <?php if ($cargo !== ''): ?>
+              <p class="member-role <?= $roleClass ?>">
+                <?= $cargo ?>
+              </p>
+            <?php endif; ?>
+
+            <div class="member-contacts">
+              <?php if ($lattes !== ''): ?>
+                <a href="<?= htmlspecialchars($lattes) ?>" target="_blank" class="lattes-link">
+                  <img src="../imagens/lattes-icon.png" alt="Currículo Lattes" class="contact-icon">
+                  Currículo Lattes
+                </a>
               <?php endif; ?>
 
-              <div class="member-contacts">
-                <?php if ($email !== ''): ?>
-                  <a href="mailto:<?= $email ?>" class="email-link">
-                    <img src="../imagens/email-icon.png" alt="Email" class="contact-icon">
-                    <?= $email ?>
-                  </a>
-                <?php endif; ?>
-                <?php if ($lattes !== ''): ?>
-                  <a href="<?= htmlspecialchars($lattes) ?>" target="_blank" class="lattes-link">
-                    <img src="../imagens/lattes-icon.png" alt="Currículo Lattes" class="contact-icon">
-                    Currículo Lattes
-                  </a>
-                <?php endif; ?>
-                <button type="button" class="btn btn-primary edit-contacts-button" data-user-id="<?= (int)$usuario['id_usuario'] ?>">
-                  <i class="ti-pencil"></i> Editar contatos
-                </button>
-              </div>
-
-              <div class="biography-text">
-                <p class="biography-text-content"><?= $bio ?></p>
-              </div>
-              <button class="edit-button edit-biography-button" type="button">
-                <i class="ti-pencil"></i> Editar biografia
+              <?php if ($email !== ''): ?>
+                <a href="mailto:<?= $email ?>" class="email-link">
+                  <img src="../imagens/email-icon.png" alt="Email" class="contact-icon">
+                  <?= $email ?>
+                </a>
+              <?php endif; ?>
+              <button type="button" class="btn btn-primary edit-contacts-button" data-user-id="<?= (int)$usuario['id_usuario'] ?>">
+                <i class="ti-pencil"></i> Editar contatos
               </button>
             </div>
+
+            <div class="biography-text">
+              <p class="biography-text-content"><?= $bio ?></p>
+            </div>
+            <button class="edit-button edit-biography-button" type="button">
+              <i class="ti-pencil"></i> Editar biografia
+            </button>
+          </div>
           </div>
         </div>
 
@@ -186,5 +205,4 @@ if ($idUsuario) {
   </div>
   <script src="../script.js"></script>
 </body>
-
 </html>

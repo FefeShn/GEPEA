@@ -3,9 +3,15 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Consider user logged in only when there's an id and the logged_in flag
-$isLoggedIn = !empty($_SESSION['logged_in']) && !empty($_SESSION['id_usuario']);
-$fotoPerfil = ($isLoggedIn && !empty($_SESSION['foto_user'])) ? $_SESSION['foto_user'] : "../imagens/user-foto.png";
+// Consider user logged in when there's a valid user id in the session
+$isLoggedIn = !empty($_SESSION['id_usuario']);
+$fotoPerfil = "../imagens/user-foto.png";
+if ($isLoggedIn) {
+  $sessFoto = $_SESSION['foto_user'] ?? '';
+  if (is_string($sessFoto) && trim($sessFoto) !== '') {
+    $fotoPerfil = $sessFoto;
+  }
+}
 $nomeUsuario = $isLoggedIn ? ($_SESSION['nome_user'] ?? 'Usuário') : 'Visitante';
 ?>
 
@@ -47,7 +53,9 @@ $nomeUsuario = $isLoggedIn ? ($_SESSION['nome_user'] ?? 'Usuário') : 'Visitante
                 <i class="ti-user text-primary"></i>
                 <?= htmlspecialchars($nomeUsuario) ?>
               </span>
-              <a class="dropdown-item" href="<?php echo ($_SESSION['eh_adm'] ?? false) ? '../admin/biografia-admin.php' : '../membro/biografia-membro.php'; ?>">
+              <a class="dropdown-item" href="<?php echo ($_SESSION['eh_adm'] ?? false)
+                ? '../admin/biografia-admin.php'
+                : ('../membro/perfil.php?id=' . urlencode((string)($_SESSION['id_usuario'] ?? ''))); ?>">
                 <i class="ti-id-badge text-primary"></i>
                 Ir para o perfil
               </a>
