@@ -3,7 +3,7 @@ $paginaAtiva = 'index';
 $fotoPerfil  = "../imagens/user-foto.png"; 
 $linkPerfil  = "../anonimo/login.php"; 
 require '../include/navbar.php';
-require '../include/menu-anonimo.php';
+require '../include/menu-dinamico.php';
 ?>
 
 <!DOCTYPE html>

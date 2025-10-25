@@ -1090,6 +1090,10 @@ body {
   margin-bottom: 1rem;
   flex: 1;
   overflow: hidden; 
+  display: -webkit-box;
+  line-clamp: 4; /* padrão */
+  -webkit-line-clamp: 4; /* limita a 4 linhas */
+  -webkit-box-orient: vertical;
 }
 
 .text-muted {
@@ -6037,4 +6041,19 @@ body.membros-page {
   display: flex !important;
   align-items: center !important;
   height: 70px !important;
+}
+
+/* Clamp card texts to 5 lines in publicações listing (ellipsis on 5th line) */
+#publicacoes-container .card-text {
+  /* Robust 3-line clamp with webkit and non-webkit fallback */
+  line-height: 1.5;
+  max-height: calc(1.5em * 3);
+  overflow: hidden !important;
+  display: -webkit-box !important;
+  -webkit-box-orient: vertical !important;
+  -webkit-line-clamp: 3 !important;
+  line-clamp: 3 !important; /* padrão para compat */
+  word-break: break-word;
+  /* Avoid stretching by global .card-text { flex: 1 } */
+  flex: 0 0 auto !important;
 }

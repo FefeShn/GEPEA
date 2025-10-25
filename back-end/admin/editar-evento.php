@@ -5,45 +5,45 @@ requireAdmin();
 require_once __DIR__ . '/../config/conexao.php';
 
 $pdo = getConexao();
-$pdo->exec("CREATE TABLE IF NOT EXISTS publicacao_imagens (
+// Tabela imagens para carrossel
+$pdo->exec("CREATE TABLE IF NOT EXISTS evento_imagens (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  publicacao_id INT NOT NULL,
+  evento_id INT NOT NULL,
   caminho VARCHAR(512) NOT NULL,
   ordem INT NOT NULL DEFAULT 1,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (publicacao_id) REFERENCES publicacoes(id) ON DELETE CASCADE
+  FOREIGN KEY (evento_id) REFERENCES evento(id_evento) ON DELETE CASCADE
 )");
-$id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
-if ($id <= 0) { header('Location: ./index-admin.php'); exit; }
 
-$stmt = $pdo->prepare('SELECT * FROM publicacoes WHERE id = ?');
+$id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+if ($id <= 0) { header('Location: ./eventos-admin.php'); exit; }
+
+$stmt = $pdo->prepare('SELECT * FROM evento WHERE id_evento = ?');
 $stmt->execute([$id]);
-$pub = $stmt->fetch(PDO::FETCH_ASSOC);
-if (!$pub) { header('Location: ./index-admin.php'); exit; }
+$evt = $stmt->fetch(PDO::FETCH_ASSOC);
+if (!$evt) { header('Location: ./eventos-admin.php'); exit; }
 
 $erro = '';
-// Adicionar imagem extra
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['acao'] ?? '') === 'add_imagem') {
+
+// Adicionar imagem extra via fetch
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && (($_POST['acao'] ?? '') === 'add_imagem')) {
   if (isset($_FILES['nova_imagem']) && $_FILES['nova_imagem']['error'] === UPLOAD_ERR_OK) {
-    $uploadDir = __DIR__ . '/../imagens/publicacoes';
+    $uploadDir = __DIR__ . '/../imagens/eventos';
     if (!is_dir($uploadDir)) { mkdir($uploadDir, 0775, true); }
     $tmp = $_FILES['nova_imagem']['tmp_name'];
     $ext = pathinfo($_FILES['nova_imagem']['name'], PATHINFO_EXTENSION);
     $ext = $ext ? ('.' . strtolower($ext)) : '';
-    $fileName = 'pub_' . date('Ymd_His') . '_' . bin2hex(random_bytes(4)) . $ext;
+    $fileName = 'evt_' . date('Ymd_His') . '_' . bin2hex(random_bytes(4)) . $ext;
     $dest = $uploadDir . '/' . $fileName;
     if (move_uploaded_file($tmp, $dest)) {
-      // Próxima ordem
-      $ord = (int)$pdo->query('SELECT COALESCE(MAX(ordem),0) FROM publicacao_imagens WHERE publicacao_id = ' . $id)->fetchColumn();
+      $ord = (int)$pdo->query('SELECT COALESCE(MAX(ordem),0) FROM evento_imagens WHERE evento_id = ' . $id)->fetchColumn();
       $ord = $ord + 1;
-      $imgRel = '../imagens/publicacoes/' . $fileName;
-      $ins = $pdo->prepare('INSERT INTO publicacao_imagens (publicacao_id, caminho, ordem) VALUES (?, ?, ?)');
+      $imgRel = '../imagens/eventos/' . $fileName;
+      $ins = $pdo->prepare('INSERT INTO evento_imagens (evento_id, caminho, ordem) VALUES (?, ?, ?)');
       $ins->execute([$id, $imgRel, $ord]);
-      // Se não havia imagem de capa, definir esta como capa
-      if (!$pub['imagem']) {
-        $updCov = $pdo->prepare('UPDATE publicacoes SET imagem = ? WHERE id = ?');
-        $updCov->execute([$imgRel, $id]);
-        $pub['imagem'] = $imgRel;
+      if (!$evt['foto_evento']) {
+        $pdo->prepare('UPDATE evento SET foto_evento = ? WHERE id_evento = ?')->execute([$imgRel, $id]);
+        $evt['foto_evento'] = $imgRel;
       }
     } else {
       $erro = 'Falha ao enviar a nova imagem.';
@@ -52,78 +52,76 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['acao'] ?? '') === 'add_ima
     $erro = 'Selecione uma imagem válida.';
   }
   // Recarregar dados atualizados
-  $stmt = $pdo->prepare('SELECT * FROM publicacoes WHERE id = ?');
+  $stmt = $pdo->prepare('SELECT * FROM evento WHERE id_evento = ?');
   $stmt->execute([$id]);
-  $pub = $stmt->fetch(PDO::FETCH_ASSOC) ?: $pub;
+  $evt = $stmt->fetch(PDO::FETCH_ASSOC) ?: $evt;
 }
 
+// Salvar e publicar
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && (($_POST['acao'] ?? '') !== 'add_imagem')) {
   $titulo = trim($_POST['titulo'] ?? '');
   $conteudo = trim($_POST['conteudo'] ?? '');
-  // Não permitir editar a data; usar a data atual da publicação
-  $data_publicacao = $pub['data_publicacao'];
+  $data_evento = $evt['data_evento']; // somente exibir, não editar
+
   if ($titulo === '' || $conteudo === '') {
     $erro = 'Preencha todos os campos obrigatórios.';
-    } else {
-        $imgPath = $pub['imagem'] ?? '../imagens/emoji.png';
+  } else {
+    $imgPath = $evt['foto_evento'] ?? '../imagens/emoji.png';
     if (isset($_FILES['imagem']) && $_FILES['imagem']['error'] === UPLOAD_ERR_OK) {
-            $uploadDir = __DIR__ . '/../imagens/publicacoes';
-            if (!is_dir($uploadDir)) { mkdir($uploadDir, 0775, true); }
-            $tmp = $_FILES['imagem']['tmp_name'];
-            $ext = pathinfo($_FILES['imagem']['name'], PATHINFO_EXTENSION);
-            $ext = $ext ? ('.' . strtolower($ext)) : '';
-            $fileName = 'pub_' . date('Ymd_His') . '_' . bin2hex(random_bytes(4)) . $ext;
-            $dest = $uploadDir . '/' . $fileName;
-            if (move_uploaded_file($tmp, $dest)) {
-                $imgPath = '../imagens/publicacoes/' . $fileName;
-        // Tornar esta a capa: empurrar ordens existentes e inserir como ordem 1
-        $pdo->prepare('UPDATE publicacao_imagens SET ordem = ordem + 1 WHERE publicacao_id = ?')->execute([$id]);
-        $pdo->prepare('INSERT INTO publicacao_imagens (publicacao_id, caminho, ordem) VALUES (?, ?, 1)')->execute([$id, $imgPath]);
-            }
-        }
-
-  // Atualizar DB com título, imagem e resumo=conteúdo (sem alterar data)
-  $upd = $pdo->prepare('UPDATE publicacoes SET titulo = ?, imagem = ?, resumo = ? WHERE id = ?');
-  $upd->execute([$titulo, $imgPath, $conteudo, $id]);
-
-        // Gerar arquivo da publicação
-        $fileRel = '../publicacoes/publicacao' . $id . '.php';
-        $fileAbs = __DIR__ . '/../publicacoes/publicacao' . $id . '.php';
-  // Buscar imagens para o carrossel
-  $imgs = $pdo->prepare('SELECT caminho FROM publicacao_imagens WHERE publicacao_id = ? ORDER BY ordem ASC');
-  $imgs->execute([$id]);
-  $imagens = $imgs->fetchAll(PDO::FETCH_COLUMN) ?: [$imgPath];
-  $htmlContent = buildPublicacaoFile($titulo, $data_publicacao, $imagens, $conteudo);
-        file_put_contents($fileAbs, $htmlContent);
-
-        // Atualizar caminho do arquivo
-        $upd2 = $pdo->prepare('UPDATE publicacoes SET arquivo = ? WHERE id = ?');
-        $upd2->execute([$fileRel, $id]);
-
-        header('Location: ' . $fileRel);
-        exit;
+      $uploadDir = __DIR__ . '/../imagens/eventos';
+      if (!is_dir($uploadDir)) { mkdir($uploadDir, 0775, true); }
+      $tmp = $_FILES['imagem']['tmp_name'];
+      $ext = pathinfo($_FILES['imagem']['name'], PATHINFO_EXTENSION);
+      $ext = $ext ? ('.' . strtolower($ext)) : '';
+      $fileName = 'evt_' . date('Ymd_His') . '_' . bin2hex(random_bytes(4)) . $ext;
+      $dest = $uploadDir . '/' . $fileName;
+      if (move_uploaded_file($tmp, $dest)) {
+        $imgPath = '../imagens/eventos/' . $fileName;
+        // Tornar esta a capa: empurrar ordens e inserir na ordem 1
+        $pdo->prepare('UPDATE evento_imagens SET ordem = ordem + 1 WHERE evento_id = ?')->execute([$id]);
+        $pdo->prepare('INSERT INTO evento_imagens (evento_id, caminho, ordem) VALUES (?, ?, 1)')->execute([$id, $imgPath]);
+      }
     }
+
+    // Atualizar dados do evento
+    $upd = $pdo->prepare('UPDATE evento SET titulo_evento = ?, conteudo_evento = ?, foto_evento = ? WHERE id_evento = ?');
+    $upd->execute([$titulo, $conteudo, $imgPath, $id]);
+
+    // Gerar arquivo do evento
+    $fileRel = '../eventos/evento' . $id . '.php';
+    $fileAbs = __DIR__ . '/../eventos/evento' . $id . '.php';
+
+    // Buscar imagens do carrossel
+    $imgs = $pdo->prepare('SELECT caminho FROM evento_imagens WHERE evento_id = ? ORDER BY ordem ASC');
+    $imgs->execute([$id]);
+    $imagens = $imgs->fetchAll(PDO::FETCH_COLUMN) ?: [$imgPath];
+
+  $dataFmt = date('d/m/Y', strtotime($data_evento));
+  $htmlContent = buildEventoFile($titulo, $dataFmt, $imagens, $conteudo);
+    file_put_contents($fileAbs, $htmlContent);
+
+    header('Location: ' . $fileRel);
+    exit;
+  }
 }
 
 function h($s) { return htmlspecialchars($s ?? '', ENT_QUOTES, 'UTF-8'); }
-function buildPublicacaoFile($titulo, $data, $imagens, $conteudo) {
-    // Converte quebras de linha em parágrafos simples
-    $paras = array_filter(array_map('trim', preg_split("/(\r\n|\n|\r)/", $conteudo)));
-    $conteudoHtml = '';
-    foreach ($paras as $p) { $conteudoHtml .= "\n          <p>" . htmlspecialchars($p, ENT_QUOTES, 'UTF-8') . "</p>"; }
+function buildEventoFile($titulo, $data, $imagens, $conteudo) {
+  $paras = array_filter(array_map('trim', preg_split("/(\r\n|\n|\r)/", $conteudo)));
+  $conteudoHtml = '';
+  foreach ($paras as $p) { $conteudoHtml .= "\n          <p>" . htmlspecialchars($p, ENT_QUOTES, 'UTF-8') . "</p>"; }
 
-  // Carousel indicators and items
   $indicators = '';
   $items = '';
   foreach ($imagens as $i => $img) {
     $active = $i === 0 ? 'active' : '';
     $indicators .= "\n              <button type=\"button\" data-bs-target=\"#carouselExampleIndicators\" data-bs-slide-to=\"{$i}\" class=\"" . ($active ? 'active' : '') . "\" " . ($active ? 'aria-current=\"true\"' : '') . " aria-label=\"Slide " . ($i+1) . "\"></button>";
-    $items .= "\n              <div class=\"carousel-item {$active}\">\n                <img src=\"" . htmlspecialchars($img, ENT_QUOTES, 'UTF-8') . "\" class=\"d-block w-100\" alt=\"Imagem da publicação\">\n                <div class=\"carousel-caption d-none d-md-block\">\n                  <p>" . htmlspecialchars($titulo, ENT_QUOTES, 'UTF-8') . "</p>\n                </div>\n              </div>";
+    $items .= "\n              <div class=\"carousel-item {$active}\">\n                <img src=\"" . htmlspecialchars($img, ENT_QUOTES, 'UTF-8') . "\" class=\"d-block w-100\" alt=\"Imagem do evento\">\n                <div class=\"carousel-caption d-none d-md-block\">\n                  <p>" . htmlspecialchars($titulo, ENT_QUOTES, 'UTF-8') . "</p>\n                </div>\n              </div>";
   }
 
-    return <<<PHP
+  return <<<PHP
 <?php
-\$paginaAtiva = 'index'; 
+\$paginaAtiva = 'eventos'; 
 \$fotoPerfil  = "../imagens/user-foto.png"; 
 \$linkPerfil  = "../anonimo/login.php"; 
 require '../include/navbar.php';
@@ -136,7 +134,6 @@ require '../include/menu-dinamico.php';
 <?php include"../include/head.php"?>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
-  /* Layout empilhado e centralizado para a página de publicação */
   .sobre-container { display: block; }
   .sobre-content { display: flex; flex-direction: column; gap: 24px; align-items: center; }
   .sobre-content .carousel { width: 100%; max-width: 960px; margin: 0 auto; }
@@ -210,27 +207,27 @@ require __DIR__ . '/../include/menu-admin.php';
     <div class="content-wrapper">
       <div class="row">
         <div class="col-md-12 grid-margin">
-          <h3 class="font-weight-bold">Criar Publicação</h3>
+          <h3 class="font-weight-bold">Criar Evento</h3>
           <?php if ($erro): ?><div class="alert alert-danger"><?php echo h($erro); ?></div><?php endif; ?>
-          <form method="post" enctype="multipart/form-data" id="formEditarPublicacao">
+          <form method="post" enctype="multipart/form-data" id="formEditarEvento">
             <div class="form-group">
               <label for="titulo">Título</label>
-              <input type="text" id="titulo" name="titulo" class="form-control" value="<?php echo h($pub['titulo']); ?>" required>
+              <input type="text" id="titulo" name="titulo" class="form-control" value="<?php echo h($evt['titulo_evento']); ?>" required>
             </div>
             <div class="form-group">
               <label>Data</label><br>
-              <span><?php echo h(date('d/m/Y', strtotime($pub['data_publicacao']))); ?></span>
+              <span><?php echo h(date('d/m/Y', strtotime($evt['data_evento']))); ?></span>
             </div>
             <div class="form-group">
               <label>Imagem atual</label><br>
-              <img src="<?php echo h($pub['imagem'] ?: '../imagens/emoji.png'); ?>" alt="Imagem" style="max-width: 300px; border-radius: 8px;">
+              <img src="<?php echo h($evt['foto_evento'] ?: '../imagens/emoji.png'); ?>" alt="Imagem" style="max-width: 300px; border-radius: 8px;">
             </div>
-          
+
             <div class="form-group">
-              <h4>Imagens da publicação</h4>
+              <h4>Imagens do evento</h4>
               <div style="display:flex; flex-wrap:wrap; gap:12px; margin-bottom:12px;">
                 <?php
-                  $imgs = $pdo->prepare('SELECT caminho, ordem FROM publicacao_imagens WHERE publicacao_id = ? ORDER BY ordem ASC');
+                  $imgs = $pdo->prepare('SELECT caminho, ordem FROM evento_imagens WHERE evento_id = ? ORDER BY ordem ASC');
                   $imgs->execute([$id]);
                   foreach ($imgs as $img) {
                     $c = h($img['caminho']);
@@ -246,18 +243,17 @@ require __DIR__ . '/../include/menu-admin.php';
                 <button type="button" class="btn btn-primary" id="btnAddImagem">Adicionar imagem</button>
               </div>
             </div>
-            
+
             <div class="form-group">
-              <label for="conteudo">Texto da Publicação</label>
-              <textarea id="conteudo" name="conteudo" class="form-control" rows="10" placeholder="Informe o texto da publicação" required><?php echo h($pub['resumo'] ?? ''); ?></textarea>
+              <label for="conteudo">Texto do Evento</label>
+              <textarea id="conteudo" name="conteudo" class="form-control" rows="10" placeholder="Descreva o evento..." required><?php echo h($evt['conteudo_evento']); ?></textarea>
             </div>
             <div class="modal-actions" style="display:flex; gap: 10px;">
               <button type="submit" class="btn btn-success">Salvar e publicar</button>
-              <a href="./index-admin.php" class="btn btn-secondary">Cancelar</a>
+              <a href="./eventos-admin.php" class="btn btn-secondary">Cancelar</a>
             </div>
           </form>
 
-          
         </div>
       </div>
     </div>
@@ -266,20 +262,16 @@ require __DIR__ . '/../include/menu-admin.php';
 </div>
 <script src="../script.js"></script>
 <script>
-  // Preservar texto digitado ao adicionar imagens (localStorage por publicação)
   (function(){
     const text = document.getElementById('conteudo');
     const addBtn = document.getElementById('btnAddImagem');
     const fileInput = document.getElementById('novaImagemInput');
-    const formMain = document.getElementById('formEditarPublicacao');
+    const formMain = document.getElementById('formEditarEvento');
     if (!text) return;
-    const key = 'pub_text_id_' + <?php echo json_encode((int)$id); ?>;
-    // Restaurar
+    const key = 'evt_text_id_' + <?php echo json_encode((int)$id); ?>;
     const saved = localStorage.getItem(key);
     if (saved && !text.value) { text.value = saved; }
-    // Salvar em digitação
     text.addEventListener('input', ()=> localStorage.setItem(key, text.value));
-    // Adicionar imagem via fetch sem recarregar
     addBtn?.addEventListener('click', async () => {
       if (!fileInput?.files?.length) { alert('Selecione uma imagem.'); return; }
       const file = fileInput.files[0];
@@ -295,7 +287,6 @@ require __DIR__ . '/../include/menu-admin.php';
         alert('Erro ao adicionar imagem.');
       }
     });
-    // Ao publicar com sucesso, limpar (será recarregado em outra página)
     formMain?.addEventListener('submit', ()=> localStorage.removeItem(key));
   })();
 </script>

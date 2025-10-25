@@ -1614,6 +1614,89 @@ const setupExclusaoArquivoModal = () => {
         });
     };
 
+    // === Eventos (CRUD real, usando tabela evento) ===
+    const setupEventoModal = () => {
+        const btnAdicionar = document.querySelector('.btn-adicionar');
+        const modalEvento = document.getElementById('modalEvento');
+        if (!btnAdicionar || !modalEvento) return;
+
+        const closeModal = () => {
+            modalEvento.classList.remove('active');
+            document.body.style.overflow = '';
+        };
+        const openModal = () => {
+            const span = document.getElementById('dataAtualEvento');
+            if (span) {
+                const now = new Date();
+                span.textContent = now.toLocaleDateString('pt-BR') + ' ' + now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+            }
+            modalEvento.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        };
+        btnAdicionar.addEventListener('click', openModal);
+
+        document.querySelectorAll('.modal-publicacao-close, .modal-publicacao-cancel').forEach(btn => {
+            btn.addEventListener('click', closeModal);
+        });
+        modalEvento.addEventListener('click', (e) => { if (e.target === modalEvento) closeModal(); });
+
+        document.getElementById('formEvento')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const form = e.target;
+            const titulo = document.getElementById('tituloEvento')?.value?.trim();
+            if (!titulo) { alert('Informe um título.'); return; }
+            const fd = new FormData(form);
+            try {
+                const resp = await fetch('./api/eventos_criar.php', { method: 'POST', body: fd, headers: { 'Accept': 'application/json' } });
+                const data = await resp.json();
+                if (!resp.ok || !data?.ok) throw new Error(data?.error || 'Falha ao criar evento');
+                form.reset();
+                closeModal();
+                window.location.href = data.redirect;
+            } catch (err) {
+                console.error(err);
+                alert('Erro ao criar evento.');
+            }
+        });
+    };
+
+    const setupExclusaoEventoModal = () => {
+        const deleteButton = document.querySelector('.btn-excluir');
+        const modalExcluirOverlay = document.getElementById('modalExcluirEvento');
+        if (!deleteButton || !modalExcluirOverlay) return;
+
+        const closeModal = () => {
+            document.body.classList.remove('modal-open');
+            modalExcluirOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+            document.querySelectorAll('.publi-checkbox:checked').forEach(cb => { cb.checked = false; });
+        };
+        const openModal = () => {
+            const checkboxes = document.querySelectorAll('.publi-checkbox:checked');
+            if (checkboxes.length === 0) { alert('Selecione ao menos um evento para excluir.'); return; }
+            document.body.classList.add('modal-open');
+            modalExcluirOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        };
+        deleteButton.addEventListener('click', (e) => { e.preventDefault(); openModal(); });
+        document.getElementById('cancelarExclusaoEvento')?.addEventListener('click', closeModal);
+        modalExcluirOverlay.addEventListener('click', (e) => { if (e.target === modalExcluirOverlay) closeModal(); });
+        document.getElementById('confirmarExclusaoEvento')?.addEventListener('click', async () => {
+            const ids = Array.from(document.querySelectorAll('.publi-checkbox:checked')).map(cb => parseInt(cb.value, 10)).filter(Boolean);
+            if (!ids.length) { closeModal(); return; }
+            try {
+                const resp = await fetch('./api/eventos_excluir.php', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ids }) });
+                const data = await resp.json();
+                if (!resp.ok || !data?.ok) throw new Error(data?.error || 'Falha ao excluir evento');
+                closeModal();
+                window.location.reload();
+            } catch (err) {
+                console.error(err);
+                alert('Erro ao excluir eventos.');
+            }
+        });
+    };
+
     setupPostCarousel();
 
     if (document.getElementById('calendar')) {
@@ -1641,8 +1724,8 @@ const setupExclusaoArquivoModal = () => {
     if (document.getElementById('modalFoto') || document.getElementById('modalContato')) setupPerfilModals();
 
     if (window.location.pathname.includes('eventos-admin.php')) {
-        setupNovaAcaoModal();
-        setupExclusaoAcaoModal();
+        setupEventoModal();
+        setupExclusaoEventoModal();
     }
 
     setupAdminButtons();

@@ -111,8 +111,8 @@ require '../include/menu-admin.php';
                   </div>
         
                   <div class="form-group-publicacao">
-                    <label for="resumoPublicacao">Resumo</label>
-                    <textarea id="resumoPublicacao" name="resumoPublicacao" placeholder="Digite um resumo da publicação" required></textarea>
+                    <label for="resumoPublicacao">Texto da publicação</label>
+                    <textarea id="resumoPublicacao" name="resumoPublicacao" placeholder="Informe o texto da publicação" required></textarea>
                   </div>
         
                   <div class="form-group-publicacao">
