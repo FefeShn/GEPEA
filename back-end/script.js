@@ -279,11 +279,46 @@ document.addEventListener('DOMContentLoaded', function() {
             if (e.target === modalUpload) closeModal();
         });
 
-        document.getElementById('uploadForm')?.addEventListener('submit', (e) => {
+        // Toggle Arquivo/Link no modal
+        const tipoRadios = modalUpload.querySelectorAll('input[name="tipo"]');
+        const groupArquivo = modalUpload.querySelector('.group-arquivo');
+        const groupLink = modalUpload.querySelector('.group-link');
+        const fileInput = modalUpload.querySelector('#fileUpload');
+        const linkInput = modalUpload.querySelector('#linkUrl');
+
+        const applyTipo = () => {
+            const tipo = modalUpload.querySelector('input[name="tipo"]:checked')?.value || 'arquivo';
+            const isLink = tipo === 'link';
+            if (groupArquivo) groupArquivo.style.display = isLink ? 'none' : '';
+            if (groupLink) groupLink.style.display = isLink ? '' : 'none';
+            if (fileInput) fileInput.required = !isLink;
+            if (linkInput) linkInput.required = isLink;
+        };
+        tipoRadios.forEach(r => r.addEventListener('change', applyTipo));
+        applyTipo();
+
+        document.getElementById('uploadForm')?.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const fileName = document.getElementById('fileTitle').value;
-            alert(`Arquivo "${fileName}" enviado com sucesso!`);
-            closeModal();
+            try {
+                const form = document.getElementById('uploadForm');
+                const fd = new FormData(form);
+                const tipo = fd.get('tipo') || 'arquivo';
+                if (tipo === 'link') {
+                    // Evita enviar campo de arquivo vazio
+                    fd.delete('arquivo');
+                }
+                const resp = await fetch('./api/arquivos_upload.php', { method: 'POST', body: fd, headers: { 'Accept': 'application/json' } });
+                const data = await resp.json().catch(async () => {
+                    const txt = await resp.text().catch(() => '');
+                    return { ok: false, error: txt || 'Falha ao interpretar resposta' };
+                });
+                if (!resp.ok || !data.ok) throw new Error(data.error || 'Erro no upload');
+                closeModal();
+                window.location.reload();
+            } catch (err) {
+                console.error(err);
+                alert('Erro no upload: ' + (err && err.message ? err.message : 'Não foi possível enviar. Verifique o tamanho do arquivo (upload_max_filesize/post_max_size) e tente novamente.'));
+            }
         });
     };
 
@@ -1511,14 +1546,26 @@ const setupExclusaoArquivoModal = () => {
         document.body.style.overflow = '';
     });
 
-    document.getElementById('confirmarExclusao')?.addEventListener('click', () => {
+    document.getElementById('confirmarExclusao')?.addEventListener('click', async () => {
         const checkboxes = document.querySelectorAll('.file-checkbox:checked');
-        
-        alert(`${checkboxes.length} arquivo(s) excluído(s) com sucesso!`);
-        
-        document.body.classList.remove('modal-open');
-        modalExcluirOverlay.classList.remove('active');
-        document.body.style.overflow = '';
+        if (checkboxes.length === 0) return;
+        const ids = Array.from(checkboxes).map(cb => parseInt(cb.value, 10)).filter(Number.isFinite);
+        try {
+            const resp = await fetch('./api/arquivos_excluir.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ids })
+            });
+            const data = await resp.json().catch(() => ({ ok: false, error: 'Falha ao interpretar resposta' }));
+            if (!resp.ok || !data.ok) throw new Error(data.error || 'Erro ao excluir arquivos');
+            document.body.classList.remove('modal-open');
+            modalExcluirOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+            window.location.reload();
+        } catch (err) {
+            console.error(err);
+            alert('Erro: ' + (err && err.message ? err.message : 'Não foi possível excluir.'));
+        }
     });
 
     modalExcluirOverlay.addEventListener('click', (e) => {

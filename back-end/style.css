@@ -1809,6 +1809,20 @@ body {
   max-width: 80%;
   padding: 15px;
   border-radius: 12px;
+
+/* ===== Biblioteca: meta do arquivo ===== */
+.document-filename {
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.6);
+  margin: 2px 0 6px;
+  word-break: break-all;
+}
+
+/* Biblioteca: metadados e datas mais suaves */
+.document-filename,
+.document-date {
+  color: rgba(0, 0, 0, 0.6);
+}
   position: relative;
   animation: fadeIn 0.3s ease;
   line-height: 1.5;
@@ -3365,6 +3379,29 @@ body {
 
 .delete-button {
   background-color: #ff4444;
+
+/* Biblioteca: radios alinhados nos grupos de envio */
+.upload-type-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.tipo-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  margin: 0;
+}
+/* Corrige inputs radio ficando acima do texto (por regras globais de .form-group input) */
+.upload-type-row input[type="radio"] {
+  width: auto !important;
+  height: auto;
+  display: inline-block;
+  padding: 0;
+  margin: 0;
+}
   border: none;
 }
 
@@ -3686,12 +3723,12 @@ body.modal-open main:not(.modal-overlay) {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  min-height: 140px;
-  padding-left: 100px;
-  padding-right: 100px;
-  padding-top: 1.5rem;
-  padding-bottom: 1.5rem;
-  margin: 1rem 0;
+  min-height: 120px;
+  padding-left: 80px;
+  padding-right: 80px;
+  padding-top: 1.25rem;
+  padding-bottom: 1.25rem;
+  margin: 1.2rem 0;
   width: 100%;
   box-sizing: border-box;
   transition: all 0.3s ease;
@@ -6071,4 +6108,37 @@ body.membros-page {
   word-break: break-word;
   /* Avoid stretching by global .card-text { flex: 1 } */
   flex: 0 0 auto !important;
+}
+
+/* ===== Biblioteca (visual): título/descrição pretos; nome do arquivo e data em cinza ===== */
+.library-container .document-content h3,
+.library-container .document-description {
+  color: #111;
+}
+.library-container .document-filename,
+.library-container .document-date {
+  color: #666 !important; /* mesmo tom do subtítulo da página */
+}
+
+/* ===== Biblioteca (Upload): alinhar rádios "Arquivo/Link" em duas linhas, com radio à esquerda do texto ===== */
+#modalUpload .upload-type-row {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  margin-top: 4px;
+}
+#modalUpload .tipo-label {
+  display: inline-flex !important; /* sobrepõe #uploadForm label */
+  align-items: center;
+  gap: 8px;
+  margin: 0; /* remove espaçamento extra */
+  font-weight: 600;
+}
+#modalUpload .tipo-label input[type="radio"] {
+  display: inline-block !important; /* sobrepõe .form-group input { display:block } */
+  width: auto !important;           /* sobrepõe larguras globais */
+  height: auto !important;
+  margin: 0;                        /* evita desalinhamento vertical */
+  vertical-align: middle;
 }
