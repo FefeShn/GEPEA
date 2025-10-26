@@ -1718,7 +1718,8 @@ const setupExclusaoArquivoModal = () => {
     if (document.getElementById('supportForm')) setupSupportModal();
     if (document.querySelector('.add-file-button')) setupUploadModal();
     if (document.querySelector('.forgot-password')) setupEsqueceuSenhaModal();
-    if (document.querySelector('.edit-text')) setupBiografiaEdicao();
+    // Executa edição de biografia apenas em páginas de biografia
+    if (document.querySelector('.biography-container') && document.querySelector('.edit-text')) setupBiografiaEdicao();
     if (document.getElementById('openDeleteModal')) setupExclusaoArquivoModal();
     if (document.querySelector('.biography-container')) setupBiografiaPage();
     if (document.getElementById('modalFoto') || document.getElementById('modalContato')) setupPerfilModals();
@@ -1726,6 +1727,73 @@ const setupExclusaoArquivoModal = () => {
     if (window.location.pathname.includes('eventos-admin.php')) {
         setupEventoModal();
         setupExclusaoEventoModal();
+    }
+
+    // Edição da página Sobre (admin)
+    function setupEditarSobre() {
+        const editBtn = document.querySelector('.edit-text');
+        const container = document.getElementById('sobreTexto');
+        const buttons = document.getElementById('sobreEditButtons');
+        if (!editBtn || !container || !buttons) return;
+
+        let originalHTML = '';
+
+        const startEdit = () => {
+            originalHTML = container.innerHTML;
+            container.setAttribute('contenteditable', 'true');
+            container.classList.add('editing');
+            buttons.style.display = 'flex';
+            editBtn.setAttribute('disabled', 'disabled');
+            editBtn.classList.remove('btn-primary');
+            editBtn.classList.add('btn-secondary');
+            editBtn.textContent = 'Modificando texto';
+        };
+
+        const cancelEdit = () => {
+            container.innerHTML = originalHTML;
+            container.removeAttribute('contenteditable');
+            container.classList.remove('editing');
+            buttons.style.display = 'none';
+            editBtn.removeAttribute('disabled');
+            editBtn.classList.remove('btn-secondary');
+            editBtn.classList.add('btn-primary');
+            editBtn.innerHTML = '<i class="ti-pencil mr-2"></i>Modificar Texto';
+        };
+
+        const saveEdit = async () => {
+            // remove atributos contenteditable e quaisquer elementos de edição acidentais
+            const tmp = document.createElement('div');
+            tmp.innerHTML = container.innerHTML;
+            tmp.querySelectorAll('[contenteditable]')?.forEach(el => el.removeAttribute('contenteditable'));
+            tmp.querySelectorAll('.edit-buttons')?.forEach(el => el.remove());
+            const html = tmp.innerHTML;
+            try {
+                const resp = await fetch('../include/atualizar_sobre.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
+                    body: 'html=' + encodeURIComponent(html)
+                });
+                const data = await resp.json().catch(() => ({}));
+                if (!resp.ok || !data.success) throw new Error(data.error || 'Falha ao salvar');
+                container.removeAttribute('contenteditable');
+                container.classList.remove('editing');
+                buttons.style.display = 'none';
+                editBtn.removeAttribute('disabled');
+                editBtn.classList.remove('btn-secondary');
+                editBtn.classList.add('btn-primary');
+                editBtn.innerHTML = '<i class="ti-pencil mr-2"></i>Modificar Texto';
+            } catch (err) {
+                alert(err.message || 'Erro ao salvar');
+            }
+        };
+
+        editBtn.addEventListener('click', (e) => { e.preventDefault(); startEdit(); });
+        buttons.querySelector('.btn-cancelar')?.addEventListener('click', (e) => { e.preventDefault(); cancelEdit(); });
+        buttons.querySelector('.btn-salvar')?.addEventListener('click', (e) => { e.preventDefault(); saveEdit(); });
+    }
+
+    if (window.location.pathname.includes('sobre-admin.php')) {
+        setupEditarSobre();
     }
 
     setupAdminButtons();
