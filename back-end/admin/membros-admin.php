@@ -113,7 +113,7 @@ require '../include/menu-admin.php';
         $cargoLabel = labelCargo($cargoRaw);
       ?>
         <div class="member-card-wrapper">
-          <a href="../biografias/biografia<?= (int)$membro['id_usuario'] ?>.php" class="member-card <?= htmlspecialchars($cargoClass) ?>">
+          <a href="../perfil.php?id=<?= (int)$membro['id_usuario'] ?>" class="member-card <?= htmlspecialchars($cargoClass) ?>">
             <div class="member-photo">
               <img src="<?= !empty($membro['foto_user']) ? htmlspecialchars($membro['foto_user']) : '../imagens/user-foto.png' ?>" alt="Foto do Membro">
             </div>

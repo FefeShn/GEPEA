@@ -4,6 +4,36 @@ $fotoPerfil  = "../imagens/user-foto.png";
 $linkPerfil  = "login.php"; 
 require '../include/navbar.php';
 require '../include/menu-anonimo.php';
+require_once '../config/conexao.php';
+
+$pdo = getConexao();
+$stmt = $pdo->prepare("SELECT id_usuario, nome_user, foto_user, cargo_user FROM usuarios");
+$stmt->execute();
+$membros = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+$prioridade = [
+    'coordenador' => 1,
+    'vice-coordenador' => 2,
+    'bolsista' => 3,
+    'membro' => 4,
+    'outro' => 5,
+    'outros' => 5,
+];
+usort($membros, function($a, $b) use ($prioridade){
+    $ca = strtolower(trim($a['cargo_user'] ?? ''));
+    $cb = strtolower(trim($b['cargo_user'] ?? ''));
+    $pa = $prioridade[$ca] ?? 999; $pb = $prioridade[$cb] ?? 999;
+    return $pa === $pb ? strcoll($a['nome_user'] ?? '', $b['nome_user'] ?? '') : ($pa <=> $pb);
+});
+
+function cargoClass($cargo){
+    $c = strtolower(trim($cargo ?? ''));
+    if (strpos($c,'vice')!==false && strpos($c,'coorden')!==false) return 'vice-coordenador';
+    if (strpos($c,'coordenador')!==false) return 'coordenador';
+    if (strpos($c,'bolsista')!==false) return 'bolsista';
+    if (strpos($c,'membro')!==false) return 'membro';
+    return 'outro';
+}
 ?>
 
 <!DOCTYPE html>
@@ -20,77 +50,18 @@ require '../include/menu-anonimo.php';
         <h1 class="page-title">Nossos Membros</h1>
         
         <div class="members-grid">
-            <!-- Membro 1 -->
-            <a href="../biografias/biografia1.php" class="member-card">
-                <div class="member-photo">
-                    <img src="../imagens/dino.jpg" alt="Foto do Coordenador">
-                </div>
-                <h3 class="member-name">Dr. Luciano Corsino</h3>
-                <p class="member-role coordenador">Coordenador</p>
+          <?php foreach($membros as $m): 
+            $cargoClass = cargoClass($m['cargo_user'] ?? '');
+            $foto = (!empty($m['foto_user'])) ? htmlspecialchars($m['foto_user']) : '../imagens/user-foto.png';
+          ?>
+            <a href="../perfil.php?id=<?= (int)$m['id_usuario'] ?>" class="member-card <?= htmlspecialchars($cargoClass) ?>">
+              <div class="member-photo">
+                <img src="<?= $foto ?>" alt="Foto de <?= htmlspecialchars($m['nome_user']) ?>">
+              </div>
+              <h3 class="member-name"><?= htmlspecialchars($m['nome_user']) ?></h3>
+              <p class="member-role <?= htmlspecialchars($cargoClass) ?>"><?= htmlspecialchars($m['cargo_user'] ?? '') ?></p>
             </a>
-            
-            <!-- Membro 2 -->
-            <a href="../biografias/biografia2.php" class="member-card">
-                <div class="member-photo">
-                    <img src="../imagens/estrela.jpg" alt="Foto do Vice-Coordenador">
-                </div>
-                <h3 class="member-name">Dr. Daniel Santana</h3>
-                <p class="member-role vice-coordenador">Vice-Coordenador</p>
-            </a>
-            
-            <!-- Membro 3 -->
-            <a href="../biografias/biografia3.php" class="member-card">
-                <div class="member-photo">
-                    <img src="../imagens/computer.jpg" alt="Foto do Bolsista">
-                </div>
-                <h3 class="member-name">Fernanda Sehn</h3>
-                <p class="member-role bolsista">Bolsista</p>
-            </a>
-            
-            <!-- Membro 4 -->
-            <a href="../biografias/biografia4.php" class="member-card">
-                <div class="member-photo">
-                    <img src="../imagens/roque.jpg" alt="Foto do Membro">
-                </div>
-                <h3 class="member-name">Danieri Ribeiro</h3>
-                <p class="member-role membro">Membro</p>
-            </a>
-            
-            <!-- Membro 5 -->
-            <a href="../biografias/biografia5.php" class="member-card">
-                <div class="member-photo">
-                    <img src="../imagens/musga.jpg" alt="Foto do Bolsista">
-                </div>
-                <h3 class="member-name">Brenda Marins</h3>
-                <p class="member-role bolsista">Bolsista</p>
-            </a>
-            
-            <!-- Membro 6 -->
-            <a href="../biografias/biografia6.php" class="member-card">
-                <div class="member-photo">
-                    <img src="../imagens/abraco.jpg" alt="Foto da Bolsista">
-                </div>
-                <h3 class="member-name">Deisi Franco</h3>
-                <p class="member-role bolsista">Bolsista</p>
-            </a>
-            
-            <!-- Membro 7 -->
-            <a href="../biografias/biografia7.php" class="member-card">
-                <div class="member-photo">
-                    <img src="../imagens/flori.jpg" alt="Foto do Membro">
-                </div>
-                <h3 class="member-name">Me. Leandro Mendes</h3>
-                <p class="member-role membro">Membro</p>
-            </a>
-            
-            <!-- Membro 8 -->
-            <a href="../biografias/biografia8.php" class="member-card">
-                <div class="member-photo">
-                    <img src="../imagens/dormino.jpg" alt="Foto da Membro">
-                </div>
-                <h3 class="member-name">Ma. Myllena Camargo</h3>
-                <p class="member-role membro">Membro</p>
-            </a>
+          <?php endforeach; ?>
         </div>
     </main>
         
