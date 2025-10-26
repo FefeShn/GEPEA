@@ -179,6 +179,7 @@
   --branco: #FFFFFF;
   --cinza-claro: #F5F5F5;
   --cinza-medio: #E0E0E0;
+  --cinza-escuro: #A9A9A9;
   
   --espacamento: 1rem;
   --borda-radius: 8px;
@@ -533,9 +534,10 @@ body {
 /* Borda da foto seguindo a cor do cargo */
 .biography-content.coordenador .profile-image { border-color: var(--vermelho); }
 .biography-content.vice-coordenador .profile-image { border-color: var(--verde); }
-.biography-content.membro .profile-image { border-color: var(--cinza-medio); }
+.biography-content.membro .profile-image { border-color: #0d6efd; }
 .biography-content.bolsista .profile-image { border-color: var(--amarelo); }
-.biography-content.outros .profile-image { border-color: #0d6efd; }
+.biography-content.outros .profile-image { border-color: var(--cinza-escuro); }
+.biography-content.outro .profile-image { border-color: var(--cinza-escuro); }
 
 .biography-info {
   flex: 1;
@@ -563,9 +565,10 @@ body {
 /* Cores de cargo específicas */
 .member-role.coordenador { background-color: var(--vermelho); }
 .member-role.vice-coordenador { background-color: var(--verde); }
-.member-role.membro { background-color: var(--cinza-medio); } /* cinza */
+.member-role.membro { background-color: #0d6efd; color: #fff; } /* azul */
 .member-role.bolsista { background-color: var(--amarelo); } /* amarelo */
-.member-role.outros { background-color: #0d6efd; } /* azul */
+.member-role.outros { background-color: var(--cinza-escuro); color: #fff; } /* cinza */
+.member-role.outro { background-color: var(--cinza-escuro); color: #fff; } /* cinza */
 
 /* Infos de perfil alinhadas à esquerda */
 .biography-info .member-name,
@@ -4036,7 +4039,7 @@ body.membros-page {
     border-radius: 50%;
     overflow: hidden;
     margin: 0 auto 1rem;
-    border: 3px solid var(--primary-color);
+  border: 3px solid var(--primary-color);
     background: white;
 }
 
@@ -4083,9 +4086,21 @@ body.membros-page {
 }
 
 .member-role.membro {
-    background-color: #6c757d;
-    color: white;
+  background-color: #0d6efd;
+  color: white;
 }
+
+/* Bordas da foto por cargo na listagem de membros (admin/membro/anônimo) */
+.member-card.coordenador .member-photo { border-color: var(--vermelho); }
+.member-card.vice-coordenador .member-photo { border-color: var(--verde); }
+.member-card.bolsista .member-photo { border-color: var(--amarelo); }
+.member-card.membro .member-photo { border-color: #0d6efd; }
+.member-card.outro .member-photo,
+.member-card.outros .member-photo { border-color: var(--cinza-medio); }
+
+/* Garantir estilo para tag de cargo "outro(s)" caso apareça */
+.member-role.outro,
+.member-role.outros { background-color: var(--cinza-escuro); color: #fff; }
 
 /* Responsividade */
 @media (max-width: 1200px) {

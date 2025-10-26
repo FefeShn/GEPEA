@@ -182,15 +182,37 @@ document.addEventListener('DOMContentLoaded', function() {
             if (e.target === modalExcluirOverlay) closeModal();
         });
 
-        document.getElementById('confirmarExclusao')?.addEventListener('click', () => {
-            const checkboxes = document.querySelectorAll('.member-checkbox:checked');
-            alert(`Simulação: ${checkboxes.length} membro(s) marcado(s) para exclusão!`);
-            
-            checkboxes.forEach(checkbox => {
-                checkbox.checked = false;
-            });
-            
-            closeModal();
+        document.getElementById('confirmarExclusao')?.addEventListener('click', async () => {
+            const selected = Array.from(document.querySelectorAll('.member-checkbox:checked'));
+            if (selected.length === 0) {
+                alert('Nenhum membro selecionado.');
+                return;
+            }
+            const ids = selected.map(cb => parseInt(cb.value, 10)).filter(n => Number.isFinite(n));
+            if (ids.length === 0) {
+                alert('Seleção inválida.');
+                return;
+            }
+            try {
+                const resp = await fetch('api/membros_excluir.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ids })
+                });
+                const data = await resp.json().catch(() => ({ ok: false, error: 'Falha ao interpretar resposta' }));
+                if (!resp.ok || !data.ok) {
+                    throw new Error(data.error || 'Erro ao excluir membros');
+                }
+                // Remover cartões da interface
+                selected.forEach(cb => {
+                    const wrapper = cb.closest('.member-card-wrapper');
+                    if (wrapper) wrapper.remove();
+                });
+                closeModal();
+            } catch (err) {
+                console.error(err);
+                alert('Erro: ' + (err && err.message ? err.message : 'Não foi possível excluir.'));
+            }
         });
     };
 

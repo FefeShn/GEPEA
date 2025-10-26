@@ -44,9 +44,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cadastrar_membro'])) 
 }
 
 $pdo = getConexao();
-$stmt = $pdo->prepare("SELECT id_usuario, nome_user, foto_user, cargo_user FROM usuarios ORDER BY nome_user");
+$stmt = $pdo->prepare("SELECT id_usuario, nome_user, foto_user, cargo_user FROM usuarios");
 $stmt->execute();
 $membros = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Normalização e ordenação por cargo e nome
+$prioridade = [
+  'coordenador' => 1,
+  'vice-coordenador' => 2,
+  'bolsista' => 3,
+  'membro' => 4,
+  'outro' => 5,
+  'outros' => 5,
+];
+
+usort($membros, function($a, $b) use ($prioridade) {
+  $cargoA = strtolower(trim($a['cargo_user'] ?? ''));
+  $cargoB = strtolower(trim($b['cargo_user'] ?? ''));
+  $prioA = $prioridade[$cargoA] ?? 999;
+  $prioB = $prioridade[$cargoB] ?? 999;
+  if ($prioA === $prioB) {
+    return strcoll($a['nome_user'] ?? '', $b['nome_user'] ?? '');
+  }
+  return $prioA <=> $prioB;
+});
+
+function labelCargo($cargo) {
+  $c = strtolower(trim($cargo ?? ''));
+  if ($c === 'coordenador') return 'Líder';
+  if ($c === 'vice-coordenador') return 'Vice-Líder';
+  if ($c === 'bolsista') return 'Bolsista';
+  if ($c === 'membro') return 'Membro';
+  return 'Outro';
+}
 $paginaAtiva = 'membros-admin'; 
 $fotoPerfil  = "../imagens/computer.jpg"; 
 $linkPerfil  = "../admin/biografia-admin.php"; 
@@ -76,20 +106,24 @@ require '../include/menu-admin.php';
             </div>
         </div>
         
-        <div class="members-grid">
-            <?php foreach ($membros as $membro): ?>
-                <div class="member-card-wrapper">
-                    <a href="../biografias/biografia<?= $membro['id_usuario'] ?>.php" class="member-card">
-                        <div class="member-photo">
-                            <img src="<?= !empty($membro['foto_user']) ? $membro['foto_user'] : '../imagens/user-foto.png' ?>" alt="Foto do Membro">
-                        </div>
-                        <h3 class="member-name"><?= htmlspecialchars($membro['nome_user']) ?></h3>
-                        <p class="member-role"><?= htmlspecialchars($membro['cargo_user']) ?></p>
-                    </a>
-                    <input type="checkbox" class="member-checkbox">
-                </div>
-            <?php endforeach; ?>
+    <div class="members-grid">
+      <?php foreach ($membros as $membro): 
+        $cargoRaw = strtolower(trim($membro['cargo_user'] ?? ''));
+        $cargoClass = in_array($cargoRaw, ['coordenador','vice-coordenador','bolsista','membro','outro','outros']) ? $cargoRaw : 'outro';
+        $cargoLabel = labelCargo($cargoRaw);
+      ?>
+        <div class="member-card-wrapper">
+          <a href="../biografias/biografia<?= (int)$membro['id_usuario'] ?>.php" class="member-card <?= htmlspecialchars($cargoClass) ?>">
+            <div class="member-photo">
+              <img src="<?= !empty($membro['foto_user']) ? htmlspecialchars($membro['foto_user']) : '../imagens/user-foto.png' ?>" alt="Foto do Membro">
+            </div>
+            <h3 class="member-name"><?= htmlspecialchars($membro['nome_user']) ?></h3>
+            <p class="member-role <?= htmlspecialchars($cargoClass) ?>"><?= htmlspecialchars($cargoLabel) ?></p>
+          </a>
+          <input type="checkbox" class="member-checkbox" value="<?= (int)$membro['id_usuario'] ?>">
         </div>
+      <?php endforeach; ?>
+    </div>
     </main>
         
     
