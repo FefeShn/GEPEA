@@ -26,9 +26,14 @@ require '../include/menu-admin.php';
                 <h3 class="font-weight-bold">Agenda</h3>
                 <h6 class="font-weight-normal mb-0">Eventos e compromissos do grupo</h6>
               </div>
-              <button class="btn btn-adicionar" id="adicionarEvento">
-                <i class="ti-plus"></i> Registrar Novo Evento
-              </button>
+              <div class="acoes-publicacoes">
+                <button class="btn btn-adicionar" id="adicionarEvento">
+                  <i class="ti-plus"></i> Registrar Novo Evento
+                </button>
+                <button class="btn btn-excluir" id="excluirAtividade">
+                  <i class="ti-trash"></i> Excluir Atividade
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -78,6 +83,24 @@ require '../include/menu-admin.php';
                 <button type="submit" class="btn btn-salvar">Salvar</button>
               </div>
             </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Excluir Atividades -->
+      <div class="modal-overlay" id="modalExcluirAtividade" aria-hidden="true" role="dialog" aria-modal="true">
+        <div class="modal-container confirm-modal">
+          <div class="modal-header">
+            <h3>Excluir Atividades</h3>
+            <button class="modal-close" aria-label="Fechar modal">&times;</button>
+          </div>
+          <div class="modal-body">
+            <p>Selecione as atividades que deseja excluir:</p>
+            <div id="listaAtividades" style="max-height:320px; overflow:auto; margin-top:10px;"></div>
+          </div>
+          <div class="modal-actions">
+            <button class="btn btn-secondary" id="cancelarExclusaoAtividade">Cancelar</button>
+            <button class="btn btn-danger" id="confirmarExclusaoAtividade">Excluir Selecionadas</button>
           </div>
         </div>
       </div>

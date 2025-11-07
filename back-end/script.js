@@ -463,7 +463,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         var calendar = $('#calendar').fullCalendar({
             header: {
-                left: 'prev,next today',
+                left: 'prev,next', // removido today conforme pedido
                 center: 'title',
                 right: 'month,agendaWeek,agendaDay'
             },
@@ -556,42 +556,43 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const setupAgendaAdmin = () => {
     try {
-        const eventosFixos = [
-            {
-                id: 1,
-                title: 'Submissão de trabalhos',
-                start: '2025-07-18T00:00:00',
-                end: '2023-08-18T23:59:59',
-                className: 'success'
-            },
-            {
-                id: 2,
-                title: 'Reunião de Leitura',
-                start: '2025-07-10T19:00:00',
-                className: 'important'
-            },
-        ];
-
         var calendar = $('#calendar').fullCalendar({
             header: {
-                left: 'prev,next today',
-                center: 'title',
-                right: 'month,agendaWeek,agendaDay'
+                left: 'prev,next',      // navegação
+                center: 'title',        // título (mês/ano) no meio
+                right: 'month,agendaWeek,agendaDay' // botões de visualização à direita
             },
             defaultView: 'month',
             defaultDate : moment().format('YYYY-MM-DD'), 
             locale: 'pt-br',
-            editable: true, 
+            editable: false, 
             selectable: true,
             eventLimit: true,
             height: 'auto',
             contentHeight: 'auto',
-            events: eventosFixos, 
-            select: function(start, end) {
-                abrirModalEventoAdmin({
-                    start: start,
-                    end: end
-                });
+            events: './api/atividades_listar.php',
+            selectHelper: true,
+            select: function(start, end, jsEvent, view) {
+                // Prefill com intervalo selecionado; em visualização mensal o "end" é exclusivo
+                var selStart = start && start.clone ? start.clone() : moment(start);
+                var selEnd = end && end.clone ? end.clone() : (end ? moment(end) : null);
+                // Ajusta horas para o horário atual para facilitar edição
+                var now = moment();
+                selStart.hour(now.hour()).minute(now.minute()).second(0);
+                if (selEnd) {
+                    // Em month view, end é exclusivo; reduz 1 minuto para exibir fim inclusivo
+                    if (view && view.name === 'month') selEnd.subtract(1, 'minute');
+                    selEnd.hour(now.hour()).minute(now.minute()).second(0);
+                }
+                abrirModalEventoAdmin({ start: selStart, end: selEnd ? selEnd : null });
+            },
+            dayClick: function(date, jsEvent, view) {
+                // Clique simples em um dia: usa data clicada com hora atual e +1h de duração
+                var start = date && date.clone ? date.clone() : moment(date);
+                var now = moment();
+                start.hour(now.hour()).minute(now.minute()).second(0);
+                var end = start.clone().add(1, 'hour');
+                abrirModalEventoAdmin({ start: start, end: end });
             },
             eventClick: function(event) {
                 abrirModalEventoAdmin(event);
@@ -619,7 +620,7 @@ document.addEventListener('DOMContentLoaded', function() {
             tituloInput.value = evento.title || '';
             dataInicioInput.value = moment(evento.start).format('YYYY-MM-DDTHH:mm');
             dataFimInput.value = evento.end ? moment(evento.end).format('YYYY-MM-DDTHH:mm') : '';
-            corSelect.value = evento.className || '';
+            corSelect.value = (Array.isArray(evento.className) ? evento.className[0] : evento.className) || '';
             
             modalEvento.classList.add('active');
             document.body.style.overflow = 'hidden';
@@ -638,30 +639,30 @@ document.addEventListener('DOMContentLoaded', function() {
             if (e.target === modalEvento) fecharModalEventoAdmin();
         });
 
-        formEvento.addEventListener('submit', function(e) {
+        formEvento.addEventListener('submit', async function(e) {
             e.preventDefault();
-            
-            const novoEvento = {
-                title: tituloInput.value,
-                start: dataInicioInput.value,
-                end: dataFimInput.value || null,
-                className: corSelect.value || ''
-            };
-
-            if (formEvento.dataset.eventoId) {
-                novoEvento.id = formEvento.dataset.eventoId;
-                const eventoExistente = eventosFixos.find(e => e.id == novoEvento.id);
-                if (eventoExistente) {
-                    Object.assign(eventoExistente, novoEvento);
-                }
-                calendar.fullCalendar('updateEvent', novoEvento);
-            } else {
-                novoEvento.id = Math.max(...eventosFixos.map(e => e.id)) + 1;
-                eventosFixos.push(novoEvento);
-                calendar.fullCalendar('renderEvent', novoEvento, true);
+            const descricao = tituloInput.value.trim();
+            const data_hora = dataInicioInput.value;
+            const data_fim = dataFimInput.value || null;
+            const cor = corSelect.value || null;
+            if (!descricao || !data_hora) {
+                alert('Informe título e data/hora');
+                return;
             }
-
-            fecharModalEventoAdmin();
+            try {
+                const resp = await fetch('./api/atividades_criar.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ descricao, data_hora, data_fim, cor })
+                });
+                const data = await resp.json();
+                if (!resp.ok || !data?.ok) throw new Error(data?.error || 'Falha ao criar atividade');
+                $('#calendar').fullCalendar('refetchEvents');
+                fecharModalEventoAdmin();
+            } catch (err) {
+                console.error(err);
+                alert('Erro ao salvar atividade.');
+            }
         });
 
         if (btnAdicionarEvento) {
@@ -672,6 +673,62 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             });
         }
+
+        // Excluir atividades (modal com lista)
+        const btnExcluirAtividade = document.getElementById('excluirAtividade');
+        const modalExcluir = document.getElementById('modalExcluirAtividade');
+        const listaAtividades = document.getElementById('listaAtividades');
+        const fecharExcluir = () => { modalExcluir.classList.remove('active'); document.body.style.overflow = ''; };
+        const abrirExcluir = () => { modalExcluir.classList.add('active'); document.body.style.overflow = 'hidden'; };
+        document.querySelector('#modalExcluirAtividade .modal-close')?.addEventListener('click', fecharExcluir);
+        document.getElementById('cancelarExclusaoAtividade')?.addEventListener('click', fecharExcluir);
+        modalExcluir?.addEventListener('click', (e) => { if (e.target === modalExcluir) fecharExcluir(); });
+        
+        async function carregarListaAtividades() {
+            listaAtividades.innerHTML = '<p class="small-text">Carregando...</p>';
+            try {
+                const resp = await fetch('./api/atividades_listar.php');
+                const eventos = await resp.json();
+                if (!Array.isArray(eventos) || eventos.length === 0) {
+                    listaAtividades.innerHTML = '<p class="small-text">Nenhuma atividade encontrada.</p>';
+                    return;
+                }
+                const html = eventos.map(ev => {
+                    const dt = moment(ev.start).format('DD/MM/YYYY HH:mm');
+                    return `<label class="membro-item"><input type="checkbox" class="chk-atividade" value="${ev.id}"> <span><strong>${dt}</strong> — ${ev.title}</span></label>`;
+                }).join('');
+                listaAtividades.innerHTML = `<div class="membros-list">${html}</div>`;
+            } catch (err) {
+                console.error(err);
+                listaAtividades.innerHTML = '<p class="small-text">Erro ao carregar atividades.</p>';
+            }
+        }
+
+        btnExcluirAtividade?.addEventListener('click', (e) => {
+            e.preventDefault();
+            carregarListaAtividades();
+            abrirExcluir();
+        });
+
+        document.getElementById('confirmarExclusaoAtividade')?.addEventListener('click', async () => {
+            const ids = Array.from(document.querySelectorAll('.chk-atividade:checked')).map(i => parseInt(i.value));
+            if (ids.length === 0) { alert('Selecione ao menos uma atividade.'); return; }
+            if (!confirm('Excluir as atividades selecionadas?')) return;
+            try {
+                const resp = await fetch('./api/atividades_excluir.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ids })
+                });
+                const data = await resp.json();
+                if (!resp.ok || !data?.ok) throw new Error(data?.error || 'Falha ao excluir');
+                $('#calendar').fullCalendar('refetchEvents');
+                fecharExcluir();
+            } catch (err) {
+                console.error(err);
+                alert('Erro ao excluir atividades.');
+            }
+        });
 
     } catch (error) {
         console.error('Erro ao inicializar calendário admin:', error);
