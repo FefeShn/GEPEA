@@ -28,7 +28,6 @@ try {
         $row = $sel->fetch(PDO::FETCH_ASSOC);
         if (!$row) { $notFound[] = $id; continue; }
         $url = $row['url_arquivo'];
-        // Caminho absoluto dentro de back-end
         $abs = realpath($storageBase . DIRECTORY_SEPARATOR . $url);
         if ($abs && strpos($abs, $storageBase) === 0 && is_file($abs)) {
             @unlink($abs);

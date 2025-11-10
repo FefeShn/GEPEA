@@ -25,7 +25,6 @@ if (!$evt) { header('Location: ./eventos-admin.php'); exit; }
 
 $erro = '';
 
-// Adicionar imagem extra via fetch
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && (($_POST['acao'] ?? '') === 'add_imagem')) {
   if (isset($_FILES['nova_imagem']) && $_FILES['nova_imagem']['error'] === UPLOAD_ERR_OK) {
     $uploadDir = __DIR__ . '/../imagens/eventos';
@@ -51,7 +50,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && (($_POST['acao'] ?? '') === 'add_im
   } else {
     $erro = 'Selecione uma imagem válida.';
   }
-  // Recarregar dados atualizados
   $stmt = $pdo->prepare('SELECT * FROM evento WHERE id_evento = ?');
   $stmt->execute([$id]);
   $evt = $stmt->fetch(PDO::FETCH_ASSOC) ?: $evt;
@@ -61,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && (($_POST['acao'] ?? '') === 'add_im
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && (($_POST['acao'] ?? '') !== 'add_imagem')) {
   $titulo = trim($_POST['titulo'] ?? '');
   $conteudo = trim($_POST['conteudo'] ?? '');
-  $data_evento = $evt['data_evento']; // somente exibir, não editar
+  $data_evento = $evt['data_evento']; 
 
   if ($titulo === '' || $conteudo === '') {
     $erro = 'Preencha todos os campos obrigatórios.';
@@ -83,7 +81,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && (($_POST['acao'] ?? '') !== 'add_im
       }
     }
 
-    // Atualizar dados do evento
     $upd = $pdo->prepare('UPDATE evento SET titulo_evento = ?, conteudo_evento = ?, foto_evento = ? WHERE id_evento = ?');
     $upd->execute([$titulo, $conteudo, $imgPath, $id]);
 
@@ -91,7 +88,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && (($_POST['acao'] ?? '') !== 'add_im
     $fileRel = '../eventos/evento' . $id . '.php';
     $fileAbs = __DIR__ . '/../eventos/evento' . $id . '.php';
 
-    // Buscar imagens do carrossel
     $imgs = $pdo->prepare('SELECT caminho FROM evento_imagens WHERE evento_id = ? ORDER BY ordem ASC');
     $imgs->execute([$id]);
     $imagens = $imgs->fetchAll(PDO::FETCH_COLUMN) ?: [$imgPath];

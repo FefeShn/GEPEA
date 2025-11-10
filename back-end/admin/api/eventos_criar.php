@@ -40,7 +40,7 @@ if ($titulo === '') {
     exit;
 }
 
-// Upload da imagem (capa)
+// upload da imagem (capa)
 $imgRelPath = '../imagens/emoji.png';
 if (isset($_FILES['imagemEvento']) && $_FILES['imagemEvento']['error'] !== UPLOAD_ERR_NO_FILE) {
     if ($_FILES['imagemEvento']['error'] !== UPLOAD_ERR_OK) {
@@ -70,18 +70,17 @@ if (isset($_FILES['imagemEvento']) && $_FILES['imagemEvento']['error'] !== UPLOA
     $imgRelPath = '../imagens/eventos/' . $fileName;
 }
 
-// Data padrão: agora
+// puxa a data atual como padrão
 $dataEvento = date('Y-m-d H:i:s');
 $idUsuario = (int)($_SESSION['id_usuario'] ?? 0);
 
-// No create, o conteúdo pode começar com o resumo; será editado depois
 $conteudo = $resumo !== '' ? $resumo : '';
 
 $stmt = $pdo->prepare('INSERT INTO evento (titulo_evento, conteudo_evento, data_evento, foto_evento, id_usuario) VALUES (?, ?, ?, ?, ?)');
 $stmt->execute([$titulo, $conteudo, $dataEvento, $imgRelPath, $idUsuario]);
 $id = (int)$pdo->lastInsertId();
 
-// Registrar como primeira imagem do carrossel se tiver imagem
+// registrar como primeira imagem do carrossel se tiver imagem
 if ($imgRelPath && $imgRelPath !== '../imagens/emoji.png') {
     $insImg = $pdo->prepare('INSERT INTO evento_imagens (evento_id, caminho, ordem) VALUES (?, ?, 1)');
     $insImg->execute([$id, $imgRelPath]);

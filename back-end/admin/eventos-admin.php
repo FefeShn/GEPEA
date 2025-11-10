@@ -1,11 +1,9 @@
 <?php
-// Sessão e proteção admin
 session_start();
 require '../config/auth.php';
 requireAdmin();
 require_once __DIR__ . '/../config/conexao.php';
 
-// DB e tabelas necessárias
 $pdo = getConexao();
 $pdo->exec("CREATE TABLE IF NOT EXISTS evento (
   id_evento INT AUTO_INCREMENT PRIMARY KEY,
@@ -76,7 +74,7 @@ require '../include/menu-admin.php';
               <?php foreach ($eventos as $ev): 
                 $id = (int)$ev['id_evento'];
                 $titulo = htmlspecialchars($ev['titulo_evento'] ?? '');
-                // Mostramos um trecho do conteúdo como resumo
+                // trecho do conteúdo como resumo
                 $resumo = htmlspecialchars(mb_strimwidth(strip_tags($ev['conteudo_evento'] ?? ''), 0, 140, '...'));
                 $img = htmlspecialchars($ev['foto_evento'] ?? '../imagens/emoji.png');
                 $dataFmt = htmlspecialchars(date('d/m/Y', strtotime($ev['data_evento'])));

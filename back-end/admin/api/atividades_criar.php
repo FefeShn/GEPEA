@@ -1,5 +1,4 @@
 <?php
-// Cria uma nova atividade
 if (session_status() === PHP_SESSION_NONE) { session_start(); }
 require_once __DIR__ . '/../../config/auth.php';
 requireAdmin();
@@ -10,7 +9,6 @@ header('Content-Type: application/json; charset=utf-8');
 try {
     $pdo = getConexao();
 
-    // Aceita JSON ou form-urlencoded/multipart
     $raw = file_get_contents('php://input');
     $data = [];
     if ($raw) {
@@ -36,7 +34,6 @@ try {
         exit;
     }
 
-    // Normaliza datetime-local (YYYY-MM-DDTHH:mm) -> Y-m-d H:i:s
     $ts = strtotime($dataHora);
     if ($ts === false) {
         http_response_code(400);
@@ -45,7 +42,6 @@ try {
     }
     $dataHoraSql = date('Y-m-d H:i:s', $ts);
 
-    // Anexa metadados (cor e fim) ao final da descrição, para persistir sem alterar o schema
     $descricaoComMeta = $descricao;
     $metas = [];
     if ($cor) { $metas['cor'] = preg_replace('/[^a-zA-Z0-9_-]/', '', $cor); }
@@ -56,7 +52,6 @@ try {
         }
     }
     if (!empty($metas)) {
-        // formato: [meta:chave=valor;chave2=valor2]
         $pairs = [];
         foreach ($metas as $k => $v) { $pairs[] = $k.'='.$v; }
         $descricaoComMeta .= ' [meta:'.implode(';', $pairs).']';

@@ -1,9 +1,30 @@
 <?php
-// Iniciar sessão antes de qualquer saída para evitar erros de headers
 if (session_status() === PHP_SESSION_NONE) { session_start(); }
 $paginaAtiva = 'index'; 
 $fotoPerfil  = "../imagens/user-foto.png"; 
 $linkPerfil  = "login.php"; 
+// Conexão com o banco para carregar publicações 
+require_once __DIR__ . '/../config/conexao.php';
+function h($s){ return htmlspecialchars($s ?? '', ENT_QUOTES, 'UTF-8'); }
+
+// Buscar publicações criadas pelos admins (tabela 'publicacoes')
+$publicacoes = [];
+try {
+  $pdo = getConexao();
+  $pdo->exec("CREATE TABLE IF NOT EXISTS publicacoes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    titulo VARCHAR(255) NOT NULL,
+    resumo TEXT,
+    imagem VARCHAR(512),
+    arquivo VARCHAR(512),
+    data_publicacao DATE NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  )");
+  $stmt = $pdo->query("SELECT id, titulo, resumo, imagem, arquivo, data_publicacao FROM publicacoes ORDER BY id DESC");
+  $publicacoes = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+} catch (Throwable $e) {
+}
 ?>
 
 <!DOCTYPE html>
@@ -32,57 +53,34 @@ require '../include/menu-anonimo.php';
             </div>
           </div>
           <div class="row" id="publicacoes-container">
-            <!-- Card 1 -->
-            <div class="col-md-4 mb-4 sombra-transparente">
-              <div class="card h-100">
-                <img src="../imagens/reuniaogepea.jpeg" class="card-img-top" alt="foto do post">
-                <div class="card-body d-flex flex-column">
-                  <div class="d-flex justify-content-between align-items-center mb-2">
-                    <small class="text-muted">13/03/2025</small>
-                  </div>
-                  <h5 class="card-title">Reunião de Leitura</h5>
-                  <p class="card-text">Reunião de leitura para discutir o capítulo do livro "Pensamento Feminista Negro", de Patricia Hill Collins.</p>
-                  <div class="mt-auto d-flex justify-content-between align-items-center">
-                    <a href="../publicacoes/publicacao1.php" class="btn btn-success">Ver detalhes</a>
-                    
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Card 2 -->
-            <div class="col-md-4 mb-4 sombra-transparente">
-              <div class="card h-100">
-                <img src="../imagens/showgepea.jpeg" class="card-img-top" alt="foto do post">
-                <div class="card-body d-flex flex-column">
-                  <div class="d-flex justify-content-between align-items-center mb-2">
-                    <small class="text-muted">10/03/2025</small>
-                  </div>
-                  <h5 class="card-title">Inauguração de Espaços Afrocentrados</h5>
-                  <p class="card-text">Evento de inauguração que contou com a presença de artistas locais.</p>
-                  <div class="mt-auto d-flex justify-content-between align-items-center">
-                    <a href="../publicacoes/publicacao2.php" class="btn btn-success">Ver detalhes</a>
+            <?php if (empty($publicacoes)): ?>
+              <div class="col-12"><p>Nenhuma publicação cadastrada ainda.</p></div>
+            <?php else: ?>
+              <?php foreach ($publicacoes as $pub): 
+                $id    = (int)($pub['id'] ?? 0);
+                $titulo= h($pub['titulo'] ?? '');
+                $resumo= h($pub['resumo'] ?? '');
+                $img   = h($pub['imagem'] ?: '../imagens/emoji.png');
+                $data  = h(date('d/m/Y', strtotime($pub['data_publicacao'])));
+                $href  = $pub['arquivo'] ? h($pub['arquivo']) : ('../publicacoes/publicacao' . $id . '.php');
+              ?>
+              <div class="col-md-4 mb-4 sombra-transparente">
+                <div class="card h-100">
+                  <img src="<?= $img ?>" class="card-img-top" alt="foto do post">
+                  <div class="card-body d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                      <small class="text-muted"><?= $data ?></small>
+                    </div>
+                    <h5 class="card-title"><?= $titulo ?></h5>
+                    <p class="card-text"><?= $resumo ?></p>
+                    <div class="mt-auto d-flex justify-content-between align-items-center">
+                      <a href="<?= $href ?>" class="btn btn-success">Ver detalhes</a>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-
-            <!-- Card 3 -->
-            <div class="col-md-4 mb-4 sombra-transparente">
-              <div class="card h-100">
-                <img src="../imagens/gepeaalvorada.jpeg" class="card-img-top" alt="foto do post">
-                <div class="card-body d-flex flex-column">
-                  <div class="d-flex justify-content-between align-items-center mb-2">
-                    <small class="text-muted">25/03/2025</small>
-                  </div>
-                  <h5 class="card-title">Reunião presencial em Alvorada</h5>
-                  <p class="card-text">Membros do GEPEA e bolsistas do grupo se reuniram em Alvorada para planejar próximos passos.</p>
-                  <div class="mt-auto d-flex justify-content-between align-items-center">
-                    <a href="../publicacoes/publicacao3.php" class="btn btn-success">Ver detalhes</a>
-                  </div>
-                </div>
-              </div>
-            </div>
+              <?php endforeach; ?>
+            <?php endif; ?>
           </div>
         
         <!-- FOOTER -->

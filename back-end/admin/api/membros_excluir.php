@@ -35,7 +35,6 @@ try {
         lattes_user VARCHAR(512)
     )");
 
-    // Buscar informações para remoção de arquivos físicos
     $in = implode(',', array_fill(0, count($ids), '?'));
     $stmt = $pdo->prepare("SELECT id_usuario, foto_user FROM usuarios WHERE id_usuario IN ($in)");
     $stmt->execute($ids);
@@ -45,7 +44,7 @@ try {
     $del = $pdo->prepare("DELETE FROM usuarios WHERE id_usuario IN ($in)");
     $del->execute($ids);
 
-    // Remover arquivos físicos relacionados
+    // Remover arquivos 
     foreach ($rows as $row) {
         $id = (int)$row['id_usuario'];
         $foto = $row['foto_user'] ?? '';

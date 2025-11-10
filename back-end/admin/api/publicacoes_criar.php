@@ -77,7 +77,7 @@ if (isset($_FILES['imagemPublicacao']) && $_FILES['imagemPublicacao']['error'] !
     $imgRelPath = '../imagens/publicacoes/' . $fileName;
 }
 
-// Data padrão: hoje
+// puxa a data atual como
 $dataPub = date('Y-m-d');
 
 $stmt = $pdo->prepare('INSERT INTO publicacoes (titulo, resumo, imagem, arquivo, data_publicacao) VALUES (?, ?, ?, ?, ?)');
@@ -85,7 +85,7 @@ $arquivoPlan = null; // será definido após a tela de edição gerar o arquivo
 $stmt->execute([$title, $resumo, $imgRelPath, $arquivoPlan, $dataPub]);
 $id = (int)$pdo->lastInsertId();
 
-// Se houver imagem enviada, cadastrar como primeira imagem do carrossel
+// se tiver imagem, vai ser a primeira do carrossel
 if ($imgRelPath && $imgRelPath !== '../imagens/emoji.png') {
     $insImg = $pdo->prepare('INSERT INTO publicacao_imagens (publicacao_id, caminho, ordem) VALUES (?, ?, 1)');
     $insImg->execute([$id, $imgRelPath]);

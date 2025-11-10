@@ -1,5 +1,5 @@
 <?php
-// Lista atividades para o FullCalendar
+// lista atividades da agenda
 if (session_status() === PHP_SESSION_NONE) { session_start(); }
 require_once __DIR__ . '/../../config/auth.php';
 requireAdmin();
@@ -16,7 +16,6 @@ try {
         $title = $r['descricao_atividade'];
         $className = null;
         $endIso = null;
-        // Extrai meta no fim da descrição: [meta:chave=valor;chave2=valor2]
         if (preg_match('/\s\[meta:([^\]]+)\]$/', $title, $m)) {
             $metaStr = $m[1];
             $title = preg_replace('/\s\[meta:[^\]]+\]$/', '', $title);

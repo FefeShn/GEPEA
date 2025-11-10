@@ -33,7 +33,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['acao'] ?? '') === 'add_ima
     $fileName = 'pub_' . date('Ymd_His') . '_' . bin2hex(random_bytes(4)) . $ext;
     $dest = $uploadDir . '/' . $fileName;
     if (move_uploaded_file($tmp, $dest)) {
-      // Próxima ordem
       $ord = (int)$pdo->query('SELECT COALESCE(MAX(ordem),0) FROM publicacao_imagens WHERE publicacao_id = ' . $id)->fetchColumn();
       $ord = $ord + 1;
       $imgRel = '../imagens/publicacoes/' . $fileName;
@@ -51,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['acao'] ?? '') === 'add_ima
   } else {
     $erro = 'Selecione uma imagem válida.';
   }
-  // Recarregar dados atualizados
+
   $stmt = $pdo->prepare('SELECT * FROM publicacoes WHERE id = ?');
   $stmt->execute([$id]);
   $pub = $stmt->fetch(PDO::FETCH_ASSOC) ?: $pub;
@@ -60,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['acao'] ?? '') === 'add_ima
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && (($_POST['acao'] ?? '') !== 'add_imagem')) {
   $titulo = trim($_POST['titulo'] ?? '');
   $conteudo = trim($_POST['conteudo'] ?? '');
-  // Não permitir editar a data; usar a data atual da publicação
+  // sempre usa a data atual da publicação
   $data_publicacao = $pub['data_publicacao'];
   if ($titulo === '' || $conteudo === '') {
     $erro = 'Preencha todos os campos obrigatórios.';
@@ -76,27 +75,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && (($_POST['acao'] ?? '') !== 'add_im
             $dest = $uploadDir . '/' . $fileName;
             if (move_uploaded_file($tmp, $dest)) {
                 $imgPath = '../imagens/publicacoes/' . $fileName;
-        // Tornar esta a capa: empurrar ordens existentes e inserir como ordem 1
         $pdo->prepare('UPDATE publicacao_imagens SET ordem = ordem + 1 WHERE publicacao_id = ?')->execute([$id]);
         $pdo->prepare('INSERT INTO publicacao_imagens (publicacao_id, caminho, ordem) VALUES (?, ?, 1)')->execute([$id, $imgPath]);
             }
         }
 
-  // Atualizar DB com título, imagem e resumo=conteúdo (sem alterar data)
   $upd = $pdo->prepare('UPDATE publicacoes SET titulo = ?, imagem = ?, resumo = ? WHERE id = ?');
   $upd->execute([$titulo, $imgPath, $conteudo, $id]);
 
-        // Gerar arquivo da publicação
         $fileRel = '../publicacoes/publicacao' . $id . '.php';
         $fileAbs = __DIR__ . '/../publicacoes/publicacao' . $id . '.php';
-  // Buscar imagens para o carrossel
   $imgs = $pdo->prepare('SELECT caminho FROM publicacao_imagens WHERE publicacao_id = ? ORDER BY ordem ASC');
   $imgs->execute([$id]);
   $imagens = $imgs->fetchAll(PDO::FETCH_COLUMN) ?: [$imgPath];
   $htmlContent = buildPublicacaoFile($titulo, $data_publicacao, $imagens, $conteudo);
         file_put_contents($fileAbs, $htmlContent);
 
-        // Atualizar caminho do arquivo
         $upd2 = $pdo->prepare('UPDATE publicacoes SET arquivo = ? WHERE id = ?');
         $upd2->execute([$fileRel, $id]);
 
@@ -107,12 +101,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && (($_POST['acao'] ?? '') !== 'add_im
 
 function h($s) { return htmlspecialchars($s ?? '', ENT_QUOTES, 'UTF-8'); }
 function buildPublicacaoFile($titulo, $data, $imagens, $conteudo) {
-    // Converte quebras de linha em parágrafos simples
     $paras = array_filter(array_map('trim', preg_split("/(\r\n|\n|\r)/", $conteudo)));
     $conteudoHtml = '';
     foreach ($paras as $p) { $conteudoHtml .= "\n          <p>" . htmlspecialchars($p, ENT_QUOTES, 'UTF-8') . "</p>"; }
 
-  // Carousel indicators and items
   $indicators = '';
   $items = '';
   foreach ($imagens as $i => $img) {
@@ -266,7 +258,6 @@ require __DIR__ . '/../include/menu-admin.php';
 </div>
 <script src="../script.js"></script>
 <script>
-  // Preservar texto digitado ao adicionar imagens (localStorage por publicação)
   (function(){
     const text = document.getElementById('conteudo');
     const addBtn = document.getElementById('btnAddImagem');
@@ -279,7 +270,6 @@ require __DIR__ . '/../include/menu-admin.php';
     if (saved && !text.value) { text.value = saved; }
     // Salvar em digitação
     text.addEventListener('input', ()=> localStorage.setItem(key, text.value));
-    // Adicionar imagem via fetch sem recarregar
     addBtn?.addEventListener('click', async () => {
       if (!fileInput?.files?.length) { alert('Selecione uma imagem.'); return; }
       const file = fileInput.files[0];

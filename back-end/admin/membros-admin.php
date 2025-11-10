@@ -48,7 +48,7 @@ $stmt = $pdo->prepare("SELECT id_usuario, nome_user, foto_user, cargo_user FROM 
 $stmt->execute();
 $membros = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Normalização e ordenação por cargo e nome
+// ordenação por cargo e nome (em ordem alfabética dentro do mesmo cargo)
 $prioridade = [
   'coordenador' => 1,
   'vice-coordenador' => 2,

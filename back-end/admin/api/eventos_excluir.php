@@ -38,22 +38,20 @@ $pdo->exec("CREATE TABLE IF NOT EXISTS evento_imagens (
   FOREIGN KEY (evento_id) REFERENCES evento(id_evento) ON DELETE CASCADE
 )");
 
-// Buscar caminhos para exclusão
 $in = implode(',', array_fill(0, count($ids), '?'));
 $stmt = $pdo->prepare("SELECT id_evento, foto_evento FROM evento WHERE id_evento IN ($in)");
 $stmt->execute($ids);
 $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Capturar imagens adicionais
 $stmtImgs = $pdo->prepare("SELECT caminho FROM evento_imagens WHERE evento_id IN ($in)");
 $stmtImgs->execute($ids);
 $extraImgs = $stmtImgs->fetchAll(PDO::FETCH_COLUMN);
 
-// Excluir do banco (evento + imagens via FK ON DELETE CASCADE)
+// excluir do banco 
 $del = $pdo->prepare("DELETE FROM evento WHERE id_evento IN ($in)");
 $del->execute($ids);
 
-// Remover arquivos físicos: capa, arquivo gerado e imagens extras
+// Remover arquivos 
 foreach ($rows as $row) {
     // Capa
     $rel = $row['foto_evento'] ?? '';

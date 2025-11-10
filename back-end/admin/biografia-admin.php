@@ -5,9 +5,8 @@ $paginaAtiva = 'nenhuma';
 require_once '../config/conexao.php';
 $pdo = getConexao();
 
-$idUsuario = $_SESSION['id_usuario'] ?? null; // id do usuário logado (admin)
+$idUsuario = $_SESSION['id_usuario'] ?? null;
 
-// Utilitário para caminho da foto (igual ao perfil.php)
 function caminhoFotoPerfilAdmin(?string $foto): string {
     if (!$foto || trim($foto) === '') {
         return '../imagens/user-foto.png';

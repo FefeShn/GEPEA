@@ -1,11 +1,9 @@
 <?php
-// Sessão e proteção admin
 if (session_status() === PHP_SESSION_NONE) { session_start(); }
 require_once __DIR__ . '/../config/auth.php';
 requireAdmin();
 require_once __DIR__ . '/../config/conexao.php';
 
-// DB
 $pdo = getConexao();
 $stmt = $pdo->query("SELECT id_arquivo, nome_arquivo, descricao_arquivo, url_arquivo, tipo_arquivo, tamanho_arquivo, data_upload FROM arquivo ORDER BY id_arquivo DESC");
 $arquivos = $stmt->fetchAll(PDO::FETCH_ASSOC);

@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $error = 'Já existe um membro com esse e-mail!';
         } else {
             $stmt = $pdo->prepare("INSERT INTO usuarios (nome_user, email_user, senha_user, foto_user, eh_adm, cargo_user, lattes_user) VALUES (?, ?, ?, ?, ?, ?, ?)");
-            $eh_adm = 0; // Membro comum
+            $eh_adm = 0; // membro comum
             $stmt->execute([
                 $nome,
                 $email,

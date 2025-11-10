@@ -1,11 +1,9 @@
 <?php
-// Iniciar sessão e validar antes de qualquer saída HTML
 session_start();
 require '../config/auth.php';
 requireAdmin();
 require_once __DIR__ . '/../config/conexao.php';
 
-// Conexão e tabela
 $pdo = getConexao();
 $pdo->exec("CREATE TABLE IF NOT EXISTS publicacoes (
   id INT AUTO_INCREMENT PRIMARY KEY,
@@ -18,7 +16,6 @@ $pdo->exec("CREATE TABLE IF NOT EXISTS publicacoes (
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 )");
 
-// Buscar publicações
 $stmt = $pdo->query("SELECT id, titulo, resumo, imagem, arquivo, data_publicacao FROM publicacoes ORDER BY id DESC");
 $publicacoes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
