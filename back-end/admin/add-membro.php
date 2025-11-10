@@ -38,10 +38,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             $stmt = $pdo->prepare("INSERT INTO usuarios (nome_user, email_user, senha_user, foto_user, eh_adm, cargo_user, lattes_user) VALUES (?, ?, ?, ?, ?, ?, ?)");
             $eh_adm = 0; // membro comum
+            $hashSenha = password_hash($senha, PASSWORD_DEFAULT);
             $stmt->execute([
                 $nome,
                 $email,
-                $senha,
+                $hashSenha,
                 $foto,
                 $eh_adm,
                 $cargo,

@@ -15,7 +15,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($user) {
-        if ($senha === $user['senha_user']) {
+        // Verificação segura com hash
+        $senhaOk = password_verify($senha, $user['senha_user']);
+
+        // Compatibilidade: se registro antigo estiver em texto plano e coincidir, atualizar para hash
+        if (!$senhaOk && $senha === $user['senha_user']) {
+            $novoHash = password_hash($senha, PASSWORD_DEFAULT);
+            try {
+                $upd = $pdo->prepare("UPDATE usuarios SET senha_user = ? WHERE id_usuario = ?");
+                $upd->execute([$novoHash, (int)$user['id_usuario']]);
+                $senhaOk = true;
+            } catch (Throwable $e) {
+                // Se falhar a atualização, manter fluxo de erro normal
+            }
+        }
+
+        if ($senhaOk) {
             $_SESSION['id_usuario'] = $user['id_usuario'];
             $_SESSION['nome_user'] = $user['nome_user'];
             $_SESSION['email_user'] = $user['email_user'];

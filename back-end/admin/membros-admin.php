@@ -28,17 +28,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cadastrar_membro'])) 
     if ($stmt->rowCount() > 0) {
         $mensagem = 'Já existe um membro com esse e-mail!';
     } else {
-        $stmt = $pdo->prepare("INSERT INTO usuarios (nome_user, email_user, senha_user, foto_user, eh_adm, cargo_user, lattes_user) VALUES (?, ?, ?, ?, ?, ?, ?)");
-        $eh_adm = 0; 
-        $stmt->execute([
-            $nome,
-            $email,
-            $senha,
-            $foto,
-            $eh_adm,
-            $cargo,
-            $lattes
-        ]);
+    $stmt = $pdo->prepare("INSERT INTO usuarios (nome_user, email_user, senha_user, foto_user, eh_adm, cargo_user, lattes_user) VALUES (?, ?, ?, ?, ?, ?, ?)");
+    $eh_adm = 0; 
+    $hashSenha = password_hash($senha, PASSWORD_DEFAULT);
+    $stmt->execute([
+      $nome,
+      $email,
+      $hashSenha,
+      $foto,
+      $eh_adm,
+      $cargo,
+      $lattes
+    ]);
         $mensagem = 'Membro cadastrado com sucesso!';
     }
 }
