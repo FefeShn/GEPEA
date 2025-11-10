@@ -1,11 +1,14 @@
 <?php
 // Sessão/variáveis de navegação
 if (session_status() === PHP_SESSION_NONE) { session_start(); }
-$paginaAtiva = 'eventos'; 
+// Definir página ativa conforme login para manter destaque no menu correto
+$isLoggedIn = !empty($_SESSION['id_usuario']);
+$paginaAtiva = $isLoggedIn ? 'eventos-membro' : 'eventos'; 
 $fotoPerfil  = "../imagens/user-foto.png"; 
 $linkPerfil  = "login.php"; 
 require '../include/navbar.php';
-require '../include/menu-anonimo.php';
+// Menu dinâmico conforme sessão
+require '../include/menu-dinamico.php';
 
 // Conexão e utilidades
 require_once __DIR__ . '/../config/conexao.php';

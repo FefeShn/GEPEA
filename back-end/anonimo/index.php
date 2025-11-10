@@ -1,6 +1,8 @@
 <?php
 if (session_status() === PHP_SESSION_NONE) { session_start(); }
-$paginaAtiva = 'index'; 
+// Define página ativa conforme status de login, para menu destacar corretamente
+$isLoggedIn = !empty($_SESSION['id_usuario']);
+$paginaAtiva = $isLoggedIn ? 'index-membro' : 'index'; 
 $fotoPerfil  = "../imagens/user-foto.png"; 
 $linkPerfil  = "login.php"; 
 // Conexão com o banco para carregar publicações 
@@ -33,7 +35,8 @@ try {
 <body>
 <?php
 require '../include/navbar.php';
-require '../include/menu-anonimo.php';
+// Menu dinâmico (anonimo/membro/admin) com base na sessão
+require '../include/menu-dinamico.php';
 ?>
   <div class="container-scroller">
       <!-- CONTEÚDO PRINCIPAL -->
