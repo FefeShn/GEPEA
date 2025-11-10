@@ -55,8 +55,8 @@ require '../include/menu-membro.php';
               <p>Status de presença: <span id="status-text">Não informado</span></p>
             </div>
             <div class="presenca-botoes">
-                <button class="btn-presenca btn-marcar-ausente" id="btn-ausente">Não poderei comparecer</button>
-              <button class="btn-presenca btn-marcar-presenca" id="btn-presente">Marcar Presença</button>
+              <button class="btn-presenca btn-marcar-presenca" id="btn-presente" data-status="presente">Marcar Presença</button>
+              <button class="btn-presenca btn-marcar-ausente" id="btn-ausente" data-status="ausente">Não poderei comparecer</button>
             </div>
           </div>
         </div>

@@ -443,27 +443,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const setupAgendaMembro = () => {
     try {
-        const eventos = [
-            {
-                id: 1,
-                title: 'Submissão de trabalhos',
-                start: '2025-07-18T00:00:00',
-                end: '2023-08-18T23:59:59',
-                className: 'success'
-            },
-            {
-                id: 2,
-                title: 'Reunião de Leitura',
-                start: '2025-07-10T19:00:00',
-                className: 'important'
-            },
-        ];
-
-        let presencasTemporarias = {};
+        const apiBase = (function(){
+            const p = window.location.pathname;
+            if (p.includes('/admin/')) return './api';
+            if (p.includes('/membro/')) return '../api';
+            return './api';
+        })();
 
         var calendar = $('#calendar').fullCalendar({
             header: {
-                left: 'prev,next', // removido today conforme pedido
+                left: 'prev,next', // sem o botão today conforme visual atual
                 center: 'title',
                 right: 'month,agendaWeek,agendaDay'
             },
@@ -473,7 +462,7 @@ document.addEventListener('DOMContentLoaded', function() {
             selectable: false,
             eventLimit: true,
             height: 'auto',
-            events: eventos,
+            events: apiBase + '/atividades_listar.php',
             eventClick: function(event) {
                 abrirModalEvento(event);
             }
@@ -490,14 +479,26 @@ document.addEventListener('DOMContentLoaded', function() {
         const btnAusente = document.getElementById('btn-ausente');
         const btnFechar = document.querySelector('.modal-evento-close');
 
+        async function carregarStatusPresenca(eventId) {
+            try {
+                const resp = await fetch(apiBase + '/presenca_obter.php?atividade_id=' + encodeURIComponent(eventId));
+                const data = await resp.json();
+                if (!resp.ok || !data?.ok) throw new Error(data?.error || 'Falha ao obter presença');
+                atualizarStatusPresenca(data.status);
+            } catch (err) {
+                console.error(err);
+                atualizarStatusPresenca('nao_informado');
+            }
+        }
+
         function abrirModalEvento(evento) {
             modalTitulo.textContent = evento.title;
             eventoTitulo.textContent = evento.title;
-            
+
             const dataInicio = moment(evento.start);
             eventoData.textContent = dataInicio.format('DD/MM/YYYY');
-            
-            if (evento.start.hasTime()) {
+
+            if (evento.start.hasTime && evento.start.hasTime()) {
                 eventoHorario.textContent = dataInicio.format('HH:mm');
                 if (evento.end) {
                     eventoHorario.textContent += ' - ' + moment(evento.end).format('HH:mm');
@@ -505,22 +506,17 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 eventoHorario.textContent = 'Dia todo';
             }
-            
-            const status = presencasTemporarias[evento.id] || 'nao_informado';
-            atualizarStatusPresenca(status);
-            
-            btnPresente.onclick = function() {
-                presencasTemporarias[evento.id] = 'presente';
-                atualizarStatusPresenca('presente');
-                alert('Presença marcada com sucesso!');
+
+            atualizarStatusPresenca('nao_informado');
+            carregarStatusPresenca(evento.id);
+
+            btnPresente.onclick = async function() {
+                await registrarPresenca(evento.id, 'presente');
             };
-            
-            btnAusente.onclick = function() {
-                presencasTemporarias[evento.id] = 'ausente';
-                atualizarStatusPresenca('ausente');
-                alert('Ausência registrada! ');
+            btnAusente.onclick = async function() {
+                await registrarPresenca(evento.id, 'ausente');
             };
-            
+
             modalEvento.classList.add('active');
             document.body.style.overflow = 'hidden';
         }
@@ -535,6 +531,23 @@ document.addEventListener('DOMContentLoaded', function() {
                 statusText.textContent = 'Não vou comparecer';
             } else {
                 statusText.textContent = 'Não informado';
+            }
+        }
+
+        async function registrarPresenca(eventId, status) {
+            try {
+                const resp = await fetch(apiBase + '/presenca_registrar.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ atividade_id: eventId, status })
+                });
+                const data = await resp.json();
+                if (!resp.ok || !data?.ok) throw new Error(data?.error || 'Falha ao registrar presença');
+                atualizarStatusPresenca(status);
+                alert(status === 'presente' ? 'Presença marcada com sucesso!' : 'Ausência registrada!');
+            } catch (err) {
+                console.error(err);
+                alert('Não foi possível registrar sua presença agora.');
             }
         }
 
@@ -595,7 +608,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 abrirModalEventoAdmin({ start: start, end: end });
             },
             eventClick: function(event) {
-                abrirModalEventoAdmin(event);
+                // Ao clicar em uma atividade registrada, abre o modal de presenças (não o de edição)
+                abrirModalListaPresencas(event);
             },
             eventDrop: function(event, delta, revertFunc) {
                 if(!confirm("Tem certeza que deseja alterar a data deste evento?")) {
@@ -626,6 +640,85 @@ document.addEventListener('DOMContentLoaded', function() {
             document.body.style.overflow = 'hidden';
             
             formEvento.dataset.eventoId = evento.id || '';
+
+            // Na criação, não exibimos nada de presenças aqui; clique em evento abre outro modal
+            const presencaWrapper = document.getElementById('presencaAdminWrapper');
+            if (presencaWrapper) presencaWrapper.style.display = 'none';
+        }
+
+        const apiBaseAdmin = (function(){
+            const p = window.location.pathname;
+            if (p.includes('/admin/')) return '../api';
+            if (p.includes('/membro/')) return '../api';
+            return './api';
+        })();
+
+        // Abre diretamente o modal de lista de presenças com dados agrupados
+        async function abrirModalListaPresencas(evento) {
+            const modal = document.getElementById('modalListaPresencas');
+            const lista = document.getElementById('listaPresencas');
+            const titulo = document.getElementById('tituloListaPresencas');
+            if (!modal || !lista) return;
+            if (titulo) {
+                const dt = moment(evento.start).format('DD/MM/YYYY');
+                const hrIni = moment(evento.start).format('HH:mm');
+                const hrFim = evento.end ? moment(evento.end).format('HH:mm') : '';
+                const hrTxt = (evento.start && evento.start.hasTime && evento.start.hasTime()) ? (hrFim ? `${hrIni} - ${hrFim}` : hrIni) : 'Dia todo';
+                titulo.textContent = `Presenças: ${evento.title} — ${dt} ${hrTxt ? '• ' + hrTxt : ''}`;
+            }
+
+            const close = () => { modal.classList.remove('active'); document.body.style.overflow = ''; };
+            const btnFechar = document.getElementById('btnFecharPresencas');
+            const btnX = document.getElementById('fecharModalPresencas');
+            btnFechar?.addEventListener('click', close, { once: true });
+            btnX?.addEventListener('click', close, { once: true });
+            modal.addEventListener('click', (e) => { if (e.target === modal) close(); }, { once: true });
+
+            lista.innerHTML = '<p class="small-text">Carregando...</p>';
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+
+            try {
+                const resp = await fetch(apiBaseAdmin + '/presenca_listar.php?atividade_id=' + encodeURIComponent(evento.id));
+                const data = await resp.json();
+                if (!resp.ok || !data?.ok) throw new Error(data?.error || 'Falha ao listar');
+
+                const membros = Array.isArray(data.membros) ? data.membros : [];
+                const presentes = membros.filter(m => m.status === 'presente');
+                const ausentes = membros.filter(m => m.status === 'ausente');
+                const naoInf  = membros.filter(m => m.status === 'nao_informado');
+
+                const makeSection = (tituloSec, arr, color) => {
+                    const badge = `<span class="small-text" style="color:${color}">${arr.length}</span>`;
+                    const items = arr.map(m => `
+                        <div class="membro-item" style="display:flex; justify-content:space-between; align-items:center; gap:10px; padding:6px 0; border-bottom:1px solid #eee;">
+                          <div style="min-width:0;">
+                            <div style="font-weight:600;">${m.nome}</div>
+                            <div class="small-text" style="color:#777; word-break:break-word;">${m.email}</div>
+                          </div>
+                          <div class="small-text" style="white-space:nowrap; color:${color}">${tituloSec}</div>
+                        </div>
+                    `).join('');
+                    return `
+                      <div style="margin-bottom:16px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin:6px 0 8px;">
+                          <h4 style="margin:0; font-size:16px;">${tituloSec}</h4>
+                          ${badge}
+                        </div>
+                        <div>${items || '<div class="small-text" style="color:#777;">Nenhum</div>'}</div>
+                      </div>
+                    `;
+                };
+
+                lista.innerHTML = [
+                    makeSection('Confirmado', presentes, '#28a745'),
+                    makeSection('Não vai', ausentes, '#dc3545'),
+                    makeSection('Não informaram', naoInf, '#6c757d')
+                ].join('');
+            } catch (err) {
+                console.error(err);
+                lista.innerHTML = '<p class="small-text">Erro ao carregar a lista de presenças.</p>';
+            }
         }
 
         function fecharModalEventoAdmin() {
@@ -674,7 +767,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
-        // Excluir atividades (modal com lista)
+    // Excluir atividades (modal com lista)
         const btnExcluirAtividade = document.getElementById('excluirAtividade');
         const modalExcluir = document.getElementById('modalExcluirAtividade');
         const listaAtividades = document.getElementById('listaAtividades');
@@ -729,6 +822,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 alert('Erro ao excluir atividades.');
             }
         });
+
+        // Removido o botão dentro do modal de edição: clique direto no evento usa abrirModalListaPresencas
 
     } catch (error) {
         console.error('Erro ao inicializar calendário admin:', error);
