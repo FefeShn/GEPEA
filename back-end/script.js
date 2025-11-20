@@ -1615,46 +1615,7 @@ function setupPerfilModals() {
         });
     };
 
-    const setupEsqueceuSenhaModal = () => {
-        const forgotPasswordLink = document.querySelector('.forgot-password');
-        const modalEsqueceuSenha = document.getElementById('modalEsqueceuSenha');
-        
-        if (!forgotPasswordLink || !modalEsqueceuSenha) return;
-
-        const closeModal = () => {
-            modalEsqueceuSenha.classList.remove('active');
-            document.body.classList.remove('modal-open');
-        };
-
-        const openModal = (e) => {
-            e.preventDefault();
-            modalEsqueceuSenha.classList.add('active');
-            document.body.classList.add('modal-open');
-        };
-
-        forgotPasswordLink.addEventListener('click', openModal);
-
-        document.querySelectorAll('#modalEsqueceuSenha .close-modal').forEach(btn => {
-            btn.addEventListener('click', closeModal);
-        });
-
-        modalEsqueceuSenha.addEventListener('click', (e) => {
-            if (e.target === modalEsqueceuSenha) closeModal();
-        });
-
-        document.getElementById('formEsqueceuSenha')?.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const email = document.getElementById('emailRecuperacao').value.trim();
-            
-            if (!email) {
-                alert('Por favor, insira seu e-mail');
-                return;
-            }
-            
-            alert(`Instruções de recuperação de senha foram enviadas para: ${email}`);
-            closeModal();
-        });
-    };
+    const setupEsqueceuSenhaModal = () => {};
 
     function setupAdminButtons() {
         document.querySelectorAll('.delete-message-btn').forEach(btn => {

@@ -28,8 +28,8 @@ require '../include/menu-dinamico.php';
             <div class="row">
               <div class="col-12 col-xl-8 mb-4 mb-xl-0">
                 <div class="titulo-publicacoes"> 
-                  <h3 class="font-weight-bold">teste 6</h3>
-                  <h6 class="font-weight-normal mb-0">Publicado em 2025-10-25</h6>
+                  <h3 class="font-weight-bold">Reunião do dia 04/11/25</h3>
+                  <h6 class="font-weight-normal mb-0">Publicado em 2025-11-14</h6>
                 </div>
               </div>
             </div>
@@ -44,9 +44,9 @@ require '../include/menu-dinamico.php';
             </div>
             <div class="carousel-inner">
               <div class="carousel-item active">
-                <img src="../imagens/publicacoes/pub_20251025_233106_d4095bfb.jpg" class="d-block w-100" alt="Imagem da publicação">
+                <img src="../imagens/publicacoes/pub_20251114_172510_9d9c351b.jpeg" class="d-block w-100" alt="Imagem da publicação">
                 <div class="carousel-caption d-none d-md-block">
-                  <p>teste 6</p>
+                  <p>Reunião do dia 04/11/25</p>
                 </div>
               </div>
             </div>
@@ -62,11 +62,7 @@ require '../include/menu-dinamico.php';
 
             <article class="post-content">
               
-          <p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.</p>
-          <p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.</p>
-          <p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.</p>
-          <p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.</p>
-          <p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.</p>
+          <p>No dia 04/11, Mylena, a nova membra do GEPEA, apresentou para as bolsistas do grupo seu projeto de mestrado. A reunião contou com a presença de quase todas as bolsistas, incluindo também o professor Dr. Luciano Corsino.</p>
             </article>
 
             <?php include"../include/share.php";?>

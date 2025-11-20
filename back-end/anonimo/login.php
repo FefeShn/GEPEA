@@ -90,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="form-group">
                     <div class="password-header">
                         <label for="password">Senha</label>
-                        <a href="esqueceu-senha.html" class="forgot-password">Esqueceu a senha?</a>
+                        <!-- Link de esqueci a senha removido -->
                     </div>
                     <div class="password-input">
                         <input type="password" id="password" name="password" placeholder="••••••••••••" required>
@@ -115,23 +115,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </div>
     
-    <!-- Modal Esqueceu a Senha -->
-      <div id="modalEsqueceuSenha" class="modal-overlay">
-          <div class="modal-content">
-              <button class="close-modal">&times;</button>
-              <h3>Recuperar Senha</h3>
-              <p>Digite seu e-mail cadastrado para receber as instruções de recuperação de senha.</p>
-              <form id="formEsqueceuSenha">
-                  <div class="form-group">
-                      <label for="emailRecuperacao">E-mail</label>
-                      <input type="email" id="emailRecuperacao" name="email" placeholder="Digite seu e-mail" required>
-                  </div>
-                  <div class="form-actions">
-                      <button type="submit" class="login-button">Enviar Instruções</button>
-                  </div>
-              </form>
-          </div>
-      </div>
+    <!-- Modal de recuperação removido -->
     <script src="../script.js"></script>
     </div>
 </body>

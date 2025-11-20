@@ -1,0 +1,6 @@
+From: GEPEA <seuemail@gmail.com>
+To: Teste Membro <teste999@gmail.com>
+Subject: GEPEA - Redefinição de senha
+Content-Type: text/html; charset=UTF-8
+
+<p>Olá,</p><p>Recebemos uma solicitação para redefinir sua senha no GEPEA.</p><p>Clique no link abaixo para criar uma nova senha (válido por 1 hora):</p><p><a href="http://localhost:8080/back-end/anonimo/resetar-senha.php?token=0aeeeaa20afceece9e9284e7dd7e352bc5d1eb2065e7c0c8d708f2c3781dc8e7">http://localhost:8080/back-end/anonimo/resetar-senha.php?token=0aeeeaa20afceece9e9284e7dd7e352bc5d1eb2065e7c0c8d708f2c3781dc8e7</a></p><p>Se você não solicitou, ignore este e-mail.</p>

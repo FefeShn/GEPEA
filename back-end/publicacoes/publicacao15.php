@@ -28,8 +28,8 @@ require '../include/menu-dinamico.php';
             <div class="row">
               <div class="col-12 col-xl-8 mb-4 mb-xl-0">
                 <div class="titulo-publicacoes"> 
-                  <h3 class="font-weight-bold">teste 5</h3>
-                  <h6 class="font-weight-normal mb-0">Publicado em 2025-10-24</h6>
+                  <h3 class="font-weight-bold">`Participação no Grupo de Pesquisa Flores Raras</h3>
+                  <h6 class="font-weight-normal mb-0">Publicado em 2025-11-14</h6>
                 </div>
               </div>
             </div>
@@ -44,9 +44,9 @@ require '../include/menu-dinamico.php';
             </div>
             <div class="carousel-inner">
               <div class="carousel-item active">
-                <img src="../imagens/publicacoes/pub_20251024_225740_449c540d.jpg" class="d-block w-100" alt="Imagem da publicação">
+                <img src="../imagens/publicacoes/pub_20251114_173310_dc4cb139.png" class="d-block w-100" alt="Imagem da publicação">
                 <div class="carousel-caption d-none d-md-block">
-                  <p>teste 5</p>
+                  <p>`Participação no Grupo de Pesquisa Flores Raras</p>
                 </div>
               </div>
             </div>
@@ -62,7 +62,13 @@ require '../include/menu-dinamico.php';
 
             <article class="post-content">
               
-          <p>azsrdtfyguhjlk</p>
+          <p>No dia 08/10, participamos da reunião ampliada do Grupo de Pesquisa Flores Raras, na UFSCar campus Sorocaba. A convite do nosso orientador, Luciano, acompanhamos a apresentação do trabalho “Fotografia por mulheres africanas — legados de beleza e luta”, que foi apresentado pela Profa Dra. @anaviitorio , pós-doutoranda na University of the Free State, África do Sul.</p>
+          <p>Estiveram presentes as orientandas de iniciação científica e membras do GEPEA: @fe.sehn, do Ensino Médio Técnico em Informática (IFRS – Campus Rolante); @deisijanine65, do Ensino Superior em Tecnologia em Produção Multimídia (IFRS – Campus Alvorada); @danierirribeiro, membra egressa do IFRS e;</p>
+          <p>@samaramouraedu, doutora em Educação e Profa. do IFCE.</p>
+          <p>🌿 A apresentação e o debate foram de alto nível, trazendo reflexões profundas sobre a beleza da população negra e problematizando a potência da fotografia.</p>
+          <p>Agradecemos especialmente à Profa. Dra. @daniela.auad e a Profa. Dra. @claudia.lahni , pelo convite e pela recepção atenciosa. É inspirador saber que nosso orientador foi orientado por uma intelectual como Daniela Auad e que pudemos presenciar a apresentação em um grupo de pesquisa de referência como o Flores Raras!</p>
+          <p>Para quem tiver interesse em conhecer o Flores Raras:</p>
+          <p>http://www.ufjf.br/educacomunicafeminismos/</p>
             </article>
 
             <?php include"../include/share.php";?>

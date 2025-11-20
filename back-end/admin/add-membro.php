@@ -1,6 +1,8 @@
 <?php
 session_start();
 require '../config/auth.php';
+require_once '../config/conexao.php';
+require_once '../config/email.php';
 
 if (!isAdmin()) {
     header('Location: ../anonimo/login.php');
@@ -10,12 +12,23 @@ if (!isAdmin()) {
 $error = '';
 $success = '';
 
+// Gera senha aleatória para novo membro
+function gerarSenhaAleatoria(int $len = 12): string {
+    $alfabeto = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789@$%';
+    $bytes = random_bytes($len);
+    $senha = '';
+    for ($i=0; $i<$len; $i++) {
+        $senha .= $alfabeto[ord($bytes[$i]) % strlen($alfabeto)];
+    }
+    return $senha;
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nome = trim($_POST['nomeMembro'] ?? '');
     $email = trim($_POST['emailMembro'] ?? '');
     $cargo = $_POST['cargoMembro'] ?? '';
     $lattes = trim($_POST['lattesMembro'] ?? '');
-    $senha = $_POST['senhaMembro'] ?? '';
+    $senhaGerada = gerarSenhaAleatoria();
     $foto = '';
 
     if (isset($_FILES['fotoMembro']) && $_FILES['fotoMembro']['error'] === UPLOAD_ERR_OK) {
@@ -27,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $foto = '../imagens/user-foto.png';
     }
 
-    if (empty($nome) || empty($email) || empty($cargo) || empty($senha)) {
+    if (empty($nome) || empty($email) || empty($cargo)) {
         $error = 'Preencha todos os campos obrigatórios!';
     } else {
         $pdo = getConexao();
@@ -37,8 +50,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $error = 'Já existe um membro com esse e-mail!';
         } else {
             $stmt = $pdo->prepare("INSERT INTO usuarios (nome_user, email_user, senha_user, foto_user, eh_adm, cargo_user, lattes_user) VALUES (?, ?, ?, ?, ?, ?, ?)");
-            $eh_adm = 0; // membro comum
-            $hashSenha = password_hash($senha, PASSWORD_DEFAULT);
+            $eh_adm = 0;
+            $hashSenha = password_hash($senhaGerada, PASSWORD_DEFAULT);
             $stmt->execute([
                 $nome,
                 $email,
@@ -48,7 +61,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $cargo,
                 $lattes
             ]);
-            $success = 'Membro cadastrado com sucesso!';
+            // Envia credenciais por e-mail
+            $assunto = 'GEPEA - Acesso inicial do membro';
+            $html = '<p>Olá ' . htmlspecialchars($nome) . ',</p>'
+                  . '<p>Você foi cadastrado no GEPEA.</p>'
+                  . '<p><strong>Login:</strong> ' . htmlspecialchars($email) . '<br>'
+                  . '<strong>Senha inicial:</strong> ' . htmlspecialchars($senhaGerada) . '</p>'
+                  . '<p>Recomendação: ao primeiro acesso, altere sua senha (quando a funcionalidade estiver disponível).</p>'
+                  . '<p>Abraço,<br>Equipe GEPEA</p>';
+            gepea_send_mail($email, $nome, $assunto, $html);
+            $success = 'Membro cadastrado e credenciais enviadas por e-mail.';
         }
     }
 }
@@ -107,10 +129,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <input type="text" name="lattesMembro" id="lattesMembro" class="form-control">
                         </div>
                         
-                        <div class="form-group">
-                            <label for="senhaMembro">Senha Inicial *</label>
-                            <input type="password" name="senhaMembro" id="senhaMembro" class="form-control" required>
-                        </div>
+                        <!-- Senha gerada automaticamente e enviada por e-mail -->
                         
                         <div class="form-group">
                             <label for="fotoMembro">Foto do Perfil</label>

@@ -18,24 +18,29 @@ require '../include/menu-anonimo.php';
     <main class="support-container">
       
       <div class="support-form-container">
-        <form id="supportForm">
+        <form id="supportFormReal" method="POST" action="suporte-enviar.php">
           <div class="support-header">
         <h1 class="page-title">Suporte</h1>
         <p class="page-subtitle">Preencha o formulário abaixo para entrar em contato com nossa equipe</p>
       </div>
           <div class="form-group">
             <label for="nome">Seu Nome</label>
-            <input type="text" id="nome" placeholder="Digite seu nome completo" required>
+            <input type="text" id="nome" name="nome" placeholder="Digite seu nome completo" required>
           </div>
           
           <div class="form-group">
             <label for="email">Seu E-mail</label>
-            <input type="email" id="email" placeholder="seu@email.com" required>
+            <input type="email" id="email" name="email" placeholder="seu@email.com" required>
+          </div>
+
+          <div class="form-group">
+            <label for="assunto">Assunto</label>
+            <input type="text" id="assunto" name="assunto" placeholder="Ex: Dúvida sobre acesso" required>
           </div>
           
           <div class="form-group">
             <label for="mensagem">Descrição do Problema/Dúvida</label>
-            <textarea id="mensagem" rows="6" placeholder="Descreva detalhadamente seu problema ou dúvida..." required></textarea>
+            <textarea id="mensagem" name="mensagem" rows="6" placeholder="Descreva detalhadamente seu problema ou dúvida..." required></textarea>
           </div>
           
           <div class="form-actions">
