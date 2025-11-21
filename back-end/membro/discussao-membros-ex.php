@@ -98,7 +98,7 @@ require '../include/menu-membro.php';
             </div>
             <div class="chat-actions">
               <button type="button" class="btn-emoji">
-                <img src="../imagens/emoji.png" alt="emoji" class="emoji-button">
+                <img src="../../site-front/imagens/emoji.png" alt="emoji" class="emoji-button">
               </button>
               <button type="button" class="btn-enviar">
                 <img src="../imagens/enviar.png" alt="enviar" class="enviar-button"> 

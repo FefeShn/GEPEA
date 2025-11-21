@@ -1323,7 +1323,8 @@ body {
   border-radius: 8px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   width: 100%;
-  max-width: 500px;
+  max-width: 680px;
+  width: min(92vw, 680px);
   transform: translateY(-20px);
   transition: transform 0.3s ease;
 }
@@ -1376,6 +1377,70 @@ body {
   display: flex;
   justify-content: flex-end;
   gap: 12px;
+}
+
+.form-group .participant-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0 -4px;
+  padding: 0 4px;
+  width: calc(100% + 8px);
+}
+
+.form-group .participant-option {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 6px;
+  width: 100%;
+  font-size: 0.95rem;
+  color: #2c2c2c;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  align-items: flex-start;
+}
+
+.form-group .participant-option input {
+  accent-color: var(--verde);
+  margin: 0;
+  padding: 0;
+  align-self: flex-start;
+}
+
+.form-group .participant-option span {
+  min-width: 0;
+  display: block;
+  line-height: 1.35;
+  color: inherit;
+}
+
+.form-group .participant-option small {
+  color: var(--cinza);
+  font-weight: 400;
+  margin: 0;
+}
+
+.select-all-row {
+  margin: 0 -4px 8px;
+  padding: 0 4px;
+  width: calc(100% + 8px);
+}
+
+.select-all-row .checkbox-inline {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 6px;
+  align-items: flex-start;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.select-all-row input {
+  accent-color: var(--verde);
+  margin: 0;
+  flex-shrink: 0;
 }
 
 .btn {
@@ -2109,6 +2174,13 @@ body {
   margin: 0;
 }
 
+.forum-actions {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
 .btn-nova-discussao {
   background: var(--verde);
   color: white;
@@ -2119,9 +2191,11 @@ body {
   font-weight: 1000;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
   transition: all 0.3s ease;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  min-width: 220px;
 }
 
 .btn-nova-discussao:hover {
@@ -2145,24 +2219,25 @@ body {
     margin-bottom: 10px;
 }
 
-.membro-item {
-    display: flex;
-    align-items: center;
-    padding: 8px 0;
-    border-bottom: 1px solid #f5f5f5;
+.membros-list .membro-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid #f5f5f5;
 }
 
-.membro-item:last-child {
-    border-bottom: none;
+.membros-list .membro-item:last-child {
+  border-bottom: none;
 }
 
-.membro-item input[type="checkbox"] {
-    margin-right: 10px;
+.membros-list .membro-item input[type="checkbox"],
+.membros-list .membro-item input {
+  margin-top: 2px;
 }
 
-.membro-item label {
-    cursor: pointer;
-    flex-grow: 1;
+.membros-list .membro-item span {
+  flex: 1;
 }
 
 .modal-overlay {
@@ -2406,17 +2481,24 @@ body {
 .btn-excluir-discussao {
   background: var(--vermelho);
   color: var(--branco);
-  border: 1px solid #e0e0e0;
-  padding: 8px 15px;
-  border-radius: 20px;
+  border: none;
+  padding: 20px 40px;
+  border-radius: 30px;
   cursor: pointer;
-  font-size: 0.9rem;
+  font-weight: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   transition: all 0.3s ease;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  min-width: 220px;
 }
 
 .btn-excluir-discussao:hover {
   background:#900000;
-  border-color: #900000;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
 }
 
 .modal-container {
@@ -2584,6 +2666,10 @@ body {
 .delete-button {
   background: var(--vermelho);
   color: white;
+}
+
+.delete-button::before {
+  content: none;
 }
 
 .delete-button:hover {

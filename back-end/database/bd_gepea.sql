@@ -83,6 +83,18 @@ CREATE TABLE `discussao` (
 -- --------------------------------------------------------
 
 --
+-- Estrutura para tabela `discussao_participante`
+--
+
+CREATE TABLE `discussao_participante` (
+  `id_discussao` int(11) NOT NULL,
+  `id_usuario` int(11) NOT NULL,
+  `data_adicao` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Estrutura para tabela `evento`
 --
 
@@ -211,6 +223,13 @@ ALTER TABLE `biografia`
 ALTER TABLE `discussao`
   ADD PRIMARY KEY (`id_discussao`),
   ADD KEY `id_usuario` (`id_usuario`);
+
+--
+-- Índices de tabela `discussao_participante`
+--
+ALTER TABLE `discussao_participante`
+  ADD PRIMARY KEY (`id_discussao`,`id_usuario`),
+  ADD KEY `idx_disc_part_usuario` (`id_usuario`);
 
 --
 -- Índices de tabela `evento`
@@ -347,6 +366,13 @@ ALTER TABLE `biografia`
 --
 ALTER TABLE `discussao`
   ADD CONSTRAINT `discussao_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id_usuario`) ON DELETE CASCADE;
+
+--
+-- Restrições para tabela `discussao_participante`
+--
+ALTER TABLE `discussao_participante`
+  ADD CONSTRAINT `fk_disc_part_disc` FOREIGN KEY (`id_discussao`) REFERENCES `discussao` (`id_discussao`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_disc_part_user` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id_usuario`) ON DELETE CASCADE;
 
 --
 -- Restrições para tabelas `evento`
