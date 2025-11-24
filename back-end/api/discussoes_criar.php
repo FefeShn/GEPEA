@@ -22,7 +22,7 @@ $participantes = array_map('intval', (array)$participantesInput);
 $participantes = array_filter($participantes, fn($id) => $id > 0);
 
 if ($titulo === '') {
-    $_SESSION['flash_erro'] = 'Informe um título para a discussão.';
+    $_SESSION['flash_erro'] = 'Informe um título para o chat.';
     header('Location: ' . $redirect);
     exit();
 }
@@ -56,12 +56,12 @@ try {
     }
 
     $pdo->commit();
-    $_SESSION['flash_sucesso'] = 'Discussão criada com sucesso!';
+    $_SESSION['flash_sucesso'] = 'Chat criado com sucesso!';
 } catch (Throwable $e) {
     if ($pdo->inTransaction()) {
         $pdo->rollBack();
     }
-    $_SESSION['flash_erro'] = 'Não foi possível criar a discussão. Tente novamente.';
+    $_SESSION['flash_erro'] = 'Não foi possível criar o chat. Tente novamente.';
 }
 
 header('Location: ' . $redirect);

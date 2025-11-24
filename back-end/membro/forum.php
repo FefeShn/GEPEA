@@ -45,9 +45,9 @@ require '../include/menu-membro.php';
     <div class="main-panel">
       <div class="content-wrapper">
         <div class="titulo-forum">
-          <h3><i class="fas fa-comments"></i> Fórum de Discussões</h3>
+          <h3><i class="fas fa-comments"></i> Bate-papos</h3>
           <button class="btn btn-nova-discussao">
-            <i class="fas fa-plus"></i> Nova Discussão
+            <i class="fas fa-plus"></i> Novo Chat
           </button>
         </div>
 
@@ -60,7 +60,7 @@ require '../include/menu-membro.php';
 
         <div class="discussoes-container" id="discussoes-container">
           <?php if (empty($discussoesUsuario)): ?>
-            <p class="text-muted">Você ainda não participa de nenhuma discussão. Crie uma nova e convide colegas.</p>
+            <p class="text-muted">Você ainda não participa de nenhum chat. Crie um novo e convide colegas.</p>
           <?php else: ?>
             <?php foreach ($discussoesUsuario as $discussao): ?>
               <div class="discussao-card">
@@ -85,18 +85,18 @@ require '../include/menu-membro.php';
       </div>
     </div>
 
-    <!-- Modal Nova Discussão para Membros -->
+    <!-- Modal Novo Chat para Membros -->
 <div class="modal-overlay" id="modalNovaDiscussaoMembro">
   <div class="modal-container">
     <div class="modal-header">
-      <h3><i class="fas fa-plus-circle"></i> Criar Nova Discussão</h3>
+      <h3><i class="fas fa-plus-circle"></i> Criar Novo Chat</h3>
       <button class="modal-close" type="button">&times;</button>
     </div>
     <div class="modal-body">
       <form id="formNovaDiscussaoMembro" method="POST" action="../api/discussoes_criar.php">
         <div class="form-group">
           <label for="tituloDiscussaoMembro"><i class="fas fa-heading"></i> Título*</label>
-          <input type="text" id="tituloDiscussaoMembro" name="titulo" placeholder="Dê um título claro para sua discussão" required>
+          <input type="text" id="tituloDiscussaoMembro" name="titulo" placeholder="Dê um título claro para seu chat" required>
         </div>
 
         <div class="form-group">
@@ -130,7 +130,7 @@ require '../include/menu-membro.php';
 
         <div class="modal-actions">
           <button type="button" class="cancel-button">Cancelar</button>
-          <button type="submit" class="submit-button">Criar Discussão</button>
+          <button type="submit" class="submit-button">Criar Chat</button>
         </div>
       </form>
     </div>

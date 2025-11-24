@@ -18,7 +18,7 @@ $ids = array_values(array_filter($ids, fn($id) => $id > 0));
 
 if (empty($ids)) {
     http_response_code(400);
-    echo json_encode(['error' => 'Selecione ao menos uma discussão.']);
+    echo json_encode(['error' => 'Selecione ao menos um chat.']);
     exit();
 }
 
@@ -43,7 +43,7 @@ try {
     if (empty($permitidas)) {
         $pdo->rollBack();
         http_response_code(403);
-        echo json_encode(['error' => 'Você não pode excluir essas discussões.']);
+        echo json_encode(['error' => 'Você não pode excluir esses chats.']);
         exit();
     }
 
@@ -58,5 +58,5 @@ try {
         $pdo->rollBack();
     }
     http_response_code(500);
-    echo json_encode(['error' => 'Erro ao excluir discussões.']);
+    echo json_encode(['error' => 'Erro ao excluir chats.']);
 }

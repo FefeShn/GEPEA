@@ -6,6 +6,8 @@
   <link href="../../site-front/css/bootstrap.min.css" rel="stylesheet">
   <script src="../../site-front/js/bootstrap.bundle.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <!-- Bootstrap Icons (necessário para ícones bi-*) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <?php
     // Ajusta prefixos relativos conforme a pasta do script atual
     $scriptDir = dirname($_SERVER['PHP_SELF'] ?? '');

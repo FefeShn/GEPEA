@@ -11,7 +11,7 @@ $paginaAtiva = $paginaAtiva ?? 'index-membro';
     <li><a href="../membro/membros-membro.php" class="<?= ($paginaAtiva === 'membros-membro') ? 'active' : '' ?>"><i class="ti-agenda mr-2"></i>Membros</a></li>
     <li><a href="../membro/biblioteca.php" class="<?= ($paginaAtiva === 'biblioteca') ? 'active' : '' ?>"><i class="ti-agenda mr-2"></i>Biblioteca</a></li>
     <li><a href="../membro/agenda.php" class="<?= ($paginaAtiva === 'agenda') ? 'active' : '' ?>"><i class="ti-agenda mr-2"></i>Agenda</a></li>
-    <li><a href="../membro/forum.php" class="<?= ($paginaAtiva === 'forum') ? 'active' : '' ?>"><i class="ti-agenda mr-2"></i>Fórum</a></li>
+    <li><a href="../membro/forum.php" class="<?= ($paginaAtiva === 'forum') ? 'active' : '' ?>"><i class="ti-agenda mr-2"></i>Bate-papo</a></li>
     <li><a href="../anonimo/suporte.php" class="<?= ($paginaAtiva === 'suporte') ? 'active' : '' ?>"><i class="ti-user mr-2"></i>Suporte</a></li>
   </ul>
 </nav>

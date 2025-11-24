@@ -45,13 +45,13 @@ require '../include/menu-admin.php';
     <div class="main-panel">
       <div class="content-wrapper">
         <div class="titulo-forum">
-          <h3><i class="fas fa-comments"></i> Fórum de Discussões</h3>
+          <h3><i class="fas fa-comments"></i> Bate-papos</h3>
           <div class="forum-actions">
             <button class="btn btn-excluir-discussao">
-              <i class="fas fa-trash"></i> Excluir Discussões
+              <i class="fas fa-trash"></i> Excluir Chats
             </button>
             <button class="btn btn-nova-discussao">
-              <i class="fas fa-plus"></i> Nova Discussão
+              <i class="fas fa-plus"></i> Novo Chat
             </button>
           </div>
         </div>
@@ -65,7 +65,7 @@ require '../include/menu-admin.php';
 
         <div class="discussoes-container" id="discussoes-container">
           <?php if (empty($discussoesUsuario)): ?>
-            <p class="text-muted">Nenhuma discussão encontrada para você. Crie uma nova usando o botão acima.</p>
+            <p class="text-muted">Nenhum chat encontrado para você. Crie um novo usando o botão acima.</p>
           <?php else: ?>
             <?php foreach ($discussoesUsuario as $discussao): ?>
               <div class="discussao-card">
@@ -90,18 +90,18 @@ require '../include/menu-admin.php';
       </div>
     </div>
 
-    <!-- Modal Nova Discussão -->
+    <!-- Modal Novo Chat -->
     <div class="modal-overlay" id="modalNovaDiscussao">
       <div class="modal-container">
         <div class="modal-header">
-          <h3><i class="fas fa-plus-circle"></i> Criar Nova Discussão</h3>
+          <h3><i class="fas fa-plus-circle"></i> Criar Novo Chat</h3>
           <button class="modal-close" type="button">&times;</button>
         </div>
         <div class="modal-body">
           <form id="formNovaDiscussao" method="POST" action="../api/discussoes_criar.php">
             <div class="form-group">
               <label for="tituloDiscussao"><i class="fas fa-heading"></i> Título*</label>
-              <input type="text" id="tituloDiscussao" name="titulo" placeholder="Dê um título claro para sua discussão" required>
+              <input type="text" id="tituloDiscussao" name="titulo" placeholder="Dê um título claro para seu chat" required>
             </div>
 
             <div class="form-group">
@@ -127,7 +127,7 @@ require '../include/menu-admin.php';
                   <?php endforeach; ?>
                 </div>
               <?php else: ?>
-                <p class="text-muted">Cadastre membros antes de criar uma discussão.</p>
+                <p class="text-muted">Cadastre membros antes de criar um chat.</p>
               <?php endif; ?>
             </div>
 
@@ -135,22 +135,22 @@ require '../include/menu-admin.php';
 
             <div class="modal-actions">
               <button type="button" class="cancel-button">Cancelar</button>
-              <button type="submit" class="submit-button">Criar Discussão</button>
+              <button type="submit" class="submit-button">Criar Chat</button>
             </div>
           </form>
         </div>
       </div>
     </div>
 
-    <!-- Modal Excluir Discussões -->
+    <!-- Modal Excluir Chats -->
     <div class="modal-overlay" id="modalExcluirDiscussao">
       <div class="modal-container confirm-modal">
         <div class="modal-header">
-          <h3><i class="fas fa-exclamation-triangle"></i> Excluir Discussões</h3>
+          <h3><i class="fas fa-exclamation-triangle"></i> Excluir Chats</h3>
           <button class="modal-close" type="button">&times;</button>
         </div>
         <div class="modal-body">
-          <p>Selecione as discussões que deseja remover. Essa ação não pode ser desfeita.</p>
+          <p>Selecione os chats que deseja remover. Essa ação não pode ser desfeita.</p>
           <div id="listaDiscussoesAdmin" class="membros-list small-text"></div>
         </div>
         <div class="modal-actions">

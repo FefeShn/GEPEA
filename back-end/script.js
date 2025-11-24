@@ -163,12 +163,18 @@ function setupPostCarousel() {
         });
 
         document.getElementById('confirmarExclusaoPubli')?.addEventListener('click', async () => {
-            const checkboxes = Array.from(document.querySelectorAll('.publi-checkbox:checked'));
-            const ids = checkboxes.map(cb => parseInt(cb.value, 10)).filter(Boolean);
-            if (ids.length === 0) { closeModal(); return; }
+            const ids = Array.from(document.querySelectorAll('.publi-checkbox:checked'))
+                .map(cb => parseInt(cb.value, 10))
+                .filter(Number.isFinite);
+            if (!ids.length) { closeModal(); return; }
+            if (!confirm('Confirmar exclusão das publicações selecionadas?')) return;
             try {
-                const resp = await fetch('./api/publicacoes_excluir.php', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ids }) });
-                const data = await resp.json();
+                const resp = await fetch('./api/publicacoes_excluir.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ids })
+                });
+                const data = await resp.json().catch(() => ({}));
                 if (!resp.ok || !data.ok) throw new Error(data.error || 'Falha ao excluir');
                 closeModal();
                 window.location.reload();
@@ -177,133 +183,8 @@ function setupPostCarousel() {
                 alert('Erro ao excluir publicações.');
             }
         });
-    };
 
-    const setupAgendaMembro = () => {
-    try {
-        const apiBase = (function(){
-            const p = window.location.pathname;
-            if (p.includes('/admin/')) return './api';
-            if (p.includes('/membro/')) return '../api';
-            return './api';
-        })();
-
-        var calendar = $('#calendar').fullCalendar({
-            header: {
-                left: 'prev,next', // sem o botão today conforme visual atual
-                center: 'title',
-                right: 'month,agendaWeek,agendaDay'
-            },
-            defaultView: 'month',
-            locale: 'pt-br',
-            editable: false,
-            selectable: false,
-            eventLimit: true,
-            height: 'auto',
-            events: apiBase + '/atividades_listar.php',
-            eventClick: function(event) {
-                abrirModalEvento(event);
-            }
-        });
-
-        const modalEvento = document.getElementById('modalEvento');
-        const modalTitulo = document.getElementById('modalEventoTitulo');
-        const eventoTitulo = document.getElementById('evento-titulo');
-        const eventoData = document.getElementById('evento-data');
-        const eventoHorario = document.getElementById('evento-horario');
-        const presencaStatus = document.getElementById('presenca-status');
-        const statusText = document.getElementById('status-text');
-        const btnPresente = document.getElementById('btn-presente');
-        const btnAusente = document.getElementById('btn-ausente');
-        const btnFechar = document.querySelector('.modal-evento-close');
-
-        async function carregarStatusPresenca(eventId) {
-            try {
-                const resp = await fetch(apiBase + '/presenca_obter.php?atividade_id=' + encodeURIComponent(eventId));
-                const data = await resp.json();
-                if (!resp.ok || !data?.ok) throw new Error(data?.error || 'Falha ao obter presença');
-                atualizarStatusPresenca(data.status);
-            } catch (err) {
-                console.error(err);
-                atualizarStatusPresenca('nao_informado');
-            }
-        }
-
-        function abrirModalEvento(evento) {
-            modalTitulo.textContent = evento.title;
-            eventoTitulo.textContent = evento.title;
-
-            const dataInicio = moment(evento.start);
-            eventoData.textContent = dataInicio.format('DD/MM/YYYY');
-
-            if (evento.start.hasTime && evento.start.hasTime()) {
-                eventoHorario.textContent = dataInicio.format('HH:mm');
-                if (evento.end) {
-                    eventoHorario.textContent += ' - ' + moment(evento.end).format('HH:mm');
-                }
-            } else {
-                eventoHorario.textContent = 'Dia todo';
-            }
-
-            atualizarStatusPresenca('nao_informado');
-            carregarStatusPresenca(evento.id);
-
-            btnPresente.onclick = async function() {
-                await registrarPresenca(evento.id, 'presente');
-            };
-            btnAusente.onclick = async function() {
-                await registrarPresenca(evento.id, 'ausente');
-            };
-
-            modalEvento.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function atualizarStatusPresenca(status) {
-            presencaStatus.className = 'presenca-status';
-            if (status === 'presente') {
-                presencaStatus.classList.add('presente');
-                statusText.textContent = 'Confirmado';
-            } else if (status === 'ausente') {
-                presencaStatus.classList.add('ausente');
-                statusText.textContent = 'Não vou comparecer';
-            } else {
-                statusText.textContent = 'Não informado';
-            }
-        }
-
-        async function registrarPresenca(eventId, status) {
-            try {
-                const resp = await fetch(apiBase + '/presenca_registrar.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ atividade_id: eventId, status })
-                });
-                const data = await resp.json();
-                if (!resp.ok || !data?.ok) throw new Error(data?.error || 'Falha ao registrar presença');
-                atualizarStatusPresenca(status);
-                alert(status === 'presente' ? 'Presença marcada com sucesso!' : 'Ausência registrada!');
-            } catch (err) {
-                console.error(err);
-                alert('Não foi possível registrar sua presença agora.');
-            }
-        }
-
-        function fecharModalEvento() {
-            modalEvento.classList.remove('active');
-            document.body.style.overflow = '';
-        }
-
-        btnFechar.addEventListener('click', fecharModalEvento);
-        modalEvento.addEventListener('click', (e) => {
-            if (e.target === modalEvento) fecharModalEvento();
-        });
-
-    } catch (error) {
-        console.error('Erro ao inicializar calendário:', error);
-        $('#calendar').php('<div class="alert alert-danger">Erro ao carregar o calendário. Recarregue a página.</div>');
-    }
-};
+    }; // fim setupExclusaoPublicacaoModal
 
     const setupAgendaAdmin = () => {
     try {
@@ -715,7 +596,7 @@ function setupExcluirDiscussoesModal() {
 
     const renderLista = (discussoes) => {
         if (!Array.isArray(discussoes) || discussoes.length === 0) {
-            listaDiscussoes.innerHTML = '<p class="small-text">Nenhuma discussão disponível.</p>';
+            listaDiscussoes.innerHTML = '<p class="small-text">Nenhum chat disponível.</p>';
             return;
         }
         const html = discussoes.map(disc => {
@@ -753,7 +634,7 @@ function setupExcluirDiscussoesModal() {
     document.getElementById('confirmarExclusaoDiscussao')?.addEventListener('click', async () => {
         const ids = Array.from(document.querySelectorAll('.checkbox-discussao:checked')).map(cb => parseInt(cb.value, 10)).filter(Boolean);
         if (!ids.length) {
-            alert('Selecione ao menos uma discussão.');
+            alert('Selecione ao menos um chat.');
             return;
         }
         if (!confirm('Confirma a exclusão das discussões selecionadas?')) return;
@@ -769,183 +650,85 @@ function setupExcluirDiscussoesModal() {
             window.location.reload();
         } catch (err) {
             console.error(err);
-            alert('Erro ao excluir discussões.');
+            alert('Erro ao excluir chats.');
         }
     });
 }
 function setupChat() {
-        const btnEnviar = document.querySelector('.btn-enviar');
-        const chatInput = document.querySelector('.chat-input textarea');
-        const chatMessages = document.querySelector('.chat-messages');
-        const replyContainer = document.querySelector('.reply-container');
-        const cancelReplyBtn = document.querySelector('.cancel-reply');
-        let replyingTo = null;
-
-        const isAdmin = window.location.pathname.includes('-admin.php');
-        const currentUser = isAdmin ? {
-            name: "Fernanda Sehn",
-            role: "bolsista",
-            avatar: "../imagens/computer.jpg"
-        } : {
-            name: "Dr. Daniel Santana",
-            role: "vice-coordenador",
-            avatar: "../imagens/estrela.jpg"
-        };
-
-        function setupMessageActions() {
-            document.querySelectorAll('.reply-btn').forEach(btn => {
-                btn.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    const message = this.closest('.message');
-                    const sender = message.querySelector('.message-sender').textContent;
-                    const text = message.querySelector('.message-text').textContent;
-                    
-                    replyingTo = {
-                        sender: sender,
-                        text: text,
-                        messageElement: message
-                    };
-                    
-                    replyContainer.style.display = 'block';
-                    replyContainer.querySelector('.reply-text').textContent = `${sender}: ${text}`;
-                });
-            });
-
-            document.querySelectorAll('.delete-btn').forEach(btn => {
-                btn.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    const message = this.closest('.message');
-                    
-                    if (confirm('Tem certeza que deseja excluir esta mensagem?')) {
-                        message.style.opacity = '0.5';
-                        message.style.pointerEvents = 'none';
-                        alert('Mensagem excluída com sucesso!');
-                    }
-                });
-            });
-
-            document.querySelectorAll('.admin-dropdown').forEach(dropdown => {
-                const btn = dropdown.querySelector('.admin-btn');
-                const content = dropdown.querySelector('.admin-dropdown-content');
-                
-                btn.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    document.querySelectorAll('.admin-dropdown-content').forEach(d => {
-                        if (d !== content) d.style.display = 'none';
-                    });
-                    content.style.display = content.style.display === 'block' ? 'none' : 'block';
-                });
-
-                const replyBtn = dropdown.querySelector('.reply-message-btn');
-                if (replyBtn) {
-                    replyBtn.addEventListener('click', function(e) {
-                        e.stopPropagation();
-                        const message = this.closest('.message');
-                        const sender = message.querySelector('.message-sender').textContent;
-                        const text = message.querySelector('.message-text').textContent;
-                        
-                        replyingTo = {
-                            sender: sender,
-                            text: text,
-                            messageElement: message
-                        };
-                        
-                        replyContainer.style.display = 'block';
-                        replyContainer.querySelector('.reply-text').textContent = `${sender}: ${text}`;
-                        
-                        content.style.display = 'none';
-                    });
-                }
-
-                const deleteBtn = dropdown.querySelector('.delete-message-btn');
-                if (deleteBtn) {
-                    deleteBtn.addEventListener('click', function(e) {
-                        e.stopPropagation();
-                        const message = this.closest('.message');
-                        if (confirm('Simulação: Apagar esta mensagem?')) {
-                            message.style.opacity = '0.5';
-                            message.style.backgroundColor = '#ffecec';
-                            alert('Simulação: Mensagem marcada para exclusão!');
-                        }
-                        content.style.display = 'none';
-                    });
-                }
-            });
-
-            document.addEventListener('click', function() {
-                document.querySelectorAll('.admin-dropdown-content').forEach(content => {
-                    content.style.display = 'none';
-                });
-            });
-        }
-
-        if (cancelReplyBtn) {
-            cancelReplyBtn.addEventListener('click', function() {
-                replyContainer.style.display = 'none';
-                replyingTo = null;
-            });
-        }
-
-        if (btnEnviar && chatInput) {
-            btnEnviar.addEventListener('click', function() {
-                const messageText = chatInput.value.trim();
-                if (messageText) {
-                    const newMessage = document.createElement('div');
-                    newMessage.className = 'message message-self';
-                    
-                    let replyHtml = '';
-                    if (replyingTo) {
-                        replyHtml = `<div class="message-reply">
-                            <span class="reply-label">Respondendo a ${replyingTo.sender}</span>
-                            <span class="reply-content">${replyingTo.text}</span>
-                        </div>`;
-                        
-                        replyContainer.style.display = 'none';
-                        replyingTo = null;
-                    }
-                    
-                    newMessage.innerHTML = `
-                        <div class="message-header">
-                            <img src="${currentUser.avatar}" alt="${currentUser.name}" class="message-avatar">
-                            <div class="message-sender ${currentUser.role}">Você</div>
-                            <div class="message-actions">
-                                <button class="reply-btn" title="Responder"><i class="fas fa-reply"></i></button>
-                                <button class="delete-btn" title="Excluir"><i class="fas fa-trash"></i></button>
-                            </div>
-                        </div>
-                        ${replyHtml}
-                        <div class="message-text">${messageText}</div>
-                        <div class="message-time">${new Date().toLocaleString('pt-BR')}</div>
-                    `;
-                    
-                    chatMessages.appendChild(newMessage);
-                    chatInput.value = '';
-                    newMessage.scrollIntoView({ behavior: 'smooth' });
-                    setupMessageActions();
-                }
-            });
-            
-            chatInput.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    btnEnviar.click();
-                }
-            });
-        }
-
-        const btnEmoji = document.querySelector('.btn-emoji');
-        if (btnEmoji) {
-            btnEmoji.addEventListener('click', function() {
-                alert('simulação: vai abrir um seletor de emojis');
-            });
-        }
-        
-        if (chatMessages) {
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-        
-        setupMessageActions();
-    }
+  const btnEnviar = document.querySelector('.btn-enviar');
+  const chatInput = document.querySelector('.chat-input textarea');
+  const chatMessages = document.querySelector('.chat-messages');
+  const replyContainer = document.querySelector('.reply-container');
+  const cancelReplyBtn = document.querySelector('.cancel-reply');
+  const emojiBtn = document.querySelector('.btn-emoji');
+  if (!btnEnviar || !chatInput || !chatMessages) return;
+  const urlParams = new URLSearchParams(window.location.search);
+  const chatId = parseInt(urlParams.get('id') || '0', 10);
+  if (!chatId) return;
+  let parentId = null;
+  let lastId = 0;
+  let emojiPicker = document.querySelector('.emoji-picker');
+  if (!emojiPicker) {
+    emojiPicker = document.createElement('div');
+    emojiPicker.className = 'emoji-picker';
+    emojiPicker.style.display = 'none';
+    chatMessages.parentElement?.appendChild(emojiPicker);
+  }
+  const EMOJIS = ['😀','😊','😂','❤️','🔥','👍','🎉','🙏','😢','👏','🤔'];
+  emojiPicker.innerHTML = EMOJIS.map(e => `<button type="button" class="emoji-item" data-emoji="${e}" aria-label="${e}">${e}</button>`).join('');
+  emojiPicker.addEventListener('click', e => {
+    const btn = e.target.closest('.emoji-item');
+    if (!btn) return;
+    chatInput.value += btn.getAttribute('data-emoji');
+    chatInput.focus();
+  });
+  function esc(str){
+    return (str||'').replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c];});
+  }
+  function msgHTML(m){
+    const deleted = m.is_deleted ? ' message-deleted' : '';
+    const mainText = m.message === null ? '<span class="removed">Mensagem removida</span>' : esc(m.message);
+    const parent = m.parent && m.parent.message !== null ? `<div class="message-parent">↪ <strong>${esc(m.parent.user_name)}:</strong> ${esc(m.parent.message)}</div>` : '';
+    const adminBtns = m.can_delete ? `<button class="msg-delete" data-id="${m.id}" title="Excluir">✕</button>${m.is_deleted?`<button class=\"msg-restore\" data-id=\"${m.id}\" title=\"Restaurar\">↺</button>`:''}` : '';
+    return `<div class="message-item${deleted}" data-id="${m.id}">
+      <div class="message-header">
+        <span class="message-author">${esc(m.user_name)}</span>
+        <span class="message-time">${esc(m.created_at)}</span>
+        <div class="message-actions"><button class="msg-reply" data-id="${m.id}" title="Responder">↪</button>${adminBtns}</div>
+      </div>
+      ${parent}
+      <div class="message-body">${mainText}</div>
+    </div>`;
+  }
+  function append(list){
+    const frag = document.createDocumentFragment();
+    list.forEach(m=>{frag.appendChild(document.createRange().createContextualFragment(msgHTML(m))); lastId=Math.max(lastId,m.id);});
+    chatMessages.appendChild(frag);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+  async function fetchMessages(){
+    try { const resp = await fetch(`../chat/fetch.php?chat_id=${chatId}&since_id=${lastId}`); if(!resp.ok) return; const data = await resp.json(); if(Array.isArray(data.messages)&&data.messages.length) append(data.messages); } catch(e){}
+  }
+  async function sendMessage(){
+    const text = chatInput.value.trim(); if(!text) return; const payload={chat_id:chatId,message:text}; if(parentId) payload.parent_id=parentId; try{ const resp=await fetch('../chat/send.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}); const data=await resp.json(); if(resp.ok&&data.message) append([data.message]); chatInput.value=''; parentId=null; hideReply(); }catch(e){ alert('Erro ao enviar mensagem.'); }
+  }
+  async function deleteMessage(id, restore=false){
+    try { const resp=await fetch('../chat/delete.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message_id:id,restore:restore?1:0})}); if(resp.ok) fetchMessages(); } catch(e){ alert('Falha na exclusão.'); }
+  }
+  function showReply(el){ parentId=parseInt(el.getAttribute('data-id'),10); if(replyContainer){ const body=el.querySelector('.message-body'); replyContainer.style.display='block'; replyContainer.querySelector('.reply-text').textContent= body?body.textContent.slice(0,120):''; }}
+  function hideReply(){ if(replyContainer){ replyContainer.style.display='none'; replyContainer.querySelector('.reply-text').textContent=''; }}
+  cancelReplyBtn?.addEventListener('click', hideReply);
+  btnEnviar.addEventListener('click', sendMessage);
+  chatInput.addEventListener('keydown', e=>{ if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); sendMessage(); }});
+  emojiBtn?.addEventListener('click', ()=>{ if(!emojiPicker) return; emojiPicker.style.display = emojiPicker.style.display==='block'?'none':'block'; });
+  chatMessages.addEventListener('click', e=>{
+    const replyBtn=e.target.closest('.msg-reply'); if(replyBtn){ showReply(replyBtn.closest('.message-item')); return; }
+    const delBtn=e.target.closest('.msg-delete'); if(delBtn && confirm('Excluir mensagem?')){ deleteMessage(parseInt(delBtn.dataset.id,10)); return; }
+    const restoreBtn=e.target.closest('.msg-restore'); if(restoreBtn && confirm('Restaurar mensagem?')){ deleteMessage(parseInt(restoreBtn.dataset.id,10), true); return; }
+  });
+  fetchMessages();
+  setInterval(fetchMessages,3000);
+}
 
 const setupBiografiaPage = () => {
     const editButton = document.querySelector('.edit-button');
@@ -958,203 +741,31 @@ const setupBiografiaPage = () => {
         editButton.addEventListener('click', async () => {
             const isEditing = biographyText.hasAttribute('contenteditable');
             if (isEditing) {
-                // Salvar de verdade
+                // Salvar conteúdo editado
                 const idInput = document.querySelector('#formEditarContato input[name="id_usuario"], #formEditarFoto input[name="id_usuario"]');
-                const idUsuario = idInput?.value;
+                const idUsuario = idInput?.value || '';
                 const plainText = biographyText.innerText.trim();
                 try {
                     const resp = await fetch('../include/atualizar_biografia.php', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                        body: `id_usuario=${encodeURIComponent(idUsuario || '')}&bio=${encodeURIComponent(plainText)}`
+                        body: `id_usuario=${encodeURIComponent(idUsuario)}&bio=${encodeURIComponent(plainText)}`
                     });
-                    const data = await resp.json();
+                    const data = await resp.json().catch(() => ({}));
                     if (!resp.ok || !data.ok) throw new Error(data.msg || 'Erro ao salvar biografia');
-                    // Modo visual volta ao normal
                     biographyText.removeAttribute('contenteditable');
-                    editButton.innerHTML = '<i class="ti-pencil"></i> Editar biografia';
-                    biographyText.style.padding = '';
-                    biographyText.style.border = '';
-                    biographyText.style.borderRadius = '';
-                    biographyText.style.minHeight = '';
                 } catch (err) {
+                    console.error(err);
                     alert(err.message || 'Erro ao salvar biografia');
                 }
-            } else {
-                biographyText.setAttribute('contenteditable', 'true');
-                biographyText.focus();
-                editButton.innerHTML = '<i class="ti-check"></i> Salvar';
-                biographyText.style.padding = '10px';
-                biographyText.style.border = '1px dashed #ccc';
-                biographyText.style.borderRadius = '4px';
-                biographyText.style.minHeight = '100px';
+                return; // encerra após salvar
             }
-        });
-    }
-    
-    // Se a página tiver modal de foto, evitamos a simulação aqui
-    if (changePhotoButton && profileImage && !document.getElementById('modalFoto')) {
-        changePhotoButton.addEventListener('click', () => {
-            const fileInput = document.createElement('input');
-            fileInput.type = 'file';
-            fileInput.accept = 'image/*';
-            
-            fileInput.addEventListener('change', (e) => {
-                const file = e.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    
-                    reader.onload = (event) => {
-                        profileImage.src = event.target.result;
-                        alert('Foto de perfil atualizada com sucesso! (Simulação)');
-                    };
-                    
-                    reader.readAsDataURL(file);
-                }
-            });
-            
-            fileInput.click();
+            // Entrar em modo edição
+            biographyText.setAttribute('contenteditable','true');
+            biographyText.focus();
         });
     }
 };
-
-// Modais e submits reais da página de perfil (foto e contatos)
-function setupPerfilModals() {
-    const modalFoto = document.getElementById('modalFoto');
-    const modalContato = document.getElementById('modalContato');
-    const btnFoto = document.querySelector('.change-photo-button');
-    const btnContatos = document.querySelector('.edit-contacts-button');
-
-    const open = (modal) => { if (modal) { modal.classList.add('active'); document.body.style.overflow = 'hidden'; } };
-    const close = (modal) => { if (modal) { modal.classList.remove('active'); document.body.style.overflow = ''; } };
-
-    // Foto
-    btnFoto?.addEventListener('click', (e) => { e.preventDefault(); open(modalFoto); });
-    modalFoto?.querySelector('.modal-close')?.addEventListener('click', () => close(modalFoto));
-    modalFoto?.querySelector('.close-modal')?.addEventListener('click', () => close(modalFoto));
-    modalFoto?.addEventListener('click', (e) => { if (e.target === modalFoto) close(modalFoto); });
-
-    // Contatos
-    btnContatos?.addEventListener('click', (e) => { e.preventDefault(); open(modalContato); });
-    modalContato?.querySelector('.modal-close')?.addEventListener('click', () => close(modalContato));
-    modalContato?.querySelector('.close-modal')?.addEventListener('click', () => close(modalContato));
-    modalContato?.addEventListener('click', (e) => { if (e.target === modalContato) close(modalContato); });
-
-    // Submit contatos
-    document.getElementById('salvarContato')?.addEventListener('click', async () => {
-        const form = document.getElementById('formEditarContato');
-        if (!form) return;
-        const fd = new FormData(form);
-        try {
-            const resp = await fetch('../include/atualizar_contato.php', { method: 'POST', body: fd });
-            const data = await resp.json();
-            if (!resp.ok || !data.ok) throw new Error(data.msg || 'Erro ao salvar');
-
-            // Atualiza DOM
-            const email = data.email || '';
-            const lattes = data.lattes || '';
-            const contacts = document.querySelector('.member-contacts');
-            const editBtn = document.querySelector('.edit-contacts-button');
-
-            let emailLink = document.querySelector('.email-link');
-            if (emailLink) {
-                emailLink.setAttribute('href', 'mailto:' + email);
-                // texto após o ícone
-                const textNode = Array.from(emailLink.childNodes).find(n => n.nodeType === Node.TEXT_NODE);
-                if (textNode) textNode.nodeValue = ' ' + email; else emailLink.appendChild(document.createTextNode(' ' + email));
-            } else if (email && contacts && editBtn) {
-                const a = document.createElement('a');
-                a.className = 'email-link';
-                a.href = 'mailto:' + email;
-                a.innerHTML = '<img src="../imagens/email-icon.png" alt="Email" class="contact-icon"> ' + email;
-                contacts.insertBefore(a, editBtn);
-            }
-
-            let lattesLink = document.querySelector('.lattes-link');
-            if (lattesLink) {
-                if (lattes) { lattesLink.setAttribute('href', lattes); }
-                else { lattesLink.remove(); }
-            } else if (lattes && contacts && editBtn) {
-                const a = document.createElement('a');
-                a.className = 'lattes-link';
-                a.href = lattes; a.target = '_blank';
-                a.innerHTML = '<img src="../imagens/lattes-icon.png" alt="Currículo Lattes" class="contact-icon"> Currículo Lattes';
-                contacts.insertBefore(a, editBtn);
-            }
-
-            close(modalContato);
-        } catch (err) {
-            alert(err.message || 'Erro ao salvar');
-        }
-    });
-
-    // Submit foto
-    document.getElementById('salvarFoto')?.addEventListener('click', async () => {
-        const form = document.getElementById('formEditarFoto');
-        if (!form) return;
-        const fd = new FormData(form);
-        try {
-            const resp = await fetch('../include/atualizar_foto.php', { method: 'POST', body: fd });
-            const data = await resp.json();
-            if (!resp.ok || !data.ok) throw new Error(data.msg || 'Erro ao salvar');
-            const img = document.querySelector('.profile-image');
-            if (img && data.foto) { img.setAttribute('src', data.foto + '?t=' + Date.now()); }
-            // Atualiza avatar da navbar
-            document.querySelectorAll('.profile-img').forEach(el => {
-                const base = data.foto || el.getAttribute('src');
-                el.setAttribute('src', base + '?t=' + Date.now());
-            });
-            close(modalFoto);
-        } catch (err) {
-            alert(err.message || 'Erro ao salvar');
-        }
-    });
-}
-
-    const setupBiografiaEdicao = () => {
-        const editButton = document.querySelector('.edit-text');
-        const sobreTexto = document.querySelector('.sobre-texto');
-        
-        if (!editButton || !sobreTexto) return;
-
-        let originalContent = '';
-
-        editButton.addEventListener('click', () => {
-            originalContent = sobreTexto.innerHTML;
-            
-            sobreTexto.classList.add('editing');
-            
-            const elementosEditaveis = sobreTexto.querySelectorAll('h4, p, li');
-            elementosEditaveis.forEach(el => {
-                el.setAttribute('contenteditable', 'true');
-            });
-            
-            const buttonsDiv = document.createElement('div');
-            buttonsDiv.className = 'edit-buttons';
-            buttonsDiv.innerHTML = `
-                <button class="btn-salvar">Salvar Alterações</button>
-                <button class="btn-cancelar">Cancelar</button>
-            `;
-            
-            sobreTexto.appendChild(buttonsDiv);
-            
-            buttonsDiv.querySelector('.btn-salvar').addEventListener('click', () => {
-                sobreTexto.classList.remove('editing');
-                elementosEditaveis.forEach(el => {
-                    el.removeAttribute('contenteditable');
-                });
-                
-                buttonsDiv.remove();
-                alert('Alterações salvas com sucesso! (Simulação)');
-            });
-            
-            buttonsDiv.querySelector('.btn-cancelar').addEventListener('click', () => {
-                sobreTexto.innerHTML = originalContent;
-                sobreTexto.classList.remove('editing');
-                setupBiografiaEdicao();
-            });
-        });
-    };
 
     const setupEsqueceuSenhaModal = () => {};
 

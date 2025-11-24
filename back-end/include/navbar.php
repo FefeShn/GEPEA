@@ -45,14 +45,7 @@ $nomeUsuario = $isLoggedIn ? ($_SESSION['nome_user'] ?? 'Usuário') : 'Visitante
     <p class="titulo-logo">GEPEA</p>
   </div>
   <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
-    <ul class="navbar-nav mr-lg-2">
-      <li class="nav-item nav-search d-none d-lg-block">
-        <div class="input-group busca-box">
-          <div class="input-group-prepend" id="navbar-search-icon"></div>
-          <input type="text" class="form-control busca" id="navbar-search-input" placeholder="Busca" aria-label="search" aria-describedby="search">
-        </div>
-      </li>
-    </ul>
+    
 
     <ul class="navbar-nav navbar-nav-right">
       <li class="nav-item nav-profile dropdown">

@@ -18,5 +18,5 @@ try {
     echo json_encode($discussoes);
 } catch (Throwable $e) {
     http_response_code(500);
-    echo json_encode(['error' => 'Erro ao listar discussões.']);
+    echo json_encode(['error' => 'Erro ao listar chats.']);
 }

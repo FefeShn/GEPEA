@@ -48,3 +48,13 @@ function gepea_buscar_discussao_para_usuario(int $discussaoId, int $usuarioId, ?
 
     return [$dados, $participantes];
 }
+
+function gepea_usuario_participa_discussao(int $discussaoId, int $usuarioId, ?PDO $pdo = null): bool {
+    if ($discussaoId <= 0 || $usuarioId <= 0) {
+        return false;
+    }
+    $pdo = $pdo ?: getConexao();
+    $stmt = $pdo->prepare('SELECT 1 FROM discussao_participante WHERE id_discussao = ? AND id_usuario = ? LIMIT 1');
+    $stmt->execute([$discussaoId, $usuarioId]);
+    return (bool)$stmt->fetchColumn();
+}
