@@ -654,6 +654,126 @@ function setupExcluirDiscussoesModal() {
         }
     });
 }
+// ==== Função de Agenda para Membro (faltava e causava erro) ====
+function setupAgendaMembro(){
+    try {
+        const calendarEl = document.getElementById('calendar');
+        if(!calendarEl) return;
+        // Prefixo de API diferente para páginas de membro
+        const apiPrefix = window.location.pathname.includes('/admin/') ? './api/' : '../api/';
+        $('#calendar').fullCalendar({
+            locale: 'pt-br',
+            height: 'auto',
+            timezone: 'local',
+            header: { left: 'prev,next today', center: 'title', right: 'month,agendaWeek,agendaDay' },
+            events: apiPrefix + 'atividades_listar.php',
+            eventClick: function(calEvent){
+                const modal = document.getElementById('modalEvento');
+                if(!modal) return;
+                modal.classList.add('active');
+                document.body.classList.add('modal-open');
+                document.body.style.overflow = 'hidden';
+                const tituloSpan = document.getElementById('evento-titulo');
+                const dataSpan = document.getElementById('evento-data');
+                const horarioSpan = document.getElementById('evento-horario');
+                if(tituloSpan) tituloSpan.textContent = calEvent.title || 'Evento';
+                if(dataSpan) dataSpan.textContent = moment(calEvent.start).format('DD/MM/YYYY');
+                if(horarioSpan) horarioSpan.textContent = moment(calEvent.start).format('HH:mm');
+                const atividadeId = calEvent.id;
+                // Carrega status de presença
+                fetch(apiPrefix + 'presenca_obter.php?atividade_id=' + atividadeId)
+                    .then(r => r.ok ? r.json() : null)
+                    .then(data => {
+                        if(data && data.ok){
+                            const st = document.getElementById('status-text');
+                            if(st) st.textContent = data.status === 'presente' ? 'Presente' : (data.status === 'ausente' ? 'Ausente' : 'Não informado');
+                        }
+                    }).catch(()=>{});
+                // Ações de presença
+                const btnPresente = document.getElementById('btn-presente');
+                const btnAusente = document.getElementById('btn-ausente');
+                const registrar = (status) => {
+                    fetch(apiPrefix + 'presenca_registrar.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({atividade_id: atividadeId, status})})
+                        .then(r => r.json())
+                        .then(data => {
+                            if(data && data.ok){
+                                const st = document.getElementById('status-text');
+                                if(st) st.textContent = status === 'presente' ? 'Presente' : 'Ausente';
+                            } else { alert('Falha ao registrar presença.'); }
+                        })
+                        .catch(()=> alert('Erro ao registrar presença.'));
+                };
+                btnPresente && (btnPresente.onclick = () => registrar('presente'));
+                btnAusente && (btnAusente.onclick = () => registrar('ausente'));
+                // Fechar modal
+                modal.querySelector('.modal-evento-close')?.addEventListener('click', closeModal);
+                function closeModal(){
+                    modal.classList.remove('active');
+                    document.body.classList.remove('modal-open');
+                    document.body.style.overflow = '';
+                }
+                modal.addEventListener('click', (e)=>{ if(e.target === modal) closeModal(); });
+            }
+        });
+    } catch(err){ console.error('Erro agenda membro', err); }
+}
+
+// ===== Stubs seguros (evitam ReferenceError sem alterar funcionalidades existentes) =====
+if(typeof setupCadastroModal === 'undefined') window.setupCadastroModal = function(){};
+if(typeof setupExclusaoModal === 'undefined') window.setupExclusaoModal = function(){
+    const btn = document.querySelector('.delete-member-button');
+    const overlay = document.getElementById('modalExcluirMembro');
+    if(!btn || !overlay) return;
+    const cancelar = document.getElementById('cancelarExclusao');
+    const confirmar = document.getElementById('confirmarExclusao');
+    btn.addEventListener('click', (e)=>{ e.preventDefault(); overlay.classList.add('active'); document.body.style.overflow='hidden'; });
+    function fechar(){ overlay.classList.remove('active'); document.body.style.overflow=''; }
+    cancelar?.addEventListener('click', fechar);
+    overlay.addEventListener('click', e=>{ if(e.target === overlay) fechar(); });
+    confirmar?.addEventListener('click', async ()=>{
+        const ids = Array.from(document.querySelectorAll('.member-checkbox:checked')).map(cb=>parseInt(cb.value,10)).filter(Boolean);
+        if(!ids.length){ fechar(); return; }
+        try {
+            const resp = await fetch('./api/membros_excluir.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ids})});
+            const data = await resp.json();
+            if(!resp.ok || !data.ok) alert(data.error || 'Falha ao excluir');
+            fechar();
+            window.location.reload();
+        } catch { alert('Erro na exclusão'); }
+    });
+};
+if(typeof setupSupportModal === 'undefined') window.setupSupportModal = function(){};
+if(typeof setupUploadModal === 'undefined') window.setupUploadModal = function(){
+    const btn = document.getElementById('openUploadModal');
+    const overlay = document.getElementById('modalUpload');
+    if(!btn || !overlay) return;
+    const closeButtons = overlay.querySelectorAll('.close-modal, .cancel-button');
+    const form = document.getElementById('uploadForm');
+    const tipoRadios = overlay.querySelectorAll('input[name="tipo"]');
+    const grupoArquivo = overlay.querySelector('.group-arquivo');
+    const grupoLink = overlay.querySelector('.group-link');
+    btn.addEventListener('click', ()=>{ overlay.classList.add('active'); document.body.style.overflow='hidden'; });
+    function fechar(){ overlay.classList.remove('active'); document.body.style.overflow=''; }
+    closeButtons.forEach(b=> b.addEventListener('click', fechar));
+    overlay.addEventListener('click', e=>{ if(e.target === overlay) fechar(); });
+    tipoRadios.forEach(r=> r.addEventListener('change', ()=>{
+        const val = document.querySelector('input[name="tipo"]:checked')?.value || 'arquivo';
+        if(val === 'link'){ grupoArquivo.style.display='none'; grupoLink.style.display='block'; } else { grupoArquivo.style.display='block'; grupoLink.style.display='none'; }
+    }));
+    form?.addEventListener('submit', async e=>{
+        e.preventDefault();
+        const fd = new FormData(form);
+        try {
+            const resp = await fetch('./api/arquivos_upload.php',{method:'POST', body: fd});
+            const data = await resp.json();
+            if(!resp.ok || !data.ok){ alert(data.error || 'Falha no upload'); return; }
+            fechar();
+            window.location.reload();
+        } catch { alert('Erro no upload'); }
+    });
+};
+if(typeof setupBiografiaEdicao === 'undefined') window.setupBiografiaEdicao = function(){};
+if(typeof setupPerfilModals === 'undefined') window.setupPerfilModals = function(){};
 function setupChat() {
   const btnEnviar = document.querySelector('.btn-enviar');
   const chatInput = document.querySelector('.chat-input textarea');
