@@ -77,62 +77,62 @@ require '../include/menu-admin.php';
       </div>
     </main>
     <!-- Modal de Upload -->
-<div class="modal-overlay" id="modalUpload">
-  <div class="modal-container">
-    <div class="modal-header">
-      <h3>Upload de Arquivo</h3>
-      <button class="close-modal">&times;</button>
+    <div class="modal-overlay" id="modalUpload">
+      <div class="modal-container">
+        <div class="modal-header">
+          <h3>Upload de Arquivo</h3>
+          <button class="close-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <form id="uploadForm" enctype="multipart/form-data">
+            <div class="form-group">
+              <label>Tipo de envio</label>
+              <div class="upload-type-row">
+                <label class="tipo-label"><input type="radio" name="tipo" value="arquivo" checked> Arquivo</label>
+                <label class="tipo-label"><input type="radio" name="tipo" value="link"> Link</label>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="fileTitle">Título do Arquivo</label>
+              <input type="text" id="fileTitle" name="titulo" placeholder="Ex: Fighting Words - Patricia Hill Collins" required>
+            </div>
+            <div class="form-group">
+              <label for="fileDescription">Descrição</label>
+              <textarea id="fileDescription" name="descricao" rows="3" placeholder="Descreva o conteúdo do arquivo..."></textarea>
+            </div>
+            <div class="form-group group-arquivo">
+              <label for="fileUpload">Selecione o arquivo</label>
+              <input type="file" id="fileUpload" name="arquivo" accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.txt,.jpg,.jpeg,.png,.gif,.webp,.csv,.zip,.rar,.7z" required>
+            </div>
+            <div class="form-group group-link" style="display:none;">
+              <label for="linkUrl">Cole o link</label>
+              <input type="url" id="linkUrl" name="link_url" placeholder="https://...">
+            </div>
+            <div class="modal-actions">
+              <button type="button" class="cancel-button">Cancelar</button>
+              <button type="submit" class="submit-button">Enviar Arquivo</button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
-    <div class="modal-body">
-      <form id="uploadForm" enctype="multipart/form-data">
-        <div class="form-group">
-          <label>Tipo de envio</label>
-          <div class="upload-type-row">
-            <label class="tipo-label"><input type="radio" name="tipo" value="arquivo" checked> Arquivo</label>
-            <label class="tipo-label"><input type="radio" name="tipo" value="link"> Link</label>
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="fileTitle">Título do Arquivo</label>
-          <input type="text" id="fileTitle" name="titulo" placeholder="Ex: Fighting Words - Patricia Hill Collins" required>
-        </div>
-        <div class="form-group">
-          <label for="fileDescription">Descrição</label>
-          <textarea id="fileDescription" name="descricao" rows="3" placeholder="Descreva o conteúdo do arquivo..."></textarea>
-        </div>
-        <div class="form-group group-arquivo">
-          <label for="fileUpload">Selecione o arquivo</label>
-          <input type="file" id="fileUpload" name="arquivo" accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.txt,.jpg,.jpeg,.png,.gif,.webp,.csv,.zip,.rar,.7z" required>
-        </div>
-        <div class="form-group group-link" style="display:none;">
-          <label for="linkUrl">Cole o link</label>
-          <input type="url" id="linkUrl" name="link_url" placeholder="https://...">
-        </div>
-        <div class="modal-actions">
-          <button type="button" class="cancel-button">Cancelar</button>
-          <button type="submit" class="submit-button">Enviar Arquivo</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
 
 <!-- Modal de Confirmação de Exclusão -->
     <div class="modal-overlay" id="modalExcluirMembro" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modalExcluirTitle">
-    <div class="modal-container confirm-modal">
-        <div class="modal-header">
-            <h3 id="modalExcluirTitle">Confirmar Exclusão</h3>
-            <button class="modal-close" aria-label="Fechar modal">&times;</button>
-        </div>
-        <div class="modal-body">
-            <p>Tem certeza que deseja excluir o(s) arquivo(s) selecionado(s)? Esta ação não pode ser desfeita.</p>
-        </div>
-        <div class="modal-actions">
-            <button class="btn btn-secondary" id="cancelarExclusao">Não, cancelar</button>
-            <button class="btn btn-danger" id="confirmarExclusao">Sim, excluir</button>
-        </div>
+      <div class="modal-container confirm-modal">
+          <div class="modal-header">
+              <h3 id="modalExcluirTitle">Confirmar Exclusão</h3>
+              <button class="modal-close" aria-label="Fechar modal">&times;</button>
+          </div>
+          <div class="modal-body">
+              <p>Tem certeza que deseja excluir o(s) arquivo(s) selecionado(s)? Esta ação não pode ser desfeita.</p>
+          </div>
+          <div class="modal-actions">
+              <button class="btn btn-secondary" id="cancelarExclusao">Não, cancelar</button>
+              <button class="btn btn-danger" id="confirmarExclusao">Sim, excluir</button>
+          </div>
+      </div>
     </div>
-</div>
     <!-- FOOTER-->
      <?php
       include"../include/footer.php";

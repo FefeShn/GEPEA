@@ -95,6 +95,5 @@ require '../include/menu-admin.php';
 </div>
 <script>window.CHAT_USER_ID = <?php echo (int)($_SESSION['id_usuario'] ?? 0); ?>;</script>
 <script src="../script.js"></script>
-<script src="../chat/chat.js"></script>
 </body>
 </html>

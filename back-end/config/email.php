@@ -14,12 +14,14 @@ const MAIL_FROM_EMAIL = 'seuemail@gmail.com';
 const MAIL_FROM_NAME  = 'GEPEA';
 const SUPPORT_INBOX   = 'seuemail@gmail.com';
 
-// Diretório para modo 'file'
-const MAIL_OUTBOX_DIR = __DIR__ . '/../arquivos/email_outbox';
+// Diretórios para modo 'file' (segregação por categoria)
+const MAIL_OUTBOX_DIR = __DIR__ . '/../arquivos/email_outbox'; // legado / geral
+const MAIL_OUTBOX_DIR_SUPORTE = __DIR__ . '/../arquivos/email_outbox/suporte';
+const MAIL_OUTBOX_DIR_CADASTRO = __DIR__ . '/../arquivos/email_outbox/cadastro';
 
 // Carrega autoload (PHPMailer se instalado)
 @include_once __DIR__ . '/../../vendor/autoload.php';
-function gepea_send_mail(string $toEmail, string $toName, string $subject, string $htmlBody, string $textBody = ''): bool {
+function gepea_send_mail(string $toEmail, string $toName, string $subject, string $htmlBody, string $textBody = '', string $category = 'cadastro'): bool {
     if (MAIL_DRIVER === 'smtp') {
         if (class_exists('PHPMailer\\PHPMailer\\PHPMailer')) {
             try {
@@ -44,11 +46,22 @@ function gepea_send_mail(string $toEmail, string $toName, string $subject, strin
             } catch (Throwable $e) { /* se falhar, usa file */ }
         }
     }
-    // Driver file: salva .eml
-    if (!is_dir(MAIL_OUTBOX_DIR)) {
-        @mkdir(MAIL_OUTBOX_DIR, 0775, true);
+    // Seleciona diretório conforme categoria
+    $category = strtolower(trim($category));
+    switch ($category) {
+        case 'suporte':
+            $outboxDir = MAIL_OUTBOX_DIR_SUPORTE;
+            break;
+        case 'cadastro':
+            $outboxDir = MAIL_OUTBOX_DIR_CADASTRO;
+            break;
+        default:
+            $outboxDir = MAIL_OUTBOX_DIR; // fallback / desconhecida
     }
-    $fn = MAIL_OUTBOX_DIR . '/' . date('Ymd_His') . '_' . preg_replace('/[^a-z0-9_.-]+/i', '_', $toEmail) . '.eml';
+    if (!is_dir($outboxDir)) {
+        @mkdir($outboxDir, 0775, true);
+    }
+    $fn = $outboxDir . '/' . date('Ymd_His') . '_' . preg_replace('/[^a-z0-9_.-]+/i', '_', $toEmail) . '.eml';
     $headers = [
         'From: ' . MAIL_FROM_NAME . ' <' . MAIL_FROM_EMAIL . '>',
         'To: ' . ($toName ? "$toName <$toEmail>" : $toEmail),
@@ -58,10 +71,9 @@ function gepea_send_mail(string $toEmail, string $toName, string $subject, strin
     $content = implode("\r\n", $headers) . "\r\n\r\n" . $htmlBody;
     $ok = (bool)file_put_contents($fn, $content);
     if ($ok) {
-        // Marca último e-mail
-        @file_put_contents(MAIL_OUTBOX_DIR . '/LATEST.txt', basename($fn));
-        // Copy latest.eml for convenience
-        @copy($fn, MAIL_OUTBOX_DIR . '/latest.eml');
+        // Marca último e-mail específico da categoria
+        @file_put_contents($outboxDir . '/LATEST.txt', basename($fn));
+        @copy($fn, $outboxDir . '/latest.eml');
     }
     return $ok;
 }

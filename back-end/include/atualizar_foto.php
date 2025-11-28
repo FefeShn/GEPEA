@@ -60,7 +60,7 @@ if (!move_uploaded_file($file['tmp_name'], $destPath)) {
     exit;
 }
 
-// Caminho público relativo a partir das páginas membro (../imagens/usuarios/...)
+// caminho público relativo a partir das páginas membro (../imagens/usuarios/...)
 $publicPath = '../imagens/usuarios/' . $basename;
 
 try {

@@ -14,7 +14,7 @@ if (!isLoggedIn() || !isAdmin()) {
 
 $input = json_decode(file_get_contents('php://input'), true);
 $messageId = (int)($input['message_id'] ?? 0);
-$restore = (int)($input['restore'] ?? 0) === 1; // opcional: restaurar mensagem
+$restore = (int)($input['restore'] ?? 0) === 1;
 
 if ($messageId <= 0) {
     http_response_code(400);

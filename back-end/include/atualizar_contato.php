@@ -20,7 +20,7 @@ if (!$id) {
     exit;
 }
 
-// Permissões: somente o próprio usuário ou admin
+// permissões: somente o próprio usuário ou admin
 if (!isLoggedIn() || (!isAdmin() && (int)$_SESSION['id_usuario'] !== (int)$id)) {
     http_response_code(403);
     echo json_encode(['ok' => false, 'msg' => 'Não autorizado']);

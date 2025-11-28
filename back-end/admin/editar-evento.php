@@ -87,17 +87,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && (($_POST['acao'] ?? '') !== 'add_im
     // Gerar arquivo do evento
     $fileRel = '../eventos/evento' . $id . '.php';
     $fileAbs = __DIR__ . '/../eventos/evento' . $id . '.php';
+    $dirEventos = __DIR__ . '/../eventos';
+    if (!is_dir($dirEventos)) { mkdir($dirEventos, 0775, true); }
 
     $imgs = $pdo->prepare('SELECT caminho FROM evento_imagens WHERE evento_id = ? ORDER BY ordem ASC');
     $imgs->execute([$id]);
     $imagens = $imgs->fetchAll(PDO::FETCH_COLUMN) ?: [$imgPath];
 
-  $dataFmt = date('d/m/Y', strtotime($data_evento));
-  $htmlContent = buildEventoFile($titulo, $dataFmt, $imagens, $conteudo);
-    file_put_contents($fileAbs, $htmlContent);
-
-    header('Location: ' . $fileRel);
-    exit;
+    $dataFmt = date('d/m/Y', strtotime($data_evento));
+    $htmlContent = buildEventoFile($titulo, $dataFmt, $imagens, $conteudo);
+    if (file_put_contents($fileAbs, $htmlContent) === false) {
+      $erro = 'Falha ao gerar arquivo do evento.';
+    } else {
+      header('Location: ' . $fileRel);
+      exit;
+    }
   }
 }
 

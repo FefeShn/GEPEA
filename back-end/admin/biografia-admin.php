@@ -9,7 +9,7 @@ $idUsuario = $_SESSION['id_usuario'] ?? null;
 
 function caminhoFotoPerfilAdmin(?string $foto): string {
     if (!$foto || trim($foto) === '') {
-        return '../imagens/user-foto.png';
+      return '../imagens/user-foto.png';
     }
     if (preg_match('#^(https?:)?//#', $foto) || substr($foto, 0, 1) === '/') {
         return $foto;

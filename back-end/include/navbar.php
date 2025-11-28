@@ -45,6 +45,9 @@ $nomeUsuario = $isLoggedIn ? ($_SESSION['nome_user'] ?? 'Usuário') : 'Visitante
     <p class="titulo-logo">GEPEA</p>
   </div>
   <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
+    <button id="botao-menu" type="button" aria-label="Abrir menu">
+      <i class="ti-menu"></i>
+    </button>
     
 
     <ul class="navbar-nav navbar-nav-right">
@@ -84,7 +87,7 @@ $nomeUsuario = $isLoggedIn ? ($_SESSION['nome_user'] ?? 'Usuário') : 'Visitante
     </ul>
 
     <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
-      <span class="icon-menu"></span>
+      <i class="ti-menu"></i>
     </button>
   </div>
 </nav>

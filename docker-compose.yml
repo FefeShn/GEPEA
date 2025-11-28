@@ -8,6 +8,7 @@ services:
     restart: always
     depends_on:
       - db
+      - mailhog
 
   db:
     image: mysql:8.0
@@ -31,4 +32,11 @@ services:
       - "8081:80"
     depends_on:
       - db
+    restart: always
+
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - "1025:1025"   # SMTP
+      - "8025:8025"   # Web UI
     restart: always

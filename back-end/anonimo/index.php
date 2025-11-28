@@ -1,12 +1,13 @@
 <?php
 if (session_status() === PHP_SESSION_NONE) { session_start(); }
-// Define página ativa conforme status de login, para menu destacar corretamente
+// define página ativa conforme status de login, para menu destacar corretamente
 $isLoggedIn = !empty($_SESSION['id_usuario']);
 $paginaAtiva = $isLoggedIn ? 'index-membro' : 'index'; 
 $fotoPerfil  = "../imagens/user-foto.png"; 
 $linkPerfil  = "login.php"; 
 // Conexão com o banco para carregar publicações 
 require_once __DIR__ . '/../config/conexao.php';
+//proteção contra XSS 
 function h($s){ return htmlspecialchars($s ?? '', ENT_QUOTES, 'UTF-8'); }
 
 // Buscar publicações criadas pelos admins (tabela 'publicacoes')
@@ -35,7 +36,6 @@ try {
 <body>
 <?php
 require '../include/navbar.php';
-// Menu dinâmico (anonimo/membro/admin) com base na sessão
 require '../include/menu-dinamico.php';
 ?>
   <div class="container-scroller">

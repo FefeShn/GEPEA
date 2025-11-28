@@ -53,7 +53,7 @@ function cargoClass($cargo){
             $cargoClass = cargoClass($m['cargo_user'] ?? '');
             $foto = (!empty($m['foto_user'])) ? htmlspecialchars($m['foto_user']) : '../imagens/user-foto.png';
           ?>
-            <a href="../perfil.php?id=<?= (int)$m['id_usuario'] ?>" class="member-card <?= htmlspecialchars($cargoClass) ?>">
+            <a href="../anonimo/perfil.php?id=<?= (int)$m['id_usuario'] ?>" class="member-card <?= htmlspecialchars($cargoClass) ?>">
               <div class="member-photo">
                 <img src="<?= $foto ?>" alt="Foto de <?= htmlspecialchars($m['nome_user']) ?>">
               </div>

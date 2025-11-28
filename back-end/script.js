@@ -97,7 +97,7 @@ function setupPostCarousel() {
             if (!titulo) { alert('Informe um título.'); return; }
             const fd = new FormData(form);
             try {
-                const resp = await fetch('./api/publicacoes_criar.php', { method: 'POST', body: fd, headers: { 'Accept': 'application/json' } });
+                const resp = await fetch('../api/publicacoes_criar.php', { method: 'POST', body: fd, headers: { 'Accept': 'application/json' } });
                 const data = await resp.json();
                 if (!resp.ok || !data.ok) throw new Error(data.error || 'Falha ao criar publicação');
                 form.reset();
@@ -169,7 +169,7 @@ function setupPostCarousel() {
             if (!ids.length) { closeModal(); return; }
             if (!confirm('Confirmar exclusão das publicações selecionadas?')) return;
             try {
-                const resp = await fetch('./api/publicacoes_excluir.php', {
+                const resp = await fetch('../api/publicacoes_excluir.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ ids })
@@ -202,7 +202,7 @@ function setupPostCarousel() {
             eventLimit: true,
             height: 'auto',
             contentHeight: 'auto',
-            events: './api/atividades_listar.php',
+            events: '../api/atividades_listar.php',
             selectHelper: true,
             select: function(start, end, jsEvent, view) {
                 // Prefill com intervalo selecionado; em visualização mensal o "end" é exclusivo
@@ -362,7 +362,7 @@ function setupPostCarousel() {
                 return;
             }
             try {
-                const resp = await fetch('./api/atividades_criar.php', {
+                const resp = await fetch('../api/atividades_criar.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ descricao, data_hora, data_fim, cor })
@@ -399,7 +399,7 @@ function setupPostCarousel() {
         async function carregarListaAtividades() {
             listaAtividades.innerHTML = '<p class="small-text">Carregando...</p>';
             try {
-                const resp = await fetch('./api/atividades_listar.php');
+                const resp = await fetch('../api/atividades_listar.php');
                 const eventos = await resp.json();
                 if (!Array.isArray(eventos) || eventos.length === 0) {
                     listaAtividades.innerHTML = '<p class="small-text">Nenhuma atividade encontrada.</p>';
@@ -427,7 +427,7 @@ function setupPostCarousel() {
             if (ids.length === 0) { alert('Selecione ao menos uma atividade.'); return; }
             if (!confirm('Excluir as atividades selecionadas?')) return;
             try {
-                const resp = await fetch('./api/atividades_excluir.php', {
+                const resp = await fetch('../api/atividades_excluir.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ ids })
@@ -574,7 +574,8 @@ function setupMenuLateralToggle() {
         e.preventDefault();
         menuLateral.classList.toggle('ativo');
         const aberto = menuLateral.classList.contains('ativo');
-        botaoMenu.textContent = aberto ? '✕' : '☰';
+        // Alterna classe visual do botão para trocar hambúrguer/X via CSS
+        botaoMenu.classList.toggle('ativo', aberto);
     });
 }
 
@@ -660,7 +661,7 @@ function setupAgendaMembro(){
         const calendarEl = document.getElementById('calendar');
         if(!calendarEl) return;
         // Prefixo de API diferente para páginas de membro
-        const apiPrefix = window.location.pathname.includes('/admin/') ? './api/' : '../api/';
+        const apiPrefix = '../api/';
         $('#calendar').fullCalendar({
             locale: 'pt-br',
             height: 'auto',
@@ -734,7 +735,7 @@ if(typeof setupExclusaoModal === 'undefined') window.setupExclusaoModal = functi
         const ids = Array.from(document.querySelectorAll('.member-checkbox:checked')).map(cb=>parseInt(cb.value,10)).filter(Boolean);
         if(!ids.length){ fechar(); return; }
         try {
-            const resp = await fetch('./api/membros_excluir.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ids})});
+            const resp = await fetch('../api/membros_excluir.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ids})});
             const data = await resp.json();
             if(!resp.ok || !data.ok) alert(data.error || 'Falha ao excluir');
             fechar();
@@ -764,7 +765,7 @@ if(typeof setupUploadModal === 'undefined') window.setupUploadModal = function()
         e.preventDefault();
         const fd = new FormData(form);
         try {
-            const resp = await fetch('./api/arquivos_upload.php',{method:'POST', body: fd});
+            const resp = await fetch('../api/arquivos_upload.php',{method:'POST', body: fd});
             const data = await resp.json();
             if(!resp.ok || !data.ok){ alert(data.error || 'Falha no upload'); return; }
             fechar();
@@ -774,81 +775,180 @@ if(typeof setupUploadModal === 'undefined') window.setupUploadModal = function()
 };
 if(typeof setupBiografiaEdicao === 'undefined') window.setupBiografiaEdicao = function(){};
 if(typeof setupPerfilModals === 'undefined') window.setupPerfilModals = function(){};
-function setupChat() {
-  const btnEnviar = document.querySelector('.btn-enviar');
-  const chatInput = document.querySelector('.chat-input textarea');
-  const chatMessages = document.querySelector('.chat-messages');
-  const replyContainer = document.querySelector('.reply-container');
-  const cancelReplyBtn = document.querySelector('.cancel-reply');
-  const emojiBtn = document.querySelector('.btn-emoji');
-  if (!btnEnviar || !chatInput || !chatMessages) return;
-  const urlParams = new URLSearchParams(window.location.search);
-  const chatId = parseInt(urlParams.get('id') || '0', 10);
-  if (!chatId) return;
-  let parentId = null;
-  let lastId = 0;
-  let emojiPicker = document.querySelector('.emoji-picker');
-  if (!emojiPicker) {
-    emojiPicker = document.createElement('div');
-    emojiPicker.className = 'emoji-picker';
-    emojiPicker.style.display = 'none';
-    chatMessages.parentElement?.appendChild(emojiPicker);
-  }
-  const EMOJIS = ['😀','😊','😂','❤️','🔥','👍','🎉','🙏','😢','👏','🤔'];
-  emojiPicker.innerHTML = EMOJIS.map(e => `<button type="button" class="emoji-item" data-emoji="${e}" aria-label="${e}">${e}</button>`).join('');
-  emojiPicker.addEventListener('click', e => {
-    const btn = e.target.closest('.emoji-item');
-    if (!btn) return;
-    chatInput.value += btn.getAttribute('data-emoji');
-    chatInput.focus();
-  });
-  function esc(str){
-    return (str||'').replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c];});
-  }
-  function msgHTML(m){
-    const deleted = m.is_deleted ? ' message-deleted' : '';
-    const mainText = m.message === null ? '<span class="removed">Mensagem removida</span>' : esc(m.message);
-    const parent = m.parent && m.parent.message !== null ? `<div class="message-parent">↪ <strong>${esc(m.parent.user_name)}:</strong> ${esc(m.parent.message)}</div>` : '';
-    const adminBtns = m.can_delete ? `<button class="msg-delete" data-id="${m.id}" title="Excluir">✕</button>${m.is_deleted?`<button class=\"msg-restore\" data-id=\"${m.id}\" title=\"Restaurar\">↺</button>`:''}` : '';
-    return `<div class="message-item${deleted}" data-id="${m.id}">
-      <div class="message-header">
-        <span class="message-author">${esc(m.user_name)}</span>
-        <span class="message-time">${esc(m.created_at)}</span>
-        <div class="message-actions"><button class="msg-reply" data-id="${m.id}" title="Responder">↪</button>${adminBtns}</div>
-      </div>
-      ${parent}
-      <div class="message-body">${mainText}</div>
-    </div>`;
-  }
-  function append(list){
-    const frag = document.createDocumentFragment();
-    list.forEach(m=>{frag.appendChild(document.createRange().createContextualFragment(msgHTML(m))); lastId=Math.max(lastId,m.id);});
-    chatMessages.appendChild(frag);
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-  }
-  async function fetchMessages(){
-    try { const resp = await fetch(`../chat/fetch.php?chat_id=${chatId}&since_id=${lastId}`); if(!resp.ok) return; const data = await resp.json(); if(Array.isArray(data.messages)&&data.messages.length) append(data.messages); } catch(e){}
-  }
-  async function sendMessage(){
-    const text = chatInput.value.trim(); if(!text) return; const payload={chat_id:chatId,message:text}; if(parentId) payload.parent_id=parentId; try{ const resp=await fetch('../chat/send.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}); const data=await resp.json(); if(resp.ok&&data.message) append([data.message]); chatInput.value=''; parentId=null; hideReply(); }catch(e){ alert('Erro ao enviar mensagem.'); }
-  }
-  async function deleteMessage(id, restore=false){
-    try { const resp=await fetch('../chat/delete.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message_id:id,restore:restore?1:0})}); if(resp.ok) fetchMessages(); } catch(e){ alert('Falha na exclusão.'); }
-  }
-  function showReply(el){ parentId=parseInt(el.getAttribute('data-id'),10); if(replyContainer){ const body=el.querySelector('.message-body'); replyContainer.style.display='block'; replyContainer.querySelector('.reply-text').textContent= body?body.textContent.slice(0,120):''; }}
-  function hideReply(){ if(replyContainer){ replyContainer.style.display='none'; replyContainer.querySelector('.reply-text').textContent=''; }}
-  cancelReplyBtn?.addEventListener('click', hideReply);
-  btnEnviar.addEventListener('click', sendMessage);
-  chatInput.addEventListener('keydown', e=>{ if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); sendMessage(); }});
-  emojiBtn?.addEventListener('click', ()=>{ if(!emojiPicker) return; emojiPicker.style.display = emojiPicker.style.display==='block'?'none':'block'; });
-  chatMessages.addEventListener('click', e=>{
-    const replyBtn=e.target.closest('.msg-reply'); if(replyBtn){ showReply(replyBtn.closest('.message-item')); return; }
-    const delBtn=e.target.closest('.msg-delete'); if(delBtn && confirm('Excluir mensagem?')){ deleteMessage(parseInt(delBtn.dataset.id,10)); return; }
-    const restoreBtn=e.target.closest('.msg-restore'); if(restoreBtn && confirm('Restaurar mensagem?')){ deleteMessage(parseInt(restoreBtn.dataset.id,10), true); return; }
-  });
-  fetchMessages();
-  setInterval(fetchMessages,3000);
+
+// ==== Chat integrado (anteriormente em chat/chat.js) ====
+(function(){
+    'use strict';
+    function ready(fn){ if(document.readyState!=='loading'){ fn(); } else { document.addEventListener('DOMContentLoaded', fn); } }
+    ready(initChat);
+
+
+// ===== Add Membro: atualização do nome do arquivo selecionado =====
+function setupAddMembroFotoInput(){
+    const input = document.getElementById('fotoMembro');
+    const fileName = document.getElementById('fileName');
+    if(!input || !fileName) return;
+    input.addEventListener('change', function(){
+        if (this.files && this.files.length > 0) {
+            fileName.textContent = this.files[0].name;
+            fileName.style.color = 'var(--verde)';
+            fileName.style.fontWeight = '500';
+        } else {
+            fileName.textContent = 'Nenhum arquivo selecionado';
+            fileName.style.color = '#666';
+            fileName.style.fontWeight = 'normal';
+        }
+    });
 }
+
+// Inicializa comportamento da página Add Membro quando presente
+setupAddMembroFotoInput();
+    function initChat(){
+        const container = document.querySelector('.chat-messages');
+        const input = document.querySelector('.chat-input textarea');
+        const sendBtn = document.querySelector('.btn-enviar');
+        const emojiBtn = document.querySelector('.btn-emoji');
+        const replyBox = document.querySelector('.reply-container');
+        const replyText = replyBox?.querySelector('.reply-text');
+        const cancelReply = replyBox?.querySelector('.cancel-reply');
+        if(!container || !input || !sendBtn) return; // não está na página de chat
+
+        const params = new URLSearchParams(window.location.search);
+        const chatId = parseInt(params.get('id')||'0',10);
+        if(!chatId) return;
+
+        const currentUserId = window.CHAT_USER_ID || 0;
+        let lastId = 0;
+        let parentId = null;
+        let pollHandle = null;
+
+        // Emoji picker
+        let emojiPicker = document.querySelector('.emoji-picker');
+        if(!emojiPicker){
+            emojiPicker = document.createElement('div');
+            emojiPicker.className = 'emoji-picker';
+            emojiPicker.style.display='none';
+            const inputContainer = document.querySelector('.chat-input-container') || container.parentElement;
+            inputContainer?.appendChild(emojiPicker);
+        }
+        const EMOJIS = ['😀','😊','😂','❤️','🔥','👍','🎉','🙏','😢','👏','🤔'];
+        emojiPicker.innerHTML = EMOJIS.map(e => `<button type="button" class="emoji-item" data-emoji="${e}" aria-label="Emoji ${e}">${e}</button>`).join('');
+        emojiPicker.addEventListener('click', e => {
+            const btn = e.target.closest('.emoji-item');
+            if(!btn) return;
+            input.value += btn.getAttribute('data-emoji');
+            input.focus();
+        });
+
+        emojiBtn?.addEventListener('click', () => {
+            if(!emojiPicker) return;
+            emojiPicker.style.display = (emojiPicker.style.display==='block') ? 'none' : 'block';
+        });
+
+        cancelReply?.addEventListener('click', () => hideReply());
+
+        function esc(str){
+            return (str||'').replace(/[&<>"']/g,function(ch){
+                return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[ch];
+            });
+        }
+
+        function formatTime(ts){
+            if(!ts) return '';
+            try {
+                const base = new Date(ts.replace(' ','T'));
+                const adjusted = new Date(base.getTime() - 3*60*60*1000); // ajuste -3h
+                return new Intl.DateTimeFormat('pt-BR',{ timeZone:'America/Sao_Paulo', day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit'}).format(adjusted);
+            } catch { return ts; }
+        }
+
+        function buildMessage(m){
+            const mine = (m.user_id && m.user_id === currentUserId);
+            const bubbleSide = mine ? ' mine' : ' other';
+            const deletedClass = m.is_deleted ? ' message-deleted' : '';
+            const body = m.message === null ? '<span class="removed">Mensagem removida</span>' : esc(m.message);
+            const parent = (m.parent && m.parent.message !== null) ? `<div class="message-parent">↪ <strong>${esc(m.parent.user_name)}:</strong> ${esc(m.parent.message)}</div>` : '';
+            const ICON_REPLY = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true"><path d="M5.921 11.9 1.253 8.72a.5.5 0 0 1 0-.82L5.92 4.719A.5.5 0 0 1 6.7 5.08v2.053c.5-.06 1.022-.099 1.554-.099 2.3 0 4.255.65 5.592 1.72.232.19.024.534-.246.46-1.648-.463-3.363-.673-5.346-.673-.527 0-1.043.037-1.554.098v2.054a.5.5 0 0 1-.78.36Z"/></svg>';
+            const ICON_DELETE = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true"><path d="M5.5 5.5A.5.5 0 0 1 6 5h4a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-.5.5H6a.5.5 0 0 1-.5-.5v-8Z"/><path d="M9.5 1h-3l-.5 1H4a1 1 0 0 0-1 1v1h10V3a1 1 0 0 0-1-1h-2l-.5-1Z"/></svg>';
+            const ICON_RESTORE = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1Z"/><path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466Z"/></svg>';
+            const adminBtns = m.can_delete ? `<button class="msg-delete" data-id="${m.id}" title="Excluir" aria-label="Excluir mensagem">${ICON_DELETE}</button>${m.is_deleted?`<button class="msg-restore" data-id="${m.id}" title="Restaurar" aria-label="Restaurar mensagem">${ICON_RESTORE}</button>`:''}` : '';
+            return `<div class="message-item${bubbleSide}${deletedClass}" data-id="${m.id}">
+                ${parent}
+                <div class="message-sender"><strong>${esc(m.user_name)}</strong></div>
+                <div class="message-body">${body}</div>
+                <div class="message-meta">
+                    <span class="message-time">${formatTime(m.created_at)}</span>
+                    <div class="message-actions"><button class="msg-reply" data-id="${m.id}" title="Responder" aria-label="Responder">${ICON_REPLY}</button>${adminBtns}</div>
+                </div>
+            </div>`;
+        }
+
+        function appendMessages(list){
+            const frag = document.createDocumentFragment();
+            list.forEach(m => {
+                if(typeof m.user_id === 'undefined' && m.usuario_id) m.user_id = m.usuario_id;
+                frag.appendChild(document.createRange().createContextualFragment(buildMessage(m)));
+                lastId = Math.max(lastId,m.id);
+            });
+            container.appendChild(frag);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        async function fetchMessages(){
+            try {
+                const resp = await fetch(`../chat/fetch.php?chat_id=${chatId}&since_id=${lastId}`);
+                if(!resp.ok) return;
+                const data = await resp.json();
+                if(Array.isArray(data.messages) && data.messages.length){ appendMessages(data.messages); }
+            } catch(e){ /* silencioso */ }
+        }
+
+        async function sendMessage(){
+            const text = input.value.trim();
+            if(!text) return;
+            const payload = { chat_id: chatId, message: text };
+            if(parentId) payload.parent_id = parentId;
+            try {
+                const resp = await fetch('../chat/send.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+                const data = await resp.json();
+                if(resp.ok && data.message){ appendMessages([data.message]); }
+                input.value=''; parentId=null; hideReply();
+            } catch(e){ alert('Falha ao enviar mensagem.'); }
+        }
+
+        async function deleteMessage(id, restore=false){
+            try {
+                const resp = await fetch('../chat/delete.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message_id:id, restore: restore?1:0})});
+                if(resp.ok){ fetchMessages(); }
+            } catch(e){ alert('Erro ao processar exclusão.'); }
+        }
+
+        function showReply(el){
+            parentId = parseInt(el.getAttribute('data-id'),10);
+            if(replyBox){
+                const body = el.querySelector('.message-body');
+                replyText.textContent = body ? body.textContent.slice(0,120) : '';
+                replyBox.style.display='block';
+            }
+        }
+        function hideReply(){ if(replyBox){ replyBox.style.display='none'; replyText.textContent=''; } }
+
+        sendBtn.addEventListener('click', sendMessage);
+        input.addEventListener('keydown', e => { if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); sendMessage(); } });
+
+        container.addEventListener('click', e => {
+            const replyBtn = e.target.closest('.msg-reply');
+            if(replyBtn){ showReply(replyBtn.closest('.message-item')); return; }
+            const delBtn = e.target.closest('.msg-delete');
+            if(delBtn && confirm('Excluir mensagem?')){ deleteMessage(parseInt(delBtn.dataset.id,10)); return; }
+            const restoreBtn = e.target.closest('.msg-restore');
+            if(restoreBtn && confirm('Restaurar mensagem?')){ deleteMessage(parseInt(restoreBtn.dataset.id,10), true); return; }
+        });
+
+        fetchMessages();
+        pollHandle = setInterval(fetchMessages, 3000);
+    }
+})();
 
 const setupBiografiaPage = () => {
     const editButton = document.querySelector('.edit-button');
@@ -936,7 +1036,7 @@ const setupExclusaoArquivoModal = () => {
         if (checkboxes.length === 0) return;
         const ids = Array.from(checkboxes).map(cb => parseInt(cb.value, 10)).filter(Number.isFinite);
         try {
-            const resp = await fetch('./api/arquivos_excluir.php', {
+            const resp = await fetch('../api/arquivos_excluir.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ ids })
@@ -1101,7 +1201,7 @@ const setupExclusaoArquivoModal = () => {
             if (!titulo) { alert('Informe um título.'); return; }
             const fd = new FormData(form);
             try {
-                const resp = await fetch('./api/eventos_criar.php', { method: 'POST', body: fd, headers: { 'Accept': 'application/json' } });
+                const resp = await fetch('../api/eventos_criar.php', { method: 'POST', body: fd, headers: { 'Accept': 'application/json' } });
                 const data = await resp.json();
                 if (!resp.ok || !data?.ok) throw new Error(data?.error || 'Falha ao criar evento');
                 form.reset();
@@ -1139,7 +1239,7 @@ const setupExclusaoArquivoModal = () => {
             const ids = Array.from(document.querySelectorAll('.publi-checkbox:checked')).map(cb => parseInt(cb.value, 10)).filter(Boolean);
             if (!ids.length) { closeModal(); return; }
             try {
-                const resp = await fetch('./api/eventos_excluir.php', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ids }) });
+                const resp = await fetch('../api/eventos_excluir.php', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ids }) });
                 const data = await resp.json();
                 if (!resp.ok || !data?.ok) throw new Error(data?.error || 'Falha ao excluir evento');
                 closeModal();
@@ -1259,6 +1359,19 @@ const setupExclusaoArquivoModal = () => {
     }
 
     setupAdminButtons();
+
+    // Toggle de visualização de senha no login
+    function setupPasswordToggle(){
+        const toggle = document.querySelector('.toggle-password');
+        const input = document.getElementById('password');
+        if(!toggle || !input) return;
+        toggle.addEventListener('click', function(){
+            const mostrando = input.type === 'text';
+            input.type = mostrando ? 'password' : 'text';
+            this.setAttribute('aria-label', mostrando ? 'Mostrar senha' : 'Ocultar senha');
+        });
+    }
+    if(document.querySelector('.toggle-password')) setupPasswordToggle();
 
     document.addEventListener("DOMContentLoaded", setupPostCarousel);
 

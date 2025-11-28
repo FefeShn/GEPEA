@@ -52,22 +52,6 @@ CREATE TABLE `atividade` (
   `id_usuario` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- --------------------------------------------------------
-
---
--- Estrutura para tabela `biografia`
---
-
-CREATE TABLE `biografia` (
-  `id_biografia` int(11) NOT NULL,
-  `descricao_biografia` text DEFAULT NULL,
-  `curriculo_lattes` varchar(500) DEFAULT NULL,
-  `email_contato` varchar(255) DEFAULT NULL,
-  `data_atualizacao` timestamp NOT NULL DEFAULT current_timestamp(),
-  `id_usuario` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
 
 --
 -- Estrutura para tabela `discussao`
@@ -136,33 +120,8 @@ CREATE TABLE `presenca` (
   `id_atividade` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- --------------------------------------------------------
 
---
--- Estrutura para tabela `publicacao`
---
 
-CREATE TABLE `publicacao` (
-  `id_publicacao` int(11) NOT NULL,
-  `titulo_publi` varchar(255) NOT NULL,
-  `conteudo_publi` text NOT NULL,
-  `foto_publi` varchar(500) DEFAULT NULL,
-  `data_publi` timestamp NOT NULL DEFAULT current_timestamp(),
-  `id_usuario` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Estrutura para tabela `suporte`
---
-
-CREATE TABLE `suporte` (
-  `id_suporte` int(11) NOT NULL,
-  `email_contato` varchar(150) NOT NULL,
-  `mensagem` text NOT NULL,
-  `data_envio` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -211,11 +170,6 @@ ALTER TABLE `atividade`
   ADD KEY `id_usuario` (`id_usuario`);
 
 --
--- Índices de tabela `biografia`
---
-ALTER TABLE `biografia`
-  ADD PRIMARY KEY (`id_biografia`),
-  ADD UNIQUE KEY `id_usuario` (`id_usuario`);
 
 --
 -- Índices de tabela `discussao`
@@ -256,17 +210,9 @@ ALTER TABLE `presenca`
   ADD KEY `id_atividade` (`id_atividade`);
 
 --
--- Índices de tabela `publicacao`
---
-ALTER TABLE `publicacao`
-  ADD PRIMARY KEY (`id_publicacao`),
-  ADD KEY `id_usuario` (`id_usuario`);
 
 --
--- Índices de tabela `suporte`
---
-ALTER TABLE `suporte`
-  ADD PRIMARY KEY (`id_suporte`);
+
 
 --
 -- Índices de tabela `usuarios`
@@ -292,10 +238,6 @@ ALTER TABLE `atividade`
   MODIFY `id_atividade` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de tabela `biografia`
---
-ALTER TABLE `biografia`
-  MODIFY `id_biografia` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de tabela `discussao`
@@ -322,16 +264,9 @@ ALTER TABLE `presenca`
   MODIFY `id_presenca` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de tabela `publicacao`
---
-ALTER TABLE `publicacao`
-  MODIFY `id_publicacao` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de tabela `suporte`
---
-ALTER TABLE `suporte`
-  MODIFY `id_suporte` int(11) NOT NULL AUTO_INCREMENT;
+
 
 --
 -- AUTO_INCREMENT de tabela `usuarios`
@@ -355,13 +290,6 @@ ALTER TABLE `arquivo`
 ALTER TABLE `atividade`
   ADD CONSTRAINT `atividade_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id_usuario`) ON DELETE CASCADE;
 
---
--- Restrições para tabelas `biografia`
---
-ALTER TABLE `biografia`
-  ADD CONSTRAINT `biografia_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id_usuario`) ON DELETE CASCADE;
-
---
 -- Restrições para tabelas `discussao`
 --
 ALTER TABLE `discussao`
@@ -396,12 +324,10 @@ ALTER TABLE `presenca`
   ADD CONSTRAINT `presenca_ibfk_2` FOREIGN KEY (`id_atividade`) REFERENCES `atividade` (`id_atividade`) ON DELETE CASCADE;
 
 --
--- Restrições para tabelas `publicacao`
---
-ALTER TABLE `publicacao`
-  ADD CONSTRAINT `publicacao_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id_usuario`) ON DELETE CASCADE;
-COMMIT;
 
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+-- Nota: A tabela utilizada nas páginas `index.php` e `admin/index-admin.php` é `publicacoes` (plural).
+-- A estrutura singular `publicacao` foi removida por não ser utilizada no código atual.
+-- Caso exista uma tabela `publicacao_imagens`, sua finalidade típica é relacionar múltiplas imagens
+-- a uma única publicação (1:N), armazenando caminhos/URLs e metadados por imagem, evitando duplicação
+-- de colunas na tabela principal e permitindo número variável de imagens por publicação.
+COMMIT;

@@ -13,7 +13,7 @@
       <a href="http://dgp.cnpq.br/dgp/espelhogrupo/1104051085481477#" target="_blank" rel="noopener" class="text-muted fs-5">
         <i class="fas fa-globe"></i>
       </a>
-      <a href="mailto:gepea@ifrs.edu.br" class="text-muted fs-5">
+      <a href="mailto:gepea@rolante.ifrs.edu.br" class="text-muted fs-5">
         <i class="fas fa-envelope"></i>
       </a>
     </div>

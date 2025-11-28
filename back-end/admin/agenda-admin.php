@@ -113,25 +113,26 @@ require '../include/menu-admin.php';
   </div>
 
   <!-- Scripts -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/locale/pt-br.js"></script>
-<script src="../script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/locale/pt-br.js"></script>
+    <script src="../script.js"></script>
+    
   <!-- Modal Lista de Presenças -->
-  <div class="modal-overlay" id="modalListaPresencas" aria-hidden="true" role="dialog" aria-modal="true">
-    <div class="modal-container" style="max-width:600px;">
-      <div class="modal-header">
-        <h3 id="tituloListaPresencas">Presenças da Atividade</h3>
-        <button class="modal-close" id="fecharModalPresencas" aria-label="Fechar modal">&times;</button>
-      </div>
-      <div class="modal-body" style="max-height:420px; overflow:auto;">
-        <div id="listaPresencas" class="membros-list"></div>
-      </div>
-      <div class="modal-actions">
-        <button class="btn btn-secondary" id="btnFecharPresencas">Fechar</button>
+    <div class="modal-overlay" id="modalListaPresencas" aria-hidden="true" role="dialog" aria-modal="true">
+      <div class="modal-container" style="max-width:600px;">
+        <div class="modal-header">
+          <h3 id="tituloListaPresencas">Presenças da Atividade</h3>
+          <button class="modal-close" id="fecharModalPresencas" aria-label="Fechar modal">&times;</button>
+        </div>
+        <div class="modal-body" style="max-height:420px; overflow:auto;">
+          <div id="listaPresencas" class="membros-list"></div>
+        </div>
+        <div class="modal-actions">
+          <button class="btn btn-secondary" id="btnFecharPresencas">Fechar</button>
+        </div>
       </div>
     </div>
-  </div>
 </body>
 </html>

@@ -362,6 +362,52 @@ body {
   transform: scale(1.1);
 }
 
+/* Ícone dentro do botão de menu lateral sempre visível */
+#botao-menu i {
+  display: inline-block;
+  font-size: 20px;
+  line-height: 1;
+  color: var(--branco);
+}
+
+/* Hambúrguer CSS como fallback — três listras sempre visíveis */
+#botao-menu {
+  position: fixed; /* já existe; reforço para o pseudo-elemento posicionar corretamente */
+}
+#botao-menu::before {
+  content: "";
+  display: block;
+  position: absolute;
+  width: 18px;
+  height: 2px;
+  background: var(--branco);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 -6px 0 0 var(--branco), 0 6px 0 0 var(--branco);
+  border-radius: 1px;
+}
+
+/* Estado ativo: mostra X, esconde hambúrguer */
+#botao-menu.ativo::before {
+  box-shadow: none;
+  width: 18px;
+  height: 2px;
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+#botao-menu.ativo::after {
+  content: "";
+  display: block;
+  position: absolute;
+  width: 18px;
+  height: 2px;
+  background: var(--branco);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-45deg);
+  border-radius: 1px;
+}
+
 /* ============== MENU LATERAL ================= */
 .menu-lateral {
   width: 280px;
@@ -798,6 +844,9 @@ body {
   transition: all 0.3s;
 }
 
+.icon-menu {
+  display: inline-block;
+}
 .btn-adicionar:hover {
   background-color: var(--amarelo);
   transform: translateY(-2px);
@@ -1389,28 +1438,30 @@ body {
 }
 
 .form-group .participant-option {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  column-gap: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
   width: 100%;
   font-size: 0.95rem;
   color: #2c2c2c;
   margin: 0;
-  padding: 0;
+  padding: 2px 0;
   border: 0;
-  align-items: flex-start;
 }
 
 .form-group .participant-option input {
   accent-color: var(--verde);
   margin: 0;
-  padding: 0;
-  align-self: flex-start;
+  flex-shrink: 0;
 }
 
 .form-group .participant-option span {
   min-width: 0;
-  display: block;
+  display: inline-flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
   line-height: 1.35;
   color: inherit;
 }
@@ -2557,6 +2608,91 @@ body {
 }
 
 .form-group input:focus,
+/* ==================== SUPORTE ==================== */
+
+/* ====== Add Membro (mover do inline) ====== */
+.btn-primary {
+  background-color: var(--verde);
+  border-color: var(--verde);
+}
+
+.btn-primary:hover {
+  background-color: var(--amarelo);
+  border-color: var(--amarelo);
+}
+
+.file-upload-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 5px;
+}
+
+.file-upload-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--verde);
+  color: white;
+  padding: 12px 20px;
+  border-radius: var(--borda-radius);
+  cursor: pointer;
+  transition: var(--transicao-normal);
+  border: none;
+  font-weight: 500;
+  text-align: center;
+  justify-content: center;
+  box-shadow: var(--sombra-leve);
+}
+
+.file-upload-button:hover {
+  background-color: var(--amarelo);
+  transform: translateY(-2px);
+  box-shadow: var(--sombra-media);
+}
+
+.file-upload-button i {
+  font-size: 1.2rem;
+}
+
+.file-upload-text {
+  font-size: 0.95rem;
+}
+
+.file-name {
+  font-size: 0.9rem;
+  color: #666;
+  padding: 8px 12px;
+  background-color: var(--cinza-claro);
+  border-radius: var(--borda-radius);
+  border: 1px solid var(--cinza-medio);
+}
+
+.file-input:focus + .file-upload-button {
+  outline: 2px solid var(--verde);
+  outline-offset: 2px;
+}
+.support-form-container { max-width:760px; margin:0 auto; padding:0 20px; }
+.support-info { background:#fff; border-radius:12px; padding:28px 30px; box-shadow:0 6px 18px rgba(0,0,0,0.06); display:flex; flex-direction:column; gap:20px; }
+.support-text p { margin:0 0 12px; font-size:15px; line-height:1.6; color:#333; }
+.support-email-line { margin:0; font-weight:600; font-size:16px; display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+.support-email-line .label { color:#444; }
+.support-email { color:var(--verde); text-decoration:none; word-break:break-all; position:relative; }
+.support-email:hover { color:var(--vermelho); }
+.support-guidelines { margin:18px 0 0; padding-left:20px; font-size:14px; color:#555; list-style:disc; display:grid; gap:6px; }
+.support-actions { display:flex; flex-wrap:wrap; gap:14px; }
+.support-btn-primary { display:inline-flex; align-items:center; gap:8px; padding:12px 22px; border-radius:8px; background:var(--verde); color:#fff; font-weight:600; text-decoration:none; font-size:15px; box-shadow:0 4px 12px rgba(0,0,0,0.15); transition:.25s; }
+.support-btn-primary:hover { background:var(--vermelho); box-shadow:0 4px 14px rgba(0,0,0,0.25); }
+.support-btn-primary i { font-size:18px; line-height:1; }
+.support-btn-secondary { background:#fff; border:1px solid #d9d9d9; color:#333; padding:12px 20px; border-radius:8px; font-weight:500; cursor:pointer; transition:.25s; }
+.support-btn-secondary:hover { border-color:var(--verde); color:var(--verde); }
+.support-hint { background:#f7faff; border:1px solid #e1ecff; color:#1a4b8c; padding:12px 16px; border-radius:8px; font-size:13px; display:flex; align-items:flex-start; gap:10px; }
+.support-hint p { margin:0; }
+@media (max-width:600px){
+  .support-info { padding:24px 20px; }
+  .support-btn-primary, .support-btn-secondary { width:100%; justify-content:center; }
+  .support-actions { flex-direction:column; }
+}
 .form-group textarea:focus {
   border-color: var(--cor-primaria);
   outline: none;
@@ -3725,12 +3861,14 @@ body.modal-open main:not(.modal-overlay) {
     border-radius: var(--border-radius);
     font-size: 1rem;
     transition: var(--transition);
+  height: 48px; /* altura fixa evita 'pulo' */
+  box-sizing: border-box; /* estabilidade do layout */
 }
 
 .form-group input:focus {
-    outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 2px rgba(0, 135, 81, 0.2);
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(0, 135, 81, 0.20); /* único box-shadow estável */
 }
 
 .password-header {

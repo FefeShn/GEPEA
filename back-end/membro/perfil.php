@@ -28,10 +28,10 @@ if ($id) {
 
 // Funções auxiliares simples
 function caminhoFotoPerfil(?string $foto): string {
-    // Foto padrão
-    if (!$foto || trim($foto) === '') {
-        return '../imagens/user-foto.png';
-    }
+  // Foto padrão
+  if (!$foto || trim($foto) === '') {
+    return '../imagens/user-foto.png';
+  }
     // Se já for URL absoluta ou path root, retorna como está
     if (preg_match('#^(https?:)?//#', $foto) || substr($foto, 0, 1) === '/') {
         return $foto;
