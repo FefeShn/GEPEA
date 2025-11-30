@@ -9,10 +9,11 @@
     function login($email, $password) {
         try {
             $pdo = getConexao();
-            
+            // busca o usuário pelo email
             $stmt = $pdo->prepare("SELECT id_usuario, nome_user, email_user, senha_user, eh_adm, foto_user FROM usuarios WHERE email_user = ?");
             $stmt->execute([$email]);
             
+            // se encontrou o usuário, verifica a senha
             if ($stmt->rowCount() === 1) {
                 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 

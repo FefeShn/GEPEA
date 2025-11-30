@@ -1,7 +1,5 @@
 <?php
 if (session_status() === PHP_SESSION_NONE) { session_start(); }
-// Página de perfil dinâmica baseada em biografia-membro.php
-// URL esperada: perfil.php?id=ID_DO_USUARIO
 
 // Variáveis opcionais (mantidas por consistência com outras páginas)
 $paginaAtiva = 'nenhuma';
@@ -10,7 +8,6 @@ $linkPerfil  = "../anonimo/login.php";
 
 require_once '../config/conexao.php';
 
-// Captura e valida o id
 $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 
 $usuario = null;
@@ -21,12 +18,10 @@ if ($id) {
         $stmt->execute([$id]);
         $usuario = $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
     } catch (Throwable $e) {
-        // Mantém $usuario como null em caso de falha, mensagem amigável será exibida
         $usuario = null;
     }
 }
 
-// Funções auxiliares simples
 function caminhoFotoPerfil(?string $foto): string {
   // Foto padrão
   if (!$foto || trim($foto) === '') {

@@ -12,6 +12,7 @@ $linkPerfil  = "../membro/biografia-membro.php";
 $pdo = getConexao();
 $participantes = [];
 try {
+  // lista os membros para seleção ao criar nova discussão
   $stmt = $pdo->prepare("SELECT id_usuario, nome_user, cargo_user FROM usuarios ORDER BY nome_user");
   $stmt->execute();
   $raw = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -23,8 +24,10 @@ try {
   $participantes = [];
 }
 
+// chats do usuário
 $discussoesUsuario = gepea_listar_discussoes_usuario((int)($_SESSION['id_usuario'] ?? 0), $pdo);
 
+// Mensagens flash
 $flashSucesso = $_SESSION['flash_sucesso'] ?? '';
 $flashErro    = $_SESSION['flash_erro'] ?? '';
 unset($_SESSION['flash_sucesso'], $_SESSION['flash_erro']);

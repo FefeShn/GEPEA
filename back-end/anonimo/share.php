@@ -1,8 +1,5 @@
 <?php
-// share.php - Botões de compartilhamento para redes sociais
-// Use: include 'share.php';
 
-// Pega a URL atual da página
 $url = (isset($_SERVER['HTTPS']) ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 
 ?>

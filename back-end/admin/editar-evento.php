@@ -25,21 +25,27 @@ if (!$evt) { header('Location: ./eventos-admin.php'); exit; }
 
 $erro = '';
 
+// Adicionar nova imagem ao carrossel
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && (($_POST['acao'] ?? '') === 'add_imagem')) {
   if (isset($_FILES['nova_imagem']) && $_FILES['nova_imagem']['error'] === UPLOAD_ERR_OK) {
+    // Processa upload da nova imagem
     $uploadDir = __DIR__ . '/../imagens/eventos';
+    // Cria diretório se não existir
     if (!is_dir($uploadDir)) { mkdir($uploadDir, 0775, true); }
     $tmp = $_FILES['nova_imagem']['tmp_name'];
     $ext = pathinfo($_FILES['nova_imagem']['name'], PATHINFO_EXTENSION);
     $ext = $ext ? ('.' . strtolower($ext)) : '';
+    // Gera nome único para a nova imagem
     $fileName = 'evt_' . date('Ymd_His') . '_' . bin2hex(random_bytes(4)) . $ext;
     $dest = $uploadDir . '/' . $fileName;
     if (move_uploaded_file($tmp, $dest)) {
+      // Incrementa a ordem para a nova imagem
       $ord = (int)$pdo->query('SELECT COALESCE(MAX(ordem),0) FROM evento_imagens WHERE evento_id = ' . $id)->fetchColumn();
       $ord = $ord + 1;
       $imgRel = '../imagens/eventos/' . $fileName;
       $ins = $pdo->prepare('INSERT INTO evento_imagens (evento_id, caminho, ordem) VALUES (?, ?, ?)');
       $ins->execute([$id, $imgRel, $ord]);
+      // Define como imagem de capa se não houver uma
       if (!$evt['foto_evento']) {
         $pdo->prepare('UPDATE evento SET foto_evento = ? WHERE id_evento = ?')->execute([$imgRel, $id]);
         $evt['foto_evento'] = $imgRel;
@@ -106,6 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && (($_POST['acao'] ?? '') !== 'add_im
 }
 
 function h($s) { return htmlspecialchars($s ?? '', ENT_QUOTES, 'UTF-8'); }
+// Gera o conteúdo do arquivo PHP do evento
 function buildEventoFile($titulo, $data, $imagens, $conteudo) {
   $paras = array_filter(array_map('trim', preg_split("/(\r\n|\n|\r)/", $conteudo)));
   $conteudoHtml = '';
@@ -229,6 +236,7 @@ require __DIR__ . '/../include/menu-admin.php';
                 <?php
                   $imgs = $pdo->prepare('SELECT caminho, ordem FROM evento_imagens WHERE evento_id = ? ORDER BY ordem ASC');
                   $imgs->execute([$id]);
+                  // Mostrar imagens atuais
                   foreach ($imgs as $img) {
                     $c = h($img['caminho']);
                     echo '<div style="width:160px; text-align:center;">'
@@ -262,6 +270,7 @@ require __DIR__ . '/../include/menu-admin.php';
 </div>
 <script src="../script.js"></script>
 <script>
+  // Salvamento automático do texto e upload de imagem via fetch
   (function(){
     const text = document.getElementById('conteudo');
     const addBtn = document.getElementById('btnAddImagem');
@@ -271,6 +280,7 @@ require __DIR__ . '/../include/menu-admin.php';
     const key = 'evt_text_id_' + <?php echo json_encode((int)$id); ?>;
     const saved = localStorage.getItem(key);
     if (saved && !text.value) { text.value = saved; }
+    // Guarda no navegador enquanto digita
     text.addEventListener('input', ()=> localStorage.setItem(key, text.value));
     addBtn?.addEventListener('click', async () => {
       if (!fileInput?.files?.length) { alert('Selecione uma imagem.'); return; }
@@ -280,6 +290,7 @@ require __DIR__ . '/../include/menu-admin.php';
       fd.append('nova_imagem', file);
       try {
         localStorage.setItem(key, text.value);
+        // adiciona imagem via ajax
         const resp = await fetch(window.location.href, { method: 'POST', body: fd });
         if (!resp.ok) throw new Error('Falha ao enviar imagem');
         window.location.reload();

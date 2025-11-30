@@ -49,7 +49,7 @@ require '../include/menu-admin.php';
             $data = htmlspecialchars(date('d/m/Y', strtotime($arq['data_upload'])));
             $url = (string)($arq['url_arquivo'] ?? '');
             $isLink = preg_match('#^https?://#i', $url) || ($arq['tipo_arquivo'] ?? '') === 'link';
-            $downloadHref = $isLink ? htmlspecialchars($url) : ('./api/arquivo_download.php?id=' . $id);
+            $downloadHref = $isLink ? htmlspecialchars($url) : ('../api/arquivo_download.php?id=' . $id);
             $ext = $isLink ? 'link' : strtolower(pathinfo($url, PATHINFO_EXTENSION));
             $tam = (int)($arq['tamanho_arquivo'] ?? 0);
             $tamFmt = $tam > 0 ? ( $tam >= 1048576 ? number_format($tam/1048576, 2, ',', '.') . ' MB' : number_format($tam/1024, 0, ',', '.') . ' KB') : '';

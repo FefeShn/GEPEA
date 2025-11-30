@@ -128,9 +128,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <label for="lattesMembro">Currículo Lattes</label>
                             <input type="text" name="lattesMembro" id="lattesMembro" class="form-control">
                         </div>
-                        
-                        <!-- Senha gerada automaticamente e enviada por e-mail -->
-                        
+                                                
                         <div class="form-group">
                             <label for="fotoMembro">Foto do Perfil</label>
                             <div class="file-upload-container">

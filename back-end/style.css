@@ -1440,7 +1440,7 @@ body {
 .form-group .participant-option {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   width: 100%;
   font-size: 0.95rem;
   color: #2c2c2c;
@@ -1453,6 +1453,14 @@ body {
   accent-color: var(--verde);
   margin: 0;
   flex-shrink: 0;
+}
+
+/* Reduz tamanho visual do checkbox e mantém alinhado ao texto */
+.form-group .participant-option input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  transform: scale(0.9);
+  transform-origin: center;
 }
 
 .form-group .participant-option span {
@@ -1492,6 +1500,14 @@ body {
   accent-color: var(--verde);
   margin: 0;
   flex-shrink: 0;
+}
+
+/* Mesma redução de tamanho para o checkbox "selecionar todos" */
+.select-all-row input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  transform: scale(0.9);
+  transform-origin: center;
 }
 
 .btn {

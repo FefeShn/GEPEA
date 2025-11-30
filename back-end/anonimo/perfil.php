@@ -1,7 +1,6 @@
 <?php
 if (session_status() === PHP_SESSION_NONE) { session_start(); }
-// Perfil público somente visualização (sem edição). Antes estava na raiz de back-end.
-// Movido para `anonimo/` pois é acessível tanto por visitantes quanto usuários logados.
+// Perfil público somente visualização (sem edição)
 
 $paginaAtiva = 'nenhuma';
 $fotoPerfil  = isset($_SESSION['foto_user']) && $_SESSION['foto_user'] ? $_SESSION['foto_user'] : "../imagens/user-foto.png";

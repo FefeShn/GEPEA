@@ -1,5 +1,4 @@
 <?php
-// Escolhe o menu correto com base na sessão/permite uso em páginas públicas e admin
 if (session_status() === PHP_SESSION_NONE) { session_start(); }
 require_once __DIR__ . '/../config/auth.php';
 

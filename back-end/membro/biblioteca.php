@@ -5,7 +5,7 @@ $linkPerfil  = "../membro/biografia-membro.php";
 require '../include/navbar.php';
 require '../include/menu-membro.php';
 
-// Conexão com o banco e carregamento de arquivos da biblioteca (mesma fonte do admin)
+// Conexão com o banco e carregamento de arquivos da biblioteca 
 require_once __DIR__ . '/../config/conexao.php';
 $pdo = getConexao();
 $stmt = $pdo->query("SELECT id_arquivo, nome_arquivo, descricao_arquivo, url_arquivo, tipo_arquivo, tamanho_arquivo, data_upload FROM arquivo ORDER BY id_arquivo DESC");
@@ -38,7 +38,7 @@ function h($s){ return htmlspecialchars($s ?? '', ENT_QUOTES, 'UTF-8'); }
             $data = h(date('d/m/Y', strtotime($arq['data_upload'])));
             $url = (string)($arq['url_arquivo'] ?? '');
             $isLink = preg_match('#^https?://#i', $url) || (($arq['tipo_arquivo'] ?? '') === 'link');
-            $downloadHref = $isLink ? h($url) : ('../admin/api/arquivo_download.php?id=' . $id);
+            $downloadHref = $isLink ? h($url) : ('../api/arquivo_download.php?id=' . $id);
             $ext = $isLink ? 'link' : strtolower(pathinfo($url, PATHINFO_EXTENSION));
             $tam = (int)($arq['tamanho_arquivo'] ?? 0);
             $tamFmt = $tam > 0 ? ( $tam >= 1048576 ? number_format($tam/1048576, 2, ',', '.') . ' MB' : number_format($tam/1024, 0, ',', '.') . ' KB') : '';

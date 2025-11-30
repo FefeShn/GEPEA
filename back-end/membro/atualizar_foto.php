@@ -4,12 +4,14 @@ require_once '../config/conexao.php';
 require_once '../config/auth.php';
 header('Content-Type: application/json; charset=utf-8');
 
+// Apenas POST permitido    
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
     echo json_encode(['ok' => false, 'msg' => 'Método não permitido']);
     exit;
 }
 
+// Valida ID do usuário
 $id = filter_input(INPUT_POST, 'id_usuario', FILTER_VALIDATE_INT);
 if (!$id) {
     http_response_code(400);
@@ -17,18 +19,21 @@ if (!$id) {
     exit;
 }
 
+// Verifica permissão
 if (!isLoggedIn() || (!isAdmin() && (int)$_SESSION['id_usuario'] !== (int)$id)) {
     http_response_code(403);
     echo json_encode(['ok' => false, 'msg' => 'Não autorizado']);
     exit;
 }
 
+// Valida arquivo de imagem
 if (!isset($_FILES['foto']) || $_FILES['foto']['error'] !== UPLOAD_ERR_OK) {
     http_response_code(400);
     echo json_encode(['ok' => false, 'msg' => 'Arquivo de imagem obrigatório']);
     exit;
 }
 
+// Valida tipo e tamanho do arquivo
 $file = $_FILES['foto'];
 $allowed = ['image/jpeg' => 'jpg', 'image/png' => 'png'];
 if (!isset($allowed[$file['type']])) {
@@ -43,6 +48,7 @@ if ($file['size'] > 2 * 1024 * 1024) { // 2MB
     exit;
 }
 
+// Salva o arquivo
 $ext = $allowed[$file['type']];
 $dir = realpath(__DIR__ . '/../imagens');
 if ($dir === false) {
@@ -51,9 +57,11 @@ if ($dir === false) {
 $subdir = $dir . DIRECTORY_SEPARATOR . 'usuarios';
 if (!is_dir($subdir)) { @mkdir($subdir, 0775, true); }
 
+// Gera nome único
 $basename = 'user_' . $id . '_' . time() . '.' . $ext;
 $destPath = $subdir . DIRECTORY_SEPARATOR . $basename;
 
+// Move o arquivo enviado para o destino final
 if (!move_uploaded_file($file['tmp_name'], $destPath)) {
     http_response_code(500);
     echo json_encode(['ok' => false, 'msg' => 'Falha ao salvar imagem']);

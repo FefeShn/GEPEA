@@ -6,6 +6,8 @@ require_once '../include/discussao_helpers.php';
 requireLogin();
 
 $paginaAtiva = 'forum';
+
+// Obtém ID da discussão a partir de GET
 $discussaoId = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 $usuarioId = (int)($_SESSION['id_usuario'] ?? 0);
 $erroDiscussao = '';
@@ -13,6 +15,7 @@ $discussaoDados = null;
 $participantesDiscussao = [];
 
 if ($discussaoId > 0) {
+  // Busca dados da discussão e participantes
   [$discussaoDados, $participantesDiscussao] = gepea_buscar_discussao_para_usuario($discussaoId, $usuarioId);
   if (!$discussaoDados) {
     $erroDiscussao = 'Você não tem acesso a este chat ou ele não existe.';

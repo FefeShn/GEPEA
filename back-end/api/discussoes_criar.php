@@ -29,7 +29,7 @@ if ($titulo === '') {
 
 $pdo = getConexao();
 
-// Garante tabela de relacionamento (ambiente local ainda não possui migração dedicada)
+// Garante tabela de relacionamento 
 $pdo->exec("CREATE TABLE IF NOT EXISTS discussao_participante (
     id_discussao INT(11) NOT NULL,
     id_usuario INT(11) NOT NULL,

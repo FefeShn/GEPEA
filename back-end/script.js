@@ -1,3 +1,4 @@
+// carrossel de posts
 function setupPostCarousel() {
     const carousel = document.getElementById('postCarousel');
     if (!carousel) return;
@@ -6,35 +7,42 @@ function setupPostCarousel() {
     const items = carousel.querySelectorAll('.carousel-item');
     const indicators = carousel.querySelectorAll('.indicator');
     
+    // se tiver só um item, nem precisa do carrossel
     if (items.length <= 1) return;
 
     let currentIndex = 0;
     let isTransitioning = false;
 
+    // Mostra o slide de índice especificado
     function showSlide(index) {
         if (isTransitioning || index < 0 || index >= items.length) return;
         
         isTransitioning = true;
+        // Move o inner para mostrar o slide correto
         inner.style.transform = `translateX(-${index * 100}%)`;
         
+        // atualiza as bolinhas em baixo do carrossel
         indicators.forEach((indicator, i) => {
             indicator.classList.toggle('active', i === index);
         });
         
+        // atualiza a classe active nos itens do carrossel
         items.forEach((item, i) => {
             item.classList.toggle('active', i === index);
         });
         
         currentIndex = index;
-        
+        // Aguarda a transição terminar antes de permitir outra
         setTimeout(() => {
             isTransitioning = false;
         }, 500);
     }
 
+    // Move para o próximo/anterior slide
     function moveSlide(direction) {
         let newIndex = currentIndex + direction;
         
+        // se chegou no fim, volta pro começo 
         if (newIndex < 0) {
             newIndex = items.length - 1;
         } else if (newIndex >= items.length) {
@@ -44,33 +52,40 @@ function setupPostCarousel() {
         showSlide(newIndex);
     }
 
+    // Vai para o slide de índice especificado
     function goToSlide(index) {
         if (index >= 0 && index < items.length) {
             showSlide(index);
         }
     }
 
+    // Configura eventos dos botões e indicadores
     carousel.querySelector('.prev').addEventListener('click', () => moveSlide(-1));
     carousel.querySelector('.next').addEventListener('click', () => moveSlide(1));
 
+    // configura as bolinhas para clicar
     indicators.forEach((indicator, index) => {
         indicator.addEventListener('click', () => goToSlide(index));
     });
 
+    // Mostra o primeiro slide inicialmente
     showSlide(0);
 }
 
+// Modal de criação de publicação
     const setupPublicacaoModal = () => {
         const btnAdicionar = document.querySelector('.btn-adicionar');
         const modalPublicacao = document.getElementById('modalPublicacao');
         
         if (!btnAdicionar || !modalPublicacao) return;
 
+        // fecha o modal
         const closeModal = () => {
             modalPublicacao.classList.remove('active');
             document.body.style.overflow = '';
         };
 
+        // abre o modal e define a data atual
         const openModal = () => {
             const dataAtual = new Date();
             const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
@@ -80,16 +95,20 @@ function setupPostCarousel() {
             document.body.style.overflow = 'hidden';
         };
 
+        // Configura evento para abrir o modal
         btnAdicionar.addEventListener('click', openModal);
 
+        // Configura eventos para fechar o modal
         document.querySelectorAll('.modal-publicacao-close, .modal-publicacao-cancel').forEach(btn => {
             btn.addEventListener('click', closeModal);
         });
 
+        // Fecha o modal ao clicar fora do conteúdo
         modalPublicacao.addEventListener('click', (e) => {
             if (e.target === modalPublicacao) closeModal();
         });
 
+        // envio do formulário
         document.getElementById('formPublicacao')?.addEventListener('submit', async (e) => {
             e.preventDefault();
             const form = e.target;
@@ -109,6 +128,7 @@ function setupPostCarousel() {
             }
         });
 
+        // atualiza o nome do arquivo selecionado
         document.getElementById('imagemPublicacao')?.addEventListener('change', function() {
             const label = this.nextElementSibling;
             if (this.files.length > 0) {
@@ -120,7 +140,7 @@ function setupPostCarousel() {
     };
 
     
-
+// Modal de exclusão de publicações
     const setupExclusaoPublicacaoModal = () => {
         const deleteButton = document.querySelector('.btn-excluir');
         const modalExcluirOverlay = document.getElementById('modalExcluirPublicacao');
@@ -162,6 +182,7 @@ function setupPostCarousel() {
             if (e.target === modalExcluirOverlay) closeModal();
         });
 
+        // confirma exclusão
         document.getElementById('confirmarExclusaoPubli')?.addEventListener('click', async () => {
             const ids = Array.from(document.querySelectorAll('.publi-checkbox:checked'))
                 .map(cb => parseInt(cb.value, 10))
@@ -186,12 +207,13 @@ function setupPostCarousel() {
 
     }; // fim setupExclusaoPublicacaoModal
 
+    // Agenda para Admin
     const setupAgendaAdmin = () => {
     try {
         var calendar = $('#calendar').fullCalendar({
             header: {
                 left: 'prev,next',      // navegação
-                center: 'title',        // título (mês/ano) no meio
+                center: 'title',        // título (mês/ano)
                 right: 'month,agendaWeek,agendaDay' // botões de visualização à direita
             },
             defaultView: 'month',
@@ -248,6 +270,7 @@ function setupPostCarousel() {
         const btnFechar = document.querySelector('.modal-evento-close');
         const btnAdicionarEvento = document.getElementById('adicionarEvento');
 
+        // Abre o modal de criação/edição de evento
         function abrirModalEventoAdmin(evento) {
             modalTitulo.textContent = evento.title ? 'Editar Evento' : 'Novo Evento';
             tituloInput.value = evento.title || '';
@@ -260,7 +283,7 @@ function setupPostCarousel() {
             
             formEvento.dataset.eventoId = evento.id || '';
 
-            // Na criação, não exibimos nada de presenças aqui; clique em evento abre outro modal
+            // esconde a seção de presenças no modal de evento
             const presencaWrapper = document.getElementById('presencaAdminWrapper');
             if (presencaWrapper) presencaWrapper.style.display = 'none';
         }
@@ -307,6 +330,7 @@ function setupPostCarousel() {
                 const ausentes = membros.filter(m => m.status === 'ausente');
                 const naoInf  = membros.filter(m => m.status === 'nao_informado');
 
+                // Função auxiliar para criar seção da lista
                 const makeSection = (tituloSec, arr, color) => {
                     const badge = `<span class="small-text" style="color:${color}">${arr.length}</span>`;
                     const items = arr.map(m => `
@@ -351,6 +375,7 @@ function setupPostCarousel() {
             if (e.target === modalEvento) fecharModalEventoAdmin();
         });
 
+        // envio do formulário de criação/edição
         formEvento.addEventListener('submit', async function(e) {
             e.preventDefault();
             const descricao = tituloInput.value.trim();
@@ -442,7 +467,6 @@ function setupPostCarousel() {
             }
         });
 
-        // Removido o botão dentro do modal de edição: clique direto no evento usa abrirModalListaPresencas
 
     } catch (error) {
         console.error('Erro ao inicializar calendário admin:', error);
@@ -450,6 +474,7 @@ function setupPostCarousel() {
     }
 };
 
+// Modal de nova discussão para membros
 function setupModalNovaDiscussaoMembro() {
     const btnNovaDiscussao = document.querySelector('.btn-nova-discussao');
     const modal = document.getElementById('modalNovaDiscussaoMembro');
@@ -481,6 +506,7 @@ function setupModalNovaDiscussaoMembro() {
         if (e.target === modal) closeModal();
     });
     
+    // Validação do formulário
     const form = document.getElementById('formNovaDiscussaoMembro');
     if (form) {
         form.addEventListener('submit', function(e) {
@@ -493,6 +519,7 @@ function setupModalNovaDiscussaoMembro() {
     }
 }
 
+// Modal de nova discussão para admin
 function setupModalNovaDiscussaoAdmin() {
     const btnNovaDiscussao = document.querySelector('.btn-nova-discussao');
     const modal = document.getElementById('modalNovaDiscussao');
@@ -532,6 +559,7 @@ function setupModalNovaDiscussaoAdmin() {
     }
 }
 
+// Checkbox "Selecionar todos" para participantes em modais de nova discussão
 function setupSelectAllParticipants() {
     document.querySelectorAll('[data-select-all-target]').forEach(master => {
         const targetSelector = master.getAttribute('data-select-all-target');
@@ -565,6 +593,7 @@ function setupSelectAllParticipants() {
     });
 }
 
+// menu-lateral: controla abrir/fechar o menu lateral
 function setupMenuLateralToggle() {
     const botaoMenu = document.getElementById('botao-menu');
     const menuLateral = document.getElementById('menuLateral');
@@ -574,11 +603,11 @@ function setupMenuLateralToggle() {
         e.preventDefault();
         menuLateral.classList.toggle('ativo');
         const aberto = menuLateral.classList.contains('ativo');
-        // Alterna classe visual do botão para trocar hambúrguer/X via CSS
         botaoMenu.classList.toggle('ativo', aberto);
     });
 }
 
+// Admin: modal de exclusão de discussões
 function setupExcluirDiscussoesModal() {
     const deleteButton = document.querySelector('.btn-excluir-discussao');
     const modalExcluir = document.getElementById('modalExcluirDiscussao');
@@ -595,6 +624,7 @@ function setupExcluirDiscussoesModal() {
         document.body.style.overflow = 'hidden';
     };
 
+    // Renderiza a lista de discussões como checkboxes
     const renderLista = (discussoes) => {
         if (!Array.isArray(discussoes) || discussoes.length === 0) {
             listaDiscussoes.innerHTML = '<p class="small-text">Nenhum chat disponível.</p>';
@@ -607,6 +637,7 @@ function setupExcluirDiscussoesModal() {
         listaDiscussoes.innerHTML = `<div class="membros-list">${html}</div>`;
     };
 
+    // Busca as discussões na API e monta a lista de checkboxes
     const carregarDiscussoes = async () => {
         listaDiscussoes.innerHTML = '<p class="small-text">Carregando discussões...</p>';
         try {
@@ -632,6 +663,7 @@ function setupExcluirDiscussoesModal() {
         if (e.target === modalExcluir) closeModal();
     });
 
+    // Chama a API para excluir as selecionadas e recarrega a página
     document.getElementById('confirmarExclusaoDiscussao')?.addEventListener('click', async () => {
         const ids = Array.from(document.querySelectorAll('.checkbox-discussao:checked')).map(cb => parseInt(cb.value, 10)).filter(Boolean);
         if (!ids.length) {
@@ -655,7 +687,7 @@ function setupExcluirDiscussoesModal() {
         }
     });
 }
-// ==== Função de Agenda para Membro (faltava e causava erro) ====
+// ==== Função de Agenda para Membro ====
 function setupAgendaMembro(){
     try {
         const calendarEl = document.getElementById('calendar');
@@ -668,6 +700,7 @@ function setupAgendaMembro(){
             timezone: 'local',
             header: { left: 'prev,next today', center: 'title', right: 'month,agendaWeek,agendaDay' },
             events: apiPrefix + 'atividades_listar.php',
+            // Ao clicar em um evento, abre o modal de presença
             eventClick: function(calEvent){
                 const modal = document.getElementById('modalEvento');
                 if(!modal) return;
@@ -719,7 +752,7 @@ function setupAgendaMembro(){
     } catch(err){ console.error('Erro agenda membro', err); }
 }
 
-// ===== Stubs seguros (evitam ReferenceError sem alterar funcionalidades existentes) =====
+// funcionalidades de modais diversas
 if(typeof setupCadastroModal === 'undefined') window.setupCadastroModal = function(){};
 if(typeof setupExclusaoModal === 'undefined') window.setupExclusaoModal = function(){
     const btn = document.querySelector('.delete-member-button');
@@ -744,6 +777,8 @@ if(typeof setupExclusaoModal === 'undefined') window.setupExclusaoModal = functi
     });
 };
 if(typeof setupSupportModal === 'undefined') window.setupSupportModal = function(){};
+
+// Biblioteca: modal de upload (arquivo ou link)
 if(typeof setupUploadModal === 'undefined') window.setupUploadModal = function(){
     const btn = document.getElementById('openUploadModal');
     const overlay = document.getElementById('modalUpload');
@@ -753,13 +788,26 @@ if(typeof setupUploadModal === 'undefined') window.setupUploadModal = function()
     const tipoRadios = overlay.querySelectorAll('input[name="tipo"]');
     const grupoArquivo = overlay.querySelector('.group-arquivo');
     const grupoLink = overlay.querySelector('.group-link');
+    const inputArquivo = overlay.querySelector('#fileUpload');
+    const inputLink = overlay.querySelector('#linkUrl');
     btn.addEventListener('click', ()=>{ overlay.classList.add('active'); document.body.style.overflow='hidden'; });
     function fechar(){ overlay.classList.remove('active'); document.body.style.overflow=''; }
     closeButtons.forEach(b=> b.addEventListener('click', fechar));
     overlay.addEventListener('click', e=>{ if(e.target === overlay) fechar(); });
+    // Troca entre upload de arquivo e link
     tipoRadios.forEach(r=> r.addEventListener('change', ()=>{
-        const val = document.querySelector('input[name="tipo"]:checked')?.value || 'arquivo';
-        if(val === 'link'){ grupoArquivo.style.display='none'; grupoLink.style.display='block'; } else { grupoArquivo.style.display='block'; grupoLink.style.display='none'; }
+        const val = overlay.querySelector('input[name="tipo"]:checked')?.value || 'arquivo';
+        if(val === 'link'){
+            grupoArquivo.style.display='none';
+            grupoLink.style.display='block';
+            if(inputArquivo) inputArquivo.removeAttribute('required');
+            if(inputLink) inputLink.setAttribute('required','required');
+        } else {
+            grupoArquivo.style.display='block';
+            grupoLink.style.display='none';
+            if(inputArquivo) inputArquivo.setAttribute('required','required');
+            if(inputLink) inputLink.removeAttribute('required');
+        }
     }));
     form?.addEventListener('submit', async e=>{
         e.preventDefault();
@@ -774,16 +822,91 @@ if(typeof setupUploadModal === 'undefined') window.setupUploadModal = function()
     });
 };
 if(typeof setupBiografiaEdicao === 'undefined') window.setupBiografiaEdicao = function(){};
-if(typeof setupPerfilModals === 'undefined') window.setupPerfilModals = function(){};
+if(typeof setupPerfilModals === 'undefined') window.setupPerfilModals = function(){
+    const modalContato = document.getElementById('modalContato');
+    const modalFoto = document.getElementById('modalFoto');
+    const btnEditarContatos = document.querySelector('.edit-contacts-button');
+    const btnAlterarFoto = document.querySelector('.change-photo-button');
+    const btnSalvarContato = document.getElementById('salvarContato');
+    const btnSalvarFoto = document.getElementById('salvarFoto');
 
-// ==== Chat integrado (anteriormente em chat/chat.js) ====
+    function openModal(modal){
+        if(!modal) return;
+        modal.classList.add('active');
+        modal.setAttribute('aria-hidden','false');
+        document.body.style.overflow = 'hidden';
+    }
+    function closeModal(modal){
+        if(!modal) return;
+        modal.classList.remove('active');
+        modal.setAttribute('aria-hidden','true');
+        document.body.style.overflow = '';
+    }
+
+    // Abrir modais
+    btnEditarContatos?.addEventListener('click', (e)=>{ e.preventDefault(); openModal(modalContato); });
+    btnAlterarFoto?.addEventListener('click', (e)=>{ e.preventDefault(); openModal(modalFoto); });
+
+    // Fechar por botões com classe .close-modal e pelo X
+    [modalContato, modalFoto].forEach(modal=>{
+        if(!modal) return;
+        modal.querySelectorAll('.close-modal, .modal-close').forEach(btn=>{
+            btn.addEventListener('click', (e)=>{ e.preventDefault(); closeModal(modal); });
+        });
+        // Fechar clicando no overlay
+        modal.addEventListener('click', (e)=>{ if(e.target === modal) closeModal(modal); });
+    });
+
+    // Salvar contatos
+    btnSalvarContato?.addEventListener('click', async ()=>{
+        const form = document.getElementById('formEditarContato');
+        if(!form) return;
+        const fd = new FormData(form);
+        try {
+            const resp = await fetch('../include/atualizar_contato.php',{method:'POST', body: fd});
+            const data = await resp.json().catch(()=>({ok:false,msg:'Erro inesperado'}));
+            if(!resp.ok || !data.ok){ alert(data.msg || 'Falha ao salvar contatos'); return; }
+            // Atualiza links na página sem recarregar
+            const emailVal = form.querySelector('#emailEditar')?.value?.trim();
+            const lattesVal = form.querySelector('#lattesEditar')?.value?.trim();
+            if(emailVal){
+                const emailLink = document.querySelector('.email-link');
+                if(emailLink){ emailLink.href = 'mailto:' + emailVal; emailLink.textContent = emailVal; }
+            }
+            if(typeof lattesVal === 'string'){
+                const lattesLink = document.querySelector('.lattes-link');
+                if(lattesLink && lattesVal){ lattesLink.href = lattesVal; }
+                if(lattesLink && !lattesVal){ lattesLink.remove(); }
+            }
+            closeModal(modalContato);
+        } catch(e){ alert('Erro ao salvar contatos'); }
+    });
+
+    // Salvar foto
+    btnSalvarFoto?.addEventListener('click', async ()=>{
+        const form = document.getElementById('formEditarFoto');
+        if(!form) return;
+        const fd = new FormData(form);
+        try {
+            const resp = await fetch('../include/atualizar_foto.php',{method:'POST', body: fd});
+            const data = await resp.json().catch(()=>({ok:false,msg:'Erro inesperado'}));
+            if(!resp.ok || !data.ok){ alert(data.msg || 'Falha ao atualizar foto'); return; }
+            const img = document.querySelector('.profile-image');
+            if(img && data.foto){ img.src = data.foto + (data.foto.includes('?')?'&':'?') + 't=' + Date.now(); }
+            closeModal(modalFoto);
+        } catch(e){ alert('Erro ao atualizar foto'); }
+    });
+};
+
+// ==== Chat integrado  ====
 (function(){
     'use strict';
+    // Helper simples: roda a função quando o DOM estiver pronto
     function ready(fn){ if(document.readyState!=='loading'){ fn(); } else { document.addEventListener('DOMContentLoaded', fn); } }
     ready(initChat);
 
 
-// ===== Add Membro: atualização do nome do arquivo selecionado =====
+// mostra nome do arquivo selecionado no input de foto do membro
 function setupAddMembroFotoInput(){
     const input = document.getElementById('fotoMembro');
     const fileName = document.getElementById('fileName');
@@ -803,6 +926,8 @@ function setupAddMembroFotoInput(){
 
 // Inicializa comportamento da página Add Membro quando presente
 setupAddMembroFotoInput();
+
+    // Inicializa o chat: carrega mensagens, envia novas,
     function initChat(){
         const container = document.querySelector('.chat-messages');
         const input = document.querySelector('.chat-input textarea');
@@ -822,7 +947,7 @@ setupAddMembroFotoInput();
         let parentId = null;
         let pollHandle = null;
 
-        // Emoji picker
+        // Emoji picker: cria uma caixinha simples com alguns emojis
         let emojiPicker = document.querySelector('.emoji-picker');
         if(!emojiPicker){
             emojiPicker = document.createElement('div');
@@ -847,12 +972,14 @@ setupAddMembroFotoInput();
 
         cancelReply?.addEventListener('click', () => hideReply());
 
+        // Escapa HTML para evitar bagunça/segurança nas mensagens
         function esc(str){
             return (str||'').replace(/[&<>"']/g,function(ch){
                 return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[ch];
             });
         }
 
+        // Formata horário no padrão PT-BR 
         function formatTime(ts){
             if(!ts) return '';
             try {
@@ -862,6 +989,7 @@ setupAddMembroFotoInput();
             } catch { return ts; }
         }
 
+        // Monta o HTML da bolha de mensagem
         function buildMessage(m){
             const mine = (m.user_id && m.user_id === currentUserId);
             const bubbleSide = mine ? ' mine' : ' other';
@@ -894,6 +1022,7 @@ setupAddMembroFotoInput();
             container.scrollTop = container.scrollHeight;
         }
 
+        // Puxa novas mensagens com polling leve, mantendo o último ID
         async function fetchMessages(){
             try {
                 const resp = await fetch(`../chat/fetch.php?chat_id=${chatId}&since_id=${lastId}`);
@@ -903,6 +1032,7 @@ setupAddMembroFotoInput();
             } catch(e){ /* silencioso */ }
         }
 
+        // envia nova mensagem
         async function sendMessage(){
             const text = input.value.trim();
             if(!text) return;
@@ -916,6 +1046,7 @@ setupAddMembroFotoInput();
             } catch(e){ alert('Falha ao enviar mensagem.'); }
         }
 
+        // exclui mensagem (admin)
         async function deleteMessage(id, restore=false){
             try {
                 const resp = await fetch('../chat/delete.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message_id:id, restore: restore?1:0})});
@@ -923,6 +1054,7 @@ setupAddMembroFotoInput();
             } catch(e){ alert('Erro ao processar exclusão.'); }
         }
 
+        // mostra caixa de resposta
         function showReply(el){
             parentId = parseInt(el.getAttribute('data-id'),10);
             if(replyBox){
@@ -936,6 +1068,7 @@ setupAddMembroFotoInput();
         sendBtn.addEventListener('click', sendMessage);
         input.addEventListener('keydown', e => { if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); sendMessage(); } });
 
+        // Delegação de eventos para botões de mensagem
         container.addEventListener('click', e => {
             const replyBtn = e.target.closest('.msg-reply');
             if(replyBtn){ showReply(replyBtn.closest('.message-item')); return; }
@@ -946,10 +1079,11 @@ setupAddMembroFotoInput();
         });
 
         fetchMessages();
-        pollHandle = setInterval(fetchMessages, 3000);
+        pollHandle = setInterval(fetchMessages, 3000); // a cada 3 segundos
     }
 })();
 
+// Biografia: edição inline
 const setupBiografiaPage = () => {
     const editButton = document.querySelector('.edit-button');
     const biographyText = document.querySelector('.biography-text');
@@ -989,6 +1123,7 @@ const setupBiografiaPage = () => {
 
     const setupEsqueceuSenhaModal = () => {};
 
+    // Chat admin: botões de excluir mensagem
     function setupAdminButtons() {
         document.querySelectorAll('.delete-message-btn').forEach(btn => {
             btn.addEventListener('click', function(e) {
@@ -1005,6 +1140,7 @@ const setupBiografiaPage = () => {
         });
     }
 
+    // Modal de exclusão de arquivos na Biblioteca
 const setupExclusaoArquivoModal = () => {
     const deleteButton = document.getElementById('openDeleteModal');
     const modalExcluirOverlay = document.getElementById('modalExcluirMembro');
@@ -1062,112 +1198,6 @@ const setupExclusaoArquivoModal = () => {
     });
 };
 
-    const setupNovaAcaoModal = () => {
-        const btnAdicionar = document.querySelector('.btn-adicionar');
-        const modalAcao = document.getElementById('modalNovaAcao');
-        
-        if (!btnAdicionar || !modalAcao) return;
-
-        const closeModal = () => {
-            modalAcao.classList.remove('active');
-            document.body.style.overflow = '';
-        };
-
-        const openModal = () => {
-            const dataAtual = new Date();
-            const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
-            document.getElementById('dataAtualAcao').textContent = dataAtual.toLocaleDateString('pt-BR', options);
-            
-            modalAcao.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        };
-
-        btnAdicionar.addEventListener('click', openModal);
-
-        document.querySelectorAll('.modal-acao-close, .modal-acao-cancel').forEach(btn => {
-            btn.addEventListener('click', closeModal);
-        });
-
-        modalAcao.addEventListener('click', (e) => {
-            if (e.target === modalAcao) closeModal();
-        });
-
-        document.getElementById('formAcao')?.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const titulo = document.getElementById('tituloAcao').value;
-            const descricao = document.getElementById('descricaoAcao').value;
-            const imagem = document.getElementById('imagemAcao').files[0];
-            
-            console.log('Nova ação:', { titulo, descricao, imagem });
-            alert('Ação criada com sucesso!');
-            
-            e.target.reset();
-            closeModal();
-        });
-
-        document.getElementById('imagemAcao')?.addEventListener('change', function() {
-            const label = this.nextElementSibling;
-            if (this.files.length > 0) {
-                label.textContent = this.files[0].name;
-            } else {
-                label.innerHTML = '<i class="ti-image mr-2"></i>Selecione uma imagem';
-            }
-        });
-    };
-
-    const setupExclusaoAcaoModal = () => {
-        const deleteButton = document.querySelector('.btn-excluir');
-        const modalExcluirOverlay = document.getElementById('modalExcluirAcao');
-        
-        if (!deleteButton || !modalExcluirOverlay) {
-            console.error('Elementos do modal de exclusão de ações não encontrados!');
-            return;
-        }
-
-        const closeModal = () => {
-            document.body.classList.remove('modal-open');
-            modalExcluirOverlay.classList.remove('active');
-            document.body.style.overflow = '';
-            
-            document.querySelectorAll('.publi-checkbox:checked').forEach(checkbox => {
-                checkbox.checked = false;
-            });
-        };
-
-        const openModal = () => {
-            const checkboxes = document.querySelectorAll('.publi-checkbox:checked');
-            if (checkboxes.length === 0) {
-                alert('Por favor, selecione pelo menos uma ação para excluir.');
-                return;
-            }
-            document.body.classList.add('modal-open');
-            modalExcluirOverlay.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        };
-
-        deleteButton.addEventListener('click', (e) => {
-            e.preventDefault();
-            openModal();
-        });
-
-        document.getElementById('cancelarExclusaoAcao')?.addEventListener('click', closeModal);
-
-        modalExcluirOverlay.addEventListener('click', (e) => {
-            if (e.target === modalExcluirOverlay) closeModal();
-        });
-
-        document.getElementById('confirmarExclusaoAcao')?.addEventListener('click', () => {
-            const checkboxes = document.querySelectorAll('.publi-checkbox:checked');
-            alert(`Simulação: ${checkboxes.length} ação(ões) marcada(s) para exclusão!`);
-            
-            checkboxes.forEach(checkbox => {
-                checkbox.checked = false;
-            });
-            
-            closeModal();
-        });
-    };
-
     // === Eventos (CRUD real, usando tabela evento) ===
     const setupEventoModal = () => {
         const btnAdicionar = document.querySelector('.btn-adicionar');
@@ -1214,6 +1244,7 @@ const setupExclusaoArquivoModal = () => {
         });
     };
 
+    // Modal de exclusão de eventos (admin)
     const setupExclusaoEventoModal = () => {
         const deleteButton = document.querySelector('.btn-excluir');
         const modalExcluirOverlay = document.getElementById('modalExcluirEvento');
@@ -1253,6 +1284,7 @@ const setupExclusaoArquivoModal = () => {
 
     setupPostCarousel();
 
+    // Inicializa agenda se o elemento existir
     if (document.getElementById('calendar')) {
         if (document.querySelector('.btn-adicionar')) {
             setupAgendaAdmin();
@@ -1261,6 +1293,7 @@ const setupExclusaoArquivoModal = () => {
         }
     }
 
+    // Modais de nova discussão
     if (document.getElementById('modalNovaDiscussaoMembro')) {
         setupModalNovaDiscussaoMembro();
     }
@@ -1271,6 +1304,7 @@ const setupExclusaoArquivoModal = () => {
 
     setupSelectAllParticipants();
 
+    // Inicializa modais conforme elementos presentes na página
     if (document.querySelector('.btn-adicionar')) setupPublicacaoModal();
     if (document.querySelector('.add-member-button')) setupCadastroModal();
     if (document.querySelector('.delete-member-button')) setupExclusaoModal();
@@ -1375,22 +1409,19 @@ const setupExclusaoArquivoModal = () => {
 
     document.addEventListener("DOMContentLoaded", setupPostCarousel);
 
-
-/* Profile dropdown toggle and logout (kept in central script file) */
+// Dropdown do perfil de usuário no cabeçalho
 (function() {
     function initProfileDropdown() {
-        // One delegated click handler to manage open/close and clicks
         document.addEventListener('click', function(e) {
-            // Prefer explicit simple selectors so closest() works reliably
             const clickedWrapper = e.target.closest('.profile-dropdown-wrapper');
             const clickedToggle = e.target.closest('.dropdown-toggle');
             const clickedMenu = e.target.closest('.profile-dropdown-menu');
 
-            // If user clicked a toggle that's inside a profile wrapper -> toggle that menu
+            // abrir/fechar menu ao clicar no toggle
             if (clickedToggle && clickedWrapper && clickedWrapper.contains(clickedToggle)) {
                 const menu = clickedWrapper.querySelector('.profile-dropdown-menu');
                 if (!menu) return;
-                // close other open menus first
+                // fechar outros menus abertos primeiro
                 document.querySelectorAll('.profile-dropdown-menu.show').forEach(m => {
                     if (m !== menu) m.classList.remove('show');
                 });
@@ -1399,20 +1430,19 @@ const setupExclusaoArquivoModal = () => {
                 return;
             }
 
-            // If clicked inside an open menu, allow link clicks to proceed
             if (clickedMenu) return;
 
-            // Click outside dropdowns -> close any open menus
+            // Clique fora dos dropdowns -> fechar quaisquer menus abertos
             document.querySelectorAll('.profile-dropdown-menu.show').forEach(m => m.classList.remove('show'));
         });
 
-        // Delegated logout handler (works even if element is rendered later)
+        // Logout com confirmação
         document.addEventListener('click', function(e) {
             const btn = e.target.closest('#logout-btn');
             if (!btn) return;
             e.preventDefault();
             if (confirm('Deseja realmente sair da sua conta?')) {
-                // server-side logout that destroys session and redirects
+                // logout no servidor que destrói a sessão e redireciona
                 window.location.href = '../anonimo/logout.php';
             }
         });

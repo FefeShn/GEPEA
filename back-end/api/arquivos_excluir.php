@@ -16,6 +16,7 @@ try {
     $ids = array_values(array_filter(array_map('intval', $data['ids'])));
     if (empty($ids)) { throw new Exception('Nenhum ID informado.'); }
 
+    // Base de armazenamento de arquivos
     $storageBase = realpath(__DIR__ . '/..');
     $deleted = [];
     $notFound = [];
@@ -23,6 +24,7 @@ try {
     $sel = $pdo->prepare('SELECT id_arquivo, url_arquivo FROM arquivo WHERE id_arquivo = ?');
     $del = $pdo->prepare('DELETE FROM arquivo WHERE id_arquivo = ?');
 
+    // Processa exclusão de cada arquivo
     foreach ($ids as $id) {
         $sel->execute([$id]);
         $row = $sel->fetch(PDO::FETCH_ASSOC);

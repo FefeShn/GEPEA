@@ -4,6 +4,7 @@ require_once __DIR__ . '/../config/auth.php';
 requireAdmin();
 require_once __DIR__ . '/../config/conexao.php';
 
+// Função auxiliar para resposta JSON
 function jsonResponse($data, $status = 200) {
     http_response_code($status);
     header('Content-Type: application/json; charset=utf-8');
@@ -20,6 +21,7 @@ $pdo->exec("CREATE TABLE IF NOT EXISTS evento (
   foto_evento VARCHAR(512) DEFAULT NULL,
   id_usuario INT NOT NULL
 )");
+
 $pdo->exec("CREATE TABLE IF NOT EXISTS evento_imagens (
   id INT AUTO_INCREMENT PRIMARY KEY,
   evento_id INT NOT NULL,
@@ -29,6 +31,7 @@ $pdo->exec("CREATE TABLE IF NOT EXISTS evento_imagens (
   FOREIGN KEY (evento_id) REFERENCES evento(id_evento) ON DELETE CASCADE
 )");
 
+// Lê dados do formulário
 $titulo = trim($_POST['tituloEvento'] ?? '');
 $resumo = trim($_POST['resumoEvento'] ?? '');
 if ($titulo === '') {
@@ -39,12 +42,13 @@ if ($titulo === '') {
     exit;
 }
 
+// Processa upload da imagem
 $imgRelPath = '../imagens/emoji.png';
 if (isset($_FILES['imagemEvento']) && $_FILES['imagemEvento']['error'] !== UPLOAD_ERR_NO_FILE) {
     if ($_FILES['imagemEvento']['error'] !== UPLOAD_ERR_OK) {
         $err = $_FILES['imagemEvento']['error'];
         $msg = 'Falha no upload da imagem.';
-        if ($err === UPLOAD_ERR_INI_SIZE || $err === UPLOAD_ERR_FORM_SIZE) { $msg = 'Imagem excede o limite do servidor.'; }
+        if ($err === UPLOAD_ERR_INI_SIZE || $err === UPLOAD_ERR_FORM_SIZE) { $msg = 'Imagem excede o limite do servidor.'; } 
         if (isset($_SERVER['HTTP_ACCEPT']) && str_contains($_SERVER['HTTP_ACCEPT'], 'application/json')) {
             jsonResponse(['ok' => false, 'error' => $msg], 400);
         }

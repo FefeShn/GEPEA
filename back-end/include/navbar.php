@@ -3,7 +3,7 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Descobre prefixo relativo (./ quando a página está em /back-end, ../ quando está em /back-end/subpasta)
+// Determina o prefixo correto para links e caminhos de recursos
 $scriptDir = dirname($_SERVER['PHP_SELF'] ?? '');
 $scriptDir = str_replace('\\', '/', $scriptDir);
 $prefix = '../';
@@ -13,7 +13,7 @@ if (preg_match('#/back-end$#', $scriptDir)) {
   $prefix = '../';
 }
 
-// Consider user logged in when there's a valid user id in the session
+
 $isLoggedIn = !empty($_SESSION['id_usuario']);
 
 // Normaliza caminho da foto do perfil para a página atual
@@ -26,6 +26,7 @@ function resolveRelPath(string $p, string $prefix): string {
   return $prefix . ltrim($p, '/');
 }
 
+// Define a foto de perfil padrão ou do usuário logado
 $fotoPerfil = $prefix . 'imagens/user-foto.png';
 if ($isLoggedIn) {
   $sessFoto = $_SESSION['foto_user'] ?? '';
